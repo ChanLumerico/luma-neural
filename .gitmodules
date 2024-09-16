@@ -1,0 +1,3 @@
+[submodule "autoprop"]
+	path = autoprop
+	url = git@github.com:ChanLumerico/autoprop.git
