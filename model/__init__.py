@@ -56,6 +56,8 @@ __all__ = (
     "SE_ResNet_50",
     "SE_ResNet_152",
     "SE_InceptionRes_V2",
+    "SE_DenseNet_121",
+    "SE_DenseNet_169",
     "DenseNet_121",
     "DenseNet_169",
     "DenseNet_201",
@@ -1936,6 +1938,116 @@ class SE_InceptionRes_V2(incep._SE_InceptionRes_V2):
     [1] Hu, Jie, et al. “Squeeze-and-Excitation Networks.”
     Proceedings of the IEEE Conference on Computer Vision and
     Pattern Recognition (CVPR), 2018, pp. 7132-7141.
+
+    """
+
+
+class SE_DenseNet_121(dense._SE_DenseNet_121):
+    """
+    SE-DenseNet-121 is a deep neural network that extends the DenseNet-121
+    architecture by integrating Squeeze-and-Excitation (SE) blocks.
+    These SE blocks enhance the network's ability to model channel-wise
+    interdependencies, improving the representational power of the network
+    by adaptively recalibrating the channel-wise feature responses.
+
+    Specs
+    -----
+    Input/Output Shapes:
+    ```py
+    Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
+    ```
+    Parameter Size:
+    ```
+    9,190,272 weights, 14,760 biases -> 9,205,032 params
+    ```
+    Components
+    ----------
+    Blocks Used:
+    ```py
+    # These blocks are SE-augmented
+    DenseNetBlock.Composite(),
+    DenseNetBlock.DenseUnit(),
+    DenseNetBlock.Transition()
+    ```
+    Arguments
+    ---------
+    `activation` : callable, default=Activation.ReLU
+        Type of activation function
+    `initializer` : InitStr, default=None
+        Type of weight initializer
+    `out_features` : int, default=1000
+        Number of output features
+    `batch_size` : int, default=100
+        Size of a single mini-batch
+    `n_epochs` : int, default=100
+        Number of epochs for training
+    `valid_size` : float, default=0.1
+        Fractional size of validation set
+    `lambda_` : float, default=0.0
+        L2 regularization strength
+    `smoothing` : float, default=0.1
+        Label smoothing factor
+    `early_stopping` : bool, default=False
+        Whether to early-stop the training when the valid score stagnates
+    `patience` : int, default=10
+        Number of epochs to wait until early-stopping
+    `shuffle` : bool, default=True
+        Whethter to shuffle the data at the beginning of every epoch
+
+    """
+
+
+class SE_DenseNet_169(dense._SE_DenseNet_169):
+    """
+    SE-DenseNet-169 is a deep neural network that extends the DenseNet-169
+    architecture by integrating Squeeze-and-Excitation (SE) blocks.
+    These SE blocks enhance the network's ability to model channel-wise
+    interdependencies, improving the representational power of the network
+    by adaptively recalibrating the channel-wise feature responses.
+
+    Specs
+    -----
+    Input/Output Shapes:
+    ```py
+    Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
+    ```
+    Parameter Size:
+    ```
+    16,515,968 weights, 19,848 biases -> 16,535,816 params
+    ```
+    Components
+    ----------
+    Blocks Used:
+    ```py
+    # These blocks are SE-augmented
+    DenseNetBlock.Composite(),
+    DenseNetBlock.DenseUnit(),
+    DenseNetBlock.Transition()
+    ```
+    Arguments
+    ---------
+    `activation` : callable, default=Activation.ReLU
+        Type of activation function
+    `initializer` : InitStr, default=None
+        Type of weight initializer
+    `out_features` : int, default=1000
+        Number of output features
+    `batch_size` : int, default=100
+        Size of a single mini-batch
+    `n_epochs` : int, default=100
+        Number of epochs for training
+    `valid_size` : float, default=0.1
+        Fractional size of validation set
+    `lambda_` : float, default=0.0
+        L2 regularization strength
+    `smoothing` : float, default=0.1
+        Label smoothing factor
+    `early_stopping` : bool, default=False
+        Whether to early-stop the training when the valid score stagnates
+    `patience` : int, default=10
+        Number of epochs to wait until early-stopping
+    `shuffle` : bool, default=True
+        Whethter to shuffle the data at the beginning of every epoch
 
     """
 
