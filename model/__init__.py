@@ -1940,13 +1940,241 @@ class SE_InceptionRes_V2(incep._SE_InceptionRes_V2):
     """
 
 
-class DenseNet_121(dense._DenseNet_121): ...
+class DenseNet_121(dense._DenseNet_121):
+    """
+    DenseNet-121 is a deep neural network architecture that connects each layer to
+    every other layer in a feed-forward fashion. Unlike traditional architectures
+    where layers are connected sequentially, DenseNet-121 establishes direct
+    connections between any two layers with the same feature-map size, enabling
+    the reuse of features.
+
+    Specs
+    -----
+    Input/Output Shapes:
+    ```py
+    Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
+    ```
+    Parameter Size:
+    ```
+    7,977,856 weights, 11,240 biases -> 7,989,096 params
+    ```
+    Components
+    ----------
+    Blocks Used:
+    ```py
+    DenseNetBlock.Composite(),
+    DenseNetBlock.DenseUnit(),
+    DenseNetBlock.Transition()
+    ```
+    Arguments
+    ---------
+    `activation` : callable, default=Activation.ReLU
+        Type of activation function
+    `initializer` : InitStr, default=None
+        Type of weight initializer
+    `out_features` : int, default=1000
+        Number of output features
+    `batch_size` : int, default=100
+        Size of a single mini-batch
+    `n_epochs` : int, default=100
+        Number of epochs for training
+    `valid_size` : float, default=0.1
+        Fractional size of validation set
+    `lambda_` : float, default=0.0
+        L2 regularization strength
+    `smoothing` : float, default=0.1
+        Label smoothing factor
+    `early_stopping` : bool, default=False
+        Whether to early-stop the training when the valid score stagnates
+    `patience` : int, default=10
+        Number of epochs to wait until early-stopping
+    `shuffle` : bool, default=True
+        Whethter to shuffle the data at the beginning of every epoch
+
+    References
+    ----------
+    [1] Huang, Gao, et al. "Densely Connected Convolutional Networks."
+    Proceedings of the IEEE Conference on Computer Vision and Pattern
+    Recognition, 2017, pp. 4700-4708.
+
+    """
 
 
-class DenseNet_169(dense._DenseNet_169): ...
+class DenseNet_169(dense._DenseNet_169):
+    """
+    DenseNet-169 is a deep neural network architecture that connects each layer to
+    every other layer in a feed-forward fashion. Unlike traditional architectures
+    where layers are connected sequentially, DenseNet-169 establishes direct
+    connections between any two layers with the same feature-map size, enabling
+    the reuse of features.
+
+    Specs
+    -----
+    Input/Output Shapes:
+    ```py
+    Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
+    ```
+    Parameter Size:
+    ```
+    14,148,480 weights, 15,208 biases -> 14,163,688 params
+    ```
+    Components
+    ----------
+    Blocks Used:
+    ```py
+    DenseNetBlock.Composite(),
+    DenseNetBlock.DenseUnit(),
+    DenseNetBlock.Transition()
+    ```
+    Arguments
+    ---------
+    `activation` : callable, default=Activation.ReLU
+        Type of activation function
+    `initializer` : InitStr, default=None
+        Type of weight initializer
+    `out_features` : int, default=1000
+        Number of output features
+    `batch_size` : int, default=100
+        Size of a single mini-batch
+    `n_epochs` : int, default=100
+        Number of epochs for training
+    `valid_size` : float, default=0.1
+        Fractional size of validation set
+    `lambda_` : float, default=0.0
+        L2 regularization strength
+    `smoothing` : float, default=0.1
+        Label smoothing factor
+    `early_stopping` : bool, default=False
+        Whether to early-stop the training when the valid score stagnates
+    `patience` : int, default=10
+        Number of epochs to wait until early-stopping
+    `shuffle` : bool, default=True
+        Whethter to shuffle the data at the beginning of every epoch
+
+    References
+    ----------
+    [1] Huang, Gao, et al. "Densely Connected Convolutional Networks."
+    Proceedings of the IEEE Conference on Computer Vision and Pattern
+    Recognition, 2017, pp. 4700-4708.
+
+    """
 
 
-class DenseNet_201(dense._DenseNet_201): ...
+class DenseNet_201(dense._DenseNet_201):
+    """
+    DenseNet-201 is a deep neural network architecture that connects each layer to
+    every other layer in a feed-forward fashion. Unlike traditional architectures
+    where layers are connected sequentially, DenseNet-201 establishes direct
+    connections between any two layers with the same feature-map size, enabling
+    the reuse of features.
+
+    Specs
+    -----
+    Input/Output Shapes:
+    ```py
+    Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
+    ```
+    Parameter Size:
+    ```
+    20,012,928 weights, 18,024 biases -> 20,030,952 params
+    ```
+    Components
+    ----------
+    Blocks Used:
+    ```py
+    DenseNetBlock.Composite(),
+    DenseNetBlock.DenseUnit(),
+    DenseNetBlock.Transition()
+    ```
+    Arguments
+    ---------
+    `activation` : callable, default=Activation.ReLU
+        Type of activation function
+    `initializer` : InitStr, default=None
+        Type of weight initializer
+    `out_features` : int, default=1000
+        Number of output features
+    `batch_size` : int, default=100
+        Size of a single mini-batch
+    `n_epochs` : int, default=100
+        Number of epochs for training
+    `valid_size` : float, default=0.1
+        Fractional size of validation set
+    `lambda_` : float, default=0.0
+        L2 regularization strength
+    `smoothing` : float, default=0.1
+        Label smoothing factor
+    `early_stopping` : bool, default=False
+        Whether to early-stop the training when the valid score stagnates
+    `patience` : int, default=10
+        Number of epochs to wait until early-stopping
+    `shuffle` : bool, default=True
+        Whethter to shuffle the data at the beginning of every epoch
+
+    References
+    ----------
+    [1] Huang, Gao, et al. "Densely Connected Convolutional Networks."
+    Proceedings of the IEEE Conference on Computer Vision and Pattern
+    Recognition, 2017, pp. 4700-4708.
+
+    """
 
 
-class DenseNet_264(dense._DenseNet_264): ...
+class DenseNet_264(dense._DenseNet_264):
+    """
+    DenseNet-264 is a deep neural network architecture that connects each layer to
+    every other layer in a feed-forward fashion. Unlike traditional architectures
+    where layers are connected sequentially, DenseNet-264 establishes direct
+    connections between any two layers with the same feature-map size, enabling
+    the reuse of features.
+
+    Specs
+    -----
+    Input/Output Shapes:
+    ```py
+    Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
+    ```
+    Parameter Size:
+    ```
+    33,336,704 weights, 23,400 biases -> 33,360,104 params
+    ```
+    Components
+    ----------
+    Blocks Used:
+    ```py
+    DenseNetBlock.Composite(),
+    DenseNetBlock.DenseUnit(),
+    DenseNetBlock.Transition()
+    ```
+    Arguments
+    ---------
+    `activation` : callable, default=Activation.ReLU
+        Type of activation function
+    `initializer` : InitStr, default=None
+        Type of weight initializer
+    `out_features` : int, default=1000
+        Number of output features
+    `batch_size` : int, default=100
+        Size of a single mini-batch
+    `n_epochs` : int, default=100
+        Number of epochs for training
+    `valid_size` : float, default=0.1
+        Fractional size of validation set
+    `lambda_` : float, default=0.0
+        L2 regularization strength
+    `smoothing` : float, default=0.1
+        Label smoothing factor
+    `early_stopping` : bool, default=False
+        Whether to early-stop the training when the valid score stagnates
+    `patience` : int, default=10
+        Number of epochs to wait until early-stopping
+    `shuffle` : bool, default=True
+        Whethter to shuffle the data at the beginning of every epoch
+
+    References
+    ----------
+    [1] Huang, Gao, et al. "Densely Connected Convolutional Networks."
+    Proceedings of the IEEE Conference on Computer Vision and Pattern
+    Recognition, 2017, pp. 4700-4708.
+
+    """
