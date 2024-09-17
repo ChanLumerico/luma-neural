@@ -1,4 +1,4 @@
-from typing import Self, override, ClassVar, List
+from typing import Self, override, ClassVar
 
 from luma.core.super import Estimator, Evaluator, Supervised
 from luma.interface.typing import Matrix, Tensor, Vector
