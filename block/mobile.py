@@ -51,8 +51,8 @@ class _InvRes(LayerGraph):
         self.init_nodes()
         super(_InvRes, self).__init__(
             graph={
-                self.rt_: [self.dw_pw_lin],
-                self.dw_pw_lin: [self.tm_],
+                self.rt_: [self.dw_],
+                self.dw_: [self.tm_],
             },
             root=self.rt_,
             term=self.tm_,
@@ -61,7 +61,7 @@ class _InvRes(LayerGraph):
         if self.expand != 1:
             self[self.rt_].clear()
             self[self.rt_].append(self.pw_)
-            self.graph[self.pw_] = [self.dw_pw_lin]
+            self.graph[self.pw_] = [self.dw_]
 
         if self.do_shortcut:
             self[self.rt_].append(self.tm_)
@@ -90,7 +90,7 @@ class _InvRes(LayerGraph):
             ),
             name="pw_",
         )
-        self.dw_pw_lin = LayerNode(
+        self.dw_ = LayerNode(
             Sequential(
                 DepthConv2D(
                     self.hid_channels,
@@ -113,7 +113,7 @@ class _InvRes(LayerGraph):
                     **self.basic_args,
                 ),
             ),
-            name="dw_pw_lin",
+            name="dw_",
         )
         self.tm_ = LayerNode(Identity(), MergeMode.SUM, name="tm_")
 
@@ -179,10 +179,11 @@ class _InvRes_SE(LayerGraph):
         self.init_nodes()
         super(_InvRes_SE, self).__init__(
             graph={
-                self.rt_: [self.dw_pw_lin],
-                self.dw_pw_lin: [self.se_block, self.scale_],
+                self.rt_: [self.dw_],
+                self.dw_: [self.se_block, self.scale_],
                 self.se_block: [self.scale_],
-                self.scale_: [self.tm_],
+                self.scale_: [self.pw_lin],
+                self.pw_lin: [self.tm_],
             },
             root=self.rt_,
             term=self.tm_,
@@ -191,7 +192,7 @@ class _InvRes_SE(LayerGraph):
         if self.expand != 1:
             self[self.rt_].clear()
             self[self.rt_].append(self.pw_)
-            self.graph[self.pw_] = [self.dw_pw_lin]
+            self.graph[self.pw_] = [self.dw_]
 
         if self.do_shortcut:
             self[self.rt_].append(self.tm_)
@@ -220,7 +221,7 @@ class _InvRes_SE(LayerGraph):
             ),
             name="pw_",
         )
-        self.dw_pw_lin = LayerNode(
+        self.dw_ = LayerNode(
             Sequential(
                 DepthConv2D(
                     self.hid_channels,
@@ -235,25 +236,28 @@ class _InvRes_SE(LayerGraph):
                     else None
                 ),
                 self.activation(),
-                Conv2D(
-                    self.hid_channels,
-                    self.out_channels,
-                    1,
-                    padding="valid",
-                    **self.basic_args,
-                ),
             ),
-            name="dw_pw_lin",
+            name="dw_",
         )
         self.se_block = LayerNode(
             _SEBlock2D(
-                self.out_channels,
+                self.hid_channels,
                 self.se_reduction,
                 self.activation,
                 self.optimizer,
                 **self.basic_args,
             ),
             name="se_block",
+        )
+        self.pw_lin = LayerNode(
+            Conv2D(
+                self.hid_channels,
+                self.out_channels,
+                1,
+                padding="valid",
+                **self.basic_args,
+            ),
+            name="pw_lin",
         )
         self.scale_ = LayerNode(Identity(), MergeMode.HADAMARD, name="scale_")
         self.tm_ = LayerNode(Identity(), MergeMode.SUM, name="tm_")
