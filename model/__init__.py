@@ -10,9 +10,17 @@ and improving performance over time through training.
 
 """
 
+from types import ModuleType
+
 from .simple import *
 from .img_clf import *
 
 
-MODLES: tuple = simple.__all__ + img_clf.__all__
-NUM_MODELS: int = len(MODLES)
+SUB_MODULES: tuple[ModuleType] = (simple, img_clf)
+MODELS: tuple = ()
+
+for module in SUB_MODULES:
+    if hasattr(module, "__all__"):
+        MODELS += module.__all__
+
+NUM_MODELS: int = len(MODELS)
