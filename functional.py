@@ -1,7 +1,8 @@
 from typing import Any, Optional, Tuple, override
 from dataclasses import dataclass, asdict
+import numpy as np
 
-from luma.interface.typing import LayerLike
+from luma.interface.typing import LayerLike, Matrix
 from luma.neural.layer import *
 from luma.neural.autoprop import LayerNode, LayerGraph, MergeMode
 
@@ -88,3 +89,29 @@ def attach_se_block(
         graph.build()
 
     return graph
+
+
+def get_efficient_net_mbconv_config(
+    base_config: list | Matrix, multipliers: list | Matrix, n: int
+) -> list:
+    if isinstance(base_config, list):
+        base_config = Matrix(base_config).astype(float)
+
+    if isinstance(multipliers, list):
+        multipliers = Matrix(multipliers)
+
+    new_config = base_config.copy()
+    new_config[:, :2] *= multipliers[n, :2]
+    new_config = new_config.round().astype(int)
+
+    return new_config.tolist()
+
+
+def get_efficient_net_input_size(
+    multipliers: list | Matrix, n: int, original: int = 224
+) -> Tuple[int, int]:
+    if isinstance(multipliers, list):
+        multipliers = Matrix(multipliers)
+
+    new_size = int(np.round(original * multipliers[n, 2]))
+    return new_size, new_size
