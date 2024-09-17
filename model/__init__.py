@@ -10,16 +10,8 @@ and improving performance over time through training.
 
 """
 
-from luma.neural.model import (
-    alex,
-    dense,
-    incep,
-    lenet,
-    mobile,
-    resnet,
-    simple,
-    vgg,
-)
+from luma.neural.model import simple
+from luma.neural.model import img_clf
 
 
 __all__ = (
@@ -202,7 +194,7 @@ class SimpleCNN(simple._SimpleCNN):
     """
 
 
-class LeNet_1(lenet._LeNet_1):
+class LeNet_1(img_clf.lenet._LeNet_1):
     """
     LeNet-1 is an early convolutional neural network (CNN) proposed by
     Yann LeCun in 1988, primarily designed for handwritten character
@@ -255,7 +247,7 @@ class LeNet_1(lenet._LeNet_1):
     """
 
 
-class LeNet_4(lenet._LeNet_4):
+class LeNet_4(img_clf.lenet._LeNet_4):
     """
     LeNet-4 is a specific convolutional neural network structure designed
     for more advanced image recognition tasks than its predecessors.
@@ -302,7 +294,7 @@ class LeNet_4(lenet._LeNet_4):
     """
 
 
-class LeNet_5(lenet._LeNet_5):
+class LeNet_5(img_clf.lenet._LeNet_5):
     """
     LeNet-5 is a specific convolutional neural network structure designed
     for more advanced image recognition tasks than its predecessors.
@@ -350,7 +342,7 @@ class LeNet_5(lenet._LeNet_5):
     """
 
 
-class AlexNet(alex._AlexNet):
+class AlexNet(img_clf.alex._AlexNet):
     """
     AlexNet is a deep convolutional neural network that is designed for
     challenging image recognition tasks and was the winning entry in ILSVRC 2012.
@@ -406,7 +398,7 @@ class AlexNet(alex._AlexNet):
     """
 
 
-class ZFNet(alex._ZFNet):
+class ZFNet(img_clf.alex._ZFNet):
     """
     ZFNet is a refinement of the AlexNet architecture that was specifically
     designed to improve model understanding and performance on image recognition
@@ -462,7 +454,7 @@ class ZFNet(alex._ZFNet):
     """
 
 
-class VGGNet_11(vgg._VGGNet_11):
+class VGGNet_11(img_clf.vgg._VGGNet_11):
     """
     VGG11 is a simplified variant of the VGG network architecture that was designed
     to enhance image recognition performance through deeper networks with smaller
@@ -516,7 +508,7 @@ class VGGNet_11(vgg._VGGNet_11):
     """
 
 
-class VGGNet_13(vgg._VGGNet_13):
+class VGGNet_13(img_clf.vgg._VGGNet_13):
     """
     VGG13 is ont of the variants of the VGG network architecture that was designed
     to enhance image recognition performance through deeper networks with smaller
@@ -570,7 +562,7 @@ class VGGNet_13(vgg._VGGNet_13):
     """
 
 
-class VGGNet_16(vgg._VGGNet_16):
+class VGGNet_16(img_clf.vgg._VGGNet_16):
     """
     VGG16 is ont of the variants of the VGG network architecture that was designed
     to enhance image recognition performance through deeper networks with smaller
@@ -624,7 +616,7 @@ class VGGNet_16(vgg._VGGNet_16):
     """
 
 
-class VGGNet_19(vgg._VGGNet_19):
+class VGGNet_19(img_clf.vgg._VGGNet_19):
     """
     VGG19 is ont of the variants of the VGG network architecture that was designed
     to enhance image recognition performance through deeper networks with smaller
@@ -678,7 +670,7 @@ class VGGNet_19(vgg._VGGNet_19):
     """
 
 
-class Inception_V1(incep._Inception_V1):
+class Inception_V1(img_clf.incep._Inception_V1):
     """
     Inception v1, also known as GoogLeNet, is a deep convolutional neural network
     architecture designed for image classification. It introduces an "Inception
@@ -735,7 +727,7 @@ class Inception_V1(incep._Inception_V1):
     """
 
 
-class Inception_V2(incep._Inception_V2):
+class Inception_V2(img_clf.incep._Inception_V2):
     """
     Inception v2, an improvement of the original Inception architecture,
     enhances computational efficiency and accuracy in deep learning models.
@@ -794,7 +786,7 @@ class Inception_V2(incep._Inception_V2):
     """
 
 
-class Inception_V3(incep._Inception_V3):
+class Inception_V3(img_clf.incep._Inception_V3):
     """
     Inception v3, an enhancement of Inception v2, further improves
     computational efficiency and accuracy in deep learning models.
@@ -856,7 +848,7 @@ class Inception_V3(incep._Inception_V3):
     """
 
 
-class Inception_V4(incep._Inception_V4):
+class Inception_V4(img_clf.incep._Inception_V4):
     """
     Inception v4, an enhancement of Inception v3, improves computational
     efficiency and accuracy. It includes sophisticated convolution
@@ -918,7 +910,7 @@ class Inception_V4(incep._Inception_V4):
     """
 
 
-class InceptionRes_V1(incep._InceptionRes_V1):
+class InceptionRes_V1(img_clf.incep._InceptionRes_V1):
     """
     Inception-ResNet v1 combines Inception modules with residual connections,
     improving computational efficiency and accuracy. This architecture uses
@@ -976,7 +968,7 @@ class InceptionRes_V1(incep._InceptionRes_V1):
     """
 
 
-class InceptionRes_V2(incep._InceptionRes_V2):
+class InceptionRes_V2(img_clf.incep._InceptionRes_V2):
     """
     Inception-ResNet v2 enhances v1 with a deeper architecture and
     improved residual blocks for better performance. It features refined
@@ -1033,7 +1025,7 @@ class InceptionRes_V2(incep._InceptionRes_V2):
     """
 
 
-class ResNet_18(resnet._ResNet_18):
+class ResNet_18(img_clf.resnet._ResNet_18):
     """
     ResNet-18 is a 18-layer deep neural network that uses residual blocks
     to improve training by learning residuals, helping prevent vanishing
@@ -1087,7 +1079,7 @@ class ResNet_18(resnet._ResNet_18):
     """
 
 
-class ResNet_34(resnet._ResNet_34):
+class ResNet_34(img_clf.resnet._ResNet_34):
     """
     ResNet-34 is a 34-layer deep neural network that uses residual blocks
     to improve training by learning residuals, helping prevent vanishing
@@ -1141,7 +1133,7 @@ class ResNet_34(resnet._ResNet_34):
     """
 
 
-class ResNet_50(resnet._ResNet_50):
+class ResNet_50(img_clf.resnet._ResNet_50):
     """
     ResNet-50 is a 50-layer deep neural network that uses residual blocks
     to improve training by learning residuals, helping prevent vanishing
@@ -1195,7 +1187,7 @@ class ResNet_50(resnet._ResNet_50):
     """
 
 
-class ResNet_101(resnet._ResNet_101):
+class ResNet_101(img_clf.resnet._ResNet_101):
     """
     ResNet-101 is a 101-layer deep neural network that uses residual blocks
     to improve training by learning residuals, helping prevent vanishing
@@ -1249,7 +1241,7 @@ class ResNet_101(resnet._ResNet_101):
     """
 
 
-class ResNet_152(resnet._ResNet_152):
+class ResNet_152(img_clf.resnet._ResNet_152):
     """
     ResNet-152 is a 152-layer deep neural network that uses residual blocks
     to improve training by learning residuals, helping prevent vanishing
@@ -1303,7 +1295,7 @@ class ResNet_152(resnet._ResNet_152):
     """
 
 
-class ResNet_200(resnet._ResNet_200):
+class ResNet_200(img_clf.resnet._ResNet_200):
     """
     ResNet-200 is a 200-layer deep neural network that uses residual blocks
     to improve training by learning residuals, helping prevent vanishing
@@ -1356,7 +1348,7 @@ class ResNet_200(resnet._ResNet_200):
     """
 
 
-class ResNet_269(resnet._ResNet_269):
+class ResNet_269(img_clf.resnet._ResNet_269):
     """
     ResNet-269 is a 269-layer deep neural network that uses residual blocks
     to improve training by learning residuals, helping prevent vanishing
@@ -1409,7 +1401,7 @@ class ResNet_269(resnet._ResNet_269):
     """
 
 
-class ResNet_1001(resnet._ResNet_1001):
+class ResNet_1001(img_clf.resnet._ResNet_1001):
     """
     ResNet-1001 is a 1001-layer deep neural network that uses residual
     blocks to improve training by learning residuals, helping prevent
@@ -1468,7 +1460,7 @@ class ResNet_1001(resnet._ResNet_1001):
     """
 
 
-class XceptionNet(incep._Xception):
+class XceptionNet(img_clf.incep._Xception):
     """
     XceptionNet enhances the Inception architecture by replacing standard
     convolutions with depthwise separable convolutions, making it more
@@ -1529,7 +1521,7 @@ class XceptionNet(incep._Xception):
     """
 
 
-class MobileNet_V1(mobile._Mobile_V1):
+class MobileNet_V1(img_clf.mobile._Mobile_V1):
     """
     MobileNet-V1 uses depthwise separable convolutions to significantly
     reduce the number of parameters and computational cost, making it
@@ -1587,7 +1579,7 @@ class MobileNet_V1(mobile._Mobile_V1):
     """
 
 
-class MobileNet_V2(mobile._Mobile_V2):
+class MobileNet_V2(img_clf.mobile._Mobile_V2):
     """
     MobileNet-V2 builds on the efficiency of its predecessor by introducing
     inverted residuals and linear bottlenecks, further reducing
@@ -1645,7 +1637,7 @@ class MobileNet_V2(mobile._Mobile_V2):
     """
 
 
-class MobileNet_V3_Small(mobile._Mobile_V3_Small):
+class MobileNet_V3_Small(img_clf.mobile._Mobile_V3_Small):
     """
     MobileNet-V3-Small improves on its predecessors by incorporating
     squeeze-and-excitation (SE) modules and the hard-swish activation,
@@ -1703,7 +1695,7 @@ class MobileNet_V3_Small(mobile._Mobile_V3_Small):
     """
 
 
-class MobileNet_V3_Large(mobile._Mobile_V3_Large):
+class MobileNet_V3_Large(img_clf.mobile._Mobile_V3_Large):
     """
     MobileNet-V3-Large enhances its predecessors by integrating
     squeeze-and-excitation(SE) modules and the hard-swish activation,
@@ -1761,7 +1753,7 @@ class MobileNet_V3_Large(mobile._Mobile_V3_Large):
     """
 
 
-class SE_ResNet_50(resnet._SE_ResNet_50):
+class SE_ResNet_50(img_clf.resnet._SE_ResNet_50):
     """
     SE-ResNet is a deep neural network that extends the ResNet
     architecture by integrating Squeeze-and-Excitation blocks.
@@ -1819,7 +1811,7 @@ class SE_ResNet_50(resnet._SE_ResNet_50):
     """
 
 
-class SE_ResNet_152(resnet._SE_ResNet_152):
+class SE_ResNet_152(img_clf.resnet._SE_ResNet_152):
     """
     SE-ResNet is a deep neural network that extends the ResNet
     architecture by integrating Squeeze-and-Excitation blocks.
@@ -1877,7 +1869,7 @@ class SE_ResNet_152(resnet._SE_ResNet_152):
     """
 
 
-class SE_InceptionRes_V2(incep._SE_InceptionRes_V2):
+class SE_InceptionRes_V2(img_clf.incep._SE_InceptionRes_V2):
     """
     SE-InceptionResNet v2 is a deep neural network that extends the
     Inception-ResNet v2 architecture by integrating Squeeze-and-Excitation (SE)
@@ -1942,7 +1934,7 @@ class SE_InceptionRes_V2(incep._SE_InceptionRes_V2):
     """
 
 
-class SE_DenseNet_121(dense._SE_DenseNet_121):
+class SE_DenseNet_121(img_clf.dense._SE_DenseNet_121):
     """
     SE-DenseNet-121 is a deep neural network that extends the DenseNet-121
     architecture by integrating Squeeze-and-Excitation (SE) blocks.
@@ -1997,7 +1989,7 @@ class SE_DenseNet_121(dense._SE_DenseNet_121):
     """
 
 
-class SE_DenseNet_169(dense._SE_DenseNet_169):
+class SE_DenseNet_169(img_clf.dense._SE_DenseNet_169):
     """
     SE-DenseNet-169 is a deep neural network that extends the DenseNet-169
     architecture by integrating Squeeze-and-Excitation (SE) blocks.
@@ -2052,7 +2044,7 @@ class SE_DenseNet_169(dense._SE_DenseNet_169):
     """
 
 
-class DenseNet_121(dense._DenseNet_121):
+class DenseNet_121(img_clf.dense._DenseNet_121):
     """
     DenseNet-121 is a deep neural network architecture that connects each layer to
     every other layer in a feed-forward fashion. Unlike traditional architectures
@@ -2112,7 +2104,7 @@ class DenseNet_121(dense._DenseNet_121):
     """
 
 
-class DenseNet_169(dense._DenseNet_169):
+class DenseNet_169(img_clf.dense._DenseNet_169):
     """
     DenseNet-169 is a deep neural network architecture that connects each layer to
     every other layer in a feed-forward fashion. Unlike traditional architectures
@@ -2172,7 +2164,7 @@ class DenseNet_169(dense._DenseNet_169):
     """
 
 
-class DenseNet_201(dense._DenseNet_201):
+class DenseNet_201(img_clf.dense._DenseNet_201):
     """
     DenseNet-201 is a deep neural network architecture that connects each layer to
     every other layer in a feed-forward fashion. Unlike traditional architectures
@@ -2232,7 +2224,7 @@ class DenseNet_201(dense._DenseNet_201):
     """
 
 
-class DenseNet_264(dense._DenseNet_264):
+class DenseNet_264(img_clf.dense._DenseNet_264):
     """
     DenseNet-264 is a deep neural network architecture that connects each layer to
     every other layer in a feed-forward fashion. Unlike traditional architectures
