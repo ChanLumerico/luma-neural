@@ -6,13 +6,68 @@ from luma.interface.util import InitUtil
 
 from luma.neural.base import NeuralModel
 from luma.neural.block import ConvBlock2D, DenseBlock
-from luma.neural.layer import Activation, Dense, Dropout, Flatten, Sequential
+from luma.neural.layer import Dense, Dropout, Flatten, Sequential
 
 
-__all__ = ("_SimpleMLP", "_SimpleCNN")
+__all__ = ("SimpleMLP", "SimpleCNN")
 
 
-class _SimpleMLP(Estimator, Supervised, NeuralModel):
+class SimpleMLP(Estimator, Supervised, NeuralModel):
+    """
+    An MLP (Multilayer Perceptron) is a type of artificial neural network
+    composed of at least three layers: an input layer, one or more hidden
+    layers, and an output layer. Each layer consists of nodes, or neurons,
+    which are fully connected to the neurons in the next layer. MLPs use a
+    technique called backpropagation for learning, where the output error
+    is propagated backwards through the network to update the weights.
+    They are capable of modeling complex nonlinear relationships between
+    inputs and outputs. MLPs are commonly used for tasks like classification,
+    regression, and pattern recognition.
+
+    Structure
+    ---------
+    ```py
+    (Dense -> Activation -> Dropout) -> ... -> Dense
+    ```
+    Parameters
+    ----------
+    `in_features` : int
+        Number of input features
+    `out_features` : int
+        Number of output features
+    `hidden_layers` : int of list of int
+        Numbers of the features in hidden layers (int for a single layer)
+    `batch_size` : int, default=100
+        Size of a single mini-batch
+    `n_epochs` : int, default=100
+        Number of epochs for training
+    `valid_size` : float, default=0.1
+        Fractional size of validation set
+    `initializer` : InitStr, default=None
+        Type of weight initializer
+    `activation` : callable
+        Type of activation function
+    `dropout_rate` : float, default=0.5
+        Dropout rate
+    `lambda_` : float, default=0.0
+        L2 regularization strength
+    `early_stopping` : bool, default=False
+        Whether to early-stop the training when the valid score stagnates
+    `patience` : int, default=10
+        Number of epochs to wait until early-stopping
+    `shuffle` : bool, default=True
+        Whethter to shuffle the data at the beginning of every epoch
+
+    Notes
+    -----
+    - If the data or the target is a 1D-Array(`Vector`), reshape it into a
+        higher dimensional array.
+
+    - For classification tasks, the target vector `y` must be
+        one-hot encoded.
+
+    """
+
     def __init__(
         self,
         in_features: int,
@@ -98,20 +153,95 @@ class _SimpleMLP(Estimator, Supervised, NeuralModel):
                 )
 
     def fit(self, X: Matrix, y: Matrix) -> Self:
-        return super(_SimpleMLP, self).fit_nn(X, y)
+        return super(SimpleMLP, self).fit_nn(X, y)
 
     @override
     def predict(self, X: Matrix, argmax: bool = True) -> Matrix | Vector:
-        return super(_SimpleMLP, self).predict_nn(X, argmax)
+        return super(SimpleMLP, self).predict_nn(X, argmax)
 
     @override
     def score(
         self, X: Matrix, y: Matrix, metric: Evaluator, argmax: bool = True
     ) -> float:
-        return super(_SimpleMLP, self).score_nn(X, y, metric, argmax)
+        return super(SimpleMLP, self).score_nn(X, y, metric, argmax)
 
 
-class _SimpleCNN(Estimator, Supervised, NeuralModel):
+class SimpleCNN(Estimator, Supervised, NeuralModel):
+    """
+    A Convolutional Neural Network (CNN) is a type of deep neural network
+    primarily used in image recognition and processing that is particularly
+    powerful at capturing spatial hierarchies in data. A CNN automatically
+    detects important features without any human supervision using layers
+    with convolving filters that pass over the input image and compute outputs.
+    These networks typically include layers such as convolutional layers,
+    pooling layers, and fully connected layers that help in reducing the
+    dimensions while retaining important features.
+
+    Structure
+    ---------
+    ```py
+    ConvBlock2D -> ... -> Flatten -> DenseBlock -> ... -> Dense
+    ```
+    Parameters
+    ----------
+    `in_channels_list` : int or list of int
+        List of input channels for convolutional blocks
+    `in_features_list` : int or list of int
+        List of input features for dense blocks
+    `out_channels` : int
+        Output channels for the last convolutional layer
+    `out_features` : int
+        Output features for the last dense layer
+    `filter_size` : int
+        Size of filters for convolution layers
+    `activation` : callable
+        Type of activation function
+    `initializer` : InitStr, default=None
+        Type of weight initializer (None for dense layers)
+    `padding` : {"same", "valid"}, default="same"
+        Padding strategy
+    `stride` : int, default=1
+        Step size of filters during convolution
+    `do_batch_norm` : bool, default=True
+        Whether to perform batch normalization
+    `momentum` : float, default=0.9
+        Momentum for batch normalization
+    `do_pooling` : bool, default=True
+        Whether to perform pooling
+    `pool_filter_size` : int, default=2
+        Size of filters for pooling layers
+    `pool_stride` : int, default=2
+        Step size of filters during pooling
+    `pool_mode` : {"max", "avg"}, default="max"
+        Pooling strategy (default `max`)
+    `do_dropout` : bool, default=True
+        Whether to perform dropout
+    `dropout_rate` : float, default=0.5
+        Dropout rate
+    `batch_size` : int, default=100
+        Size of a single mini-batch
+    `n_epochs` : int, default=100
+        Number of epochs for training
+    `valid_size` : float, default=0.1
+        Fractional size of validation set
+    `lambda_` : float, default=0.0
+        L2 regularization strength
+    `early_stopping` : bool, default=False
+        Whether to early-stop the training when the valid score stagnates
+    `patience` : int, default=10
+        Number of epochs to wait until early-stopping
+    `shuffle` : bool, default=True
+        Whethter to shuffle the data at the beginning of every epoch
+
+    Notes
+    -----
+    - Input `X` must have the shape of 4D-array(`Tensor`)
+
+    - For classification tasks, the target vector `y` must be
+        one-hot encoded.
+
+    """
+
     def __init__(
         self,
         in_channels_list: list[int] | int,
@@ -254,16 +384,16 @@ class _SimpleCNN(Estimator, Supervised, NeuralModel):
 
     @Tensor.force_dim(4)
     def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_SimpleCNN, self).fit_nn(X, y)
+        return super(SimpleCNN, self).fit_nn(X, y)
 
     @override
     @Tensor.force_dim(4)
     def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_SimpleCNN, self).predict_nn(X, argmax)
+        return super(SimpleCNN, self).predict_nn(X, argmax)
 
     @override
     @Tensor.force_dim(4)
     def score(
         self, X: Tensor, y: Matrix, metric: Evaluator, argmax: bool = True
     ) -> float:
-        return super(_SimpleCNN, self).score_nn(X, y, metric, argmax)
+        return super(SimpleCNN, self).score_nn(X, y, metric, argmax)

@@ -1,4 +1,4 @@
-from typing import Any, Optional, Tuple
+from typing import Any, Optional, Tuple, override
 from dataclasses import dataclass, asdict
 
 from luma.interface.typing import LayerLike
@@ -60,6 +60,7 @@ def attach_se_block(
     layer_args: dict = {},
     se_args: dict = {},
     pre_build: bool = True,
+    suffix: str = "SE",
 ) -> LayerGraph:
     layer_inst = layer(**layer_args)
     se_inst = se_block(**se_args)
@@ -68,7 +69,14 @@ def attach_se_block(
     se_node = LayerNode(se_inst, name="se")
     scale_node = LayerNode(Identity(), MergeMode.HADAMARD, name="scale")
 
-    graph = LayerGraph(
+    class _Tmp_LayerGraph(LayerGraph):
+        @override
+        def out_shape(self, in_shape: Tuple[int]) -> Tuple[int]:
+            return layer_inst.out_shape(in_shape)
+
+    _Tmp_LayerGraph.__name__ = f"{layer.__name__}_{suffix}"
+
+    graph = _Tmp_LayerGraph(
         graph={
             root_node: [se_node, scale_node],
             se_node: [scale_node],
@@ -78,8 +86,5 @@ def attach_se_block(
     )
     if pre_build:
         graph.build()
-
-    setattr(graph, "__str__", layer.__str__)
-    setattr(graph, "out_shape", layer_inst.out_shape)
 
     return graph
