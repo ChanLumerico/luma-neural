@@ -6,12 +6,11 @@ from luma.interface.util import InitUtil
 from luma.metric.classification import Accuracy
 
 from luma.neural.base import NeuralModel
-from luma.neural.block import MobileNetBlock
+from luma.neural.block import EfficientBlock
 from luma.neural.layer import *
 from luma.neural import functional as F
 
-MBConv = MobileNetBlock.InvRes_SE
-MBConv.__name__ = "MBConv"
+MBConv = EfficientBlock.MBConv
 
 b0_config = [
     [16, 1, 1, 1, 3],

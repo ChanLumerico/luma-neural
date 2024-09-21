@@ -18,6 +18,7 @@ from luma.interface.util import InitUtil
 
 from luma.neural.block import (
     dense,
+    efficient,
     incep,
     incep_res,
     mobile,
@@ -45,6 +46,7 @@ __all__ = (
     "XceptionBlock",
     "MobileNetBlock",
     "DenseNetBlock",
+    "EfficientBlock",
 )
 
 
@@ -1078,3 +1080,33 @@ class DenseNetBlock:
 
         Refer to the figures shown in the original paper[1].
         """
+
+
+@ClassType.non_instantiable()
+class EfficientBlock:
+    """
+    Container class for building components of EfficientNet series.
+
+    References
+    ----------
+    `EfficientNet-(B0~B7)` :
+        [1] Tan, Mingxing, and Quoc V. Le. "EfficientNet: Rethinking
+        Model Scaling for Convolutional Neural Networks." International
+        Conference on Machine Learning, 2020, pp. 6105-6114. arXiv:1905.11946.
+
+    """
+
+    class MBConv(MobileNetBlock.InvRes_SE):
+        """
+        Mobile block used in EfficientNet architecture. It is the same with
+        `MobileNetBlock.InvRes_SE`.
+
+        Parameters
+        ----------
+        `se_reduction` : float, default=4
+            Reduction factor for SE block
+
+        Refer to the figures shown in the original paper[1].
+        """
+
+    class FusedMBConv(efficient.FusedMBConv): ...

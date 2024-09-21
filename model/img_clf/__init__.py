@@ -2157,25 +2157,465 @@ class DenseNet_264(dense._DenseNet_264):
     """
 
 
-class EfficientNet_B0(efficient._EfficientNet_B0): ...
+class EfficientNet_B0(efficient._EfficientNet_B0):
+    """
+    EfficientNet-B0 is the baseline model in the EfficientNet family,
+    designed using compound scaling to optimize width, depth, and resolution.
+    It builds on MobileNetV3, utilizing inverted residual blocks and
+    Squeeze-and-Excitation (SE) blocks to improve efficiency and performance
+    on tasks like ImageNet classification.
+
+    Specs
+    -----
+    Input/Output Shapes:
+    ```py
+    Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
+    ```
+    Parameter Size:
+    ```
+    4,803,040 weights, 24,268 biases -> 4,827,308 params
+    ```
+    Components
+    ----------
+    Blocks Used:
+    ```py
+    EfficientBlock.MBConv()
+    ```
+    Arguments
+    ---------
+    `activation` : callable, default=Activation.Swish
+        Type of activation function
+    `initializer` : InitStr, default=None
+        Type of weight initializer
+    `out_features` : int, default=1000
+        Number of output features
+    `batch_size` : int, default=100
+        Size of a single mini-batch
+    `n_epochs` : int, default=100
+        Number of epochs for training
+    `valid_size` : float, default=0.1
+        Fractional size of validation set
+    `lambda_` : float, default=0.0
+        L2 regularization strength
+    `smoothing` : float, default=0.1
+        Label smoothing factor
+    `early_stopping` : bool, default=False
+        Whether to early-stop the training when the valid score stagnates
+    `patience` : int, default=10
+        Number of epochs to wait until early-stopping
+    `shuffle` : bool, default=True
+        Whethter to shuffle the data at the beginning of every epoch
+
+    References
+    ----------
+    [1] Tan, Mingxing, and Quoc V. Le. "EfficientNet: Rethinking Model Scaling
+    for Convolutional Neural Networks." International Conference on Machine
+    Learning, 2020, pp. 6105-6114. arXiv:1905.11946.
+
+    """
 
 
-class EfficientNet_B1(efficient._EfficientNet_B1): ...
+class EfficientNet_B1(efficient._EfficientNet_B1):
+    """
+    EfficientNet-B1 is the baseline model in the EfficientNet family,
+    designed using compound scaling to optimize width, depth, and resolution.
+    It builds on MobileNetV3, utilizing inverted residual blocks and
+    Squeeze-and-Excitation (SE) blocks to improve efficiency and performance
+    on tasks like ImageNet classification.
+
+    Specs
+    -----
+    Input/Output Shapes:
+    ```py
+    Tensor[-1, 3, 240, 240] -> Matrix[-1, 1000]
+    ```
+    Parameter Size:
+    ```
+    6,544,500 weights, 32,568 biases -> 6,577,068 params
+    ```
+    Components
+    ----------
+    Blocks Used:
+    ```py
+    EfficientBlock.MBConv()
+    ```
+    Arguments
+    ---------
+    `activation` : callable, default=Activation.Swish
+        Type of activation function
+    `initializer` : InitStr, default=None
+        Type of weight initializer
+    `out_features` : int, default=1000
+        Number of output features
+    `batch_size` : int, default=100
+        Size of a single mini-batch
+    `n_epochs` : int, default=100
+        Number of epochs for training
+    `valid_size` : float, default=0.1
+        Fractional size of validation set
+    `lambda_` : float, default=0.0
+        L2 regularization strength
+    `smoothing` : float, default=0.1
+        Label smoothing factor
+    `early_stopping` : bool, default=False
+        Whether to early-stop the training when the valid score stagnates
+    `patience` : int, default=10
+        Number of epochs to wait until early-stopping
+    `shuffle` : bool, default=True
+        Whethter to shuffle the data at the beginning of every epoch
+
+    References
+    ----------
+    [1] Tan, Mingxing, and Quoc V. Le. "EfficientNet: Rethinking Model Scaling
+    for Convolutional Neural Networks." International Conference on Machine
+    Learning, 2020, pp. 6105-6114. arXiv:1905.11946.
+
+    """
 
 
-class EfficientNet_B2(efficient._EfficientNet_B2): ...
+class EfficientNet_B2(efficient._EfficientNet_B2):
+    """
+    EfficientNet-B2 is the baseline model in the EfficientNet family,
+    designed using compound scaling to optimize width, depth, and resolution.
+    It builds on MobileNetV3, utilizing inverted residual blocks and
+    Squeeze-and-Excitation (SE) blocks to improve efficiency and performance
+    on tasks like ImageNet classification.
+
+    Specs
+    -----
+    Input/Output Shapes:
+    ```py
+    Tensor[-1, 3, 260, 260] -> Matrix[-1, 1000]
+    ```
+    Parameter Size:
+    ```
+    8,503,007 weights, 40,160 biases -> 8,543,167 params
+    ```
+    Components
+    ----------
+    Blocks Used:
+    ```py
+    EfficientBlock.MBConv()
+    ```
+    Arguments
+    ---------
+    `activation` : callable, default=Activation.Swish
+        Type of activation function
+    `initializer` : InitStr, default=None
+        Type of weight initializer
+    `out_features` : int, default=1000
+        Number of output features
+    `batch_size` : int, default=100
+        Size of a single mini-batch
+    `n_epochs` : int, default=100
+        Number of epochs for training
+    `valid_size` : float, default=0.1
+        Fractional size of validation set
+    `lambda_` : float, default=0.0
+        L2 regularization strength
+    `smoothing` : float, default=0.1
+        Label smoothing factor
+    `early_stopping` : bool, default=False
+        Whether to early-stop the training when the valid score stagnates
+    `patience` : int, default=10
+        Number of epochs to wait until early-stopping
+    `shuffle` : bool, default=True
+        Whethter to shuffle the data at the beginning of every epoch
+
+    References
+    ----------
+    [1] Tan, Mingxing, and Quoc V. Le. "EfficientNet: Rethinking Model Scaling
+    for Convolutional Neural Networks." International Conference on Machine
+    Learning, 2020, pp. 6105-6114. arXiv:1905.11946.
+
+    """
 
 
-class EfficientNet_B3(efficient._EfficientNet_B3): ...
+class EfficientNet_B3(efficient._EfficientNet_B3):
+    """
+    EfficientNet-B3 is the baseline model in the EfficientNet family,
+    designed using compound scaling to optimize width, depth, and resolution.
+    It builds on MobileNetV3, utilizing inverted residual blocks and
+    Squeeze-and-Excitation (SE) blocks to improve efficiency and performance
+    on tasks like ImageNet classification.
+
+    Specs
+    -----
+    Input/Output Shapes:
+    ```py
+    Tensor[-1, 3, 300, 300] -> Matrix[-1, 1000]
+    ```
+    Parameter Size:
+    ```
+    13,657,980 weights, 57,390 biases -> 13,715,370 params
+    ```
+    Components
+    ----------
+    Blocks Used:
+    ```py
+    EfficientBlock.MBConv()
+    ```
+    Arguments
+    ---------
+    `activation` : callable, default=Activation.Swish
+        Type of activation function
+    `initializer` : InitStr, default=None
+        Type of weight initializer
+    `out_features` : int, default=1000
+        Number of output features
+    `batch_size` : int, default=100
+        Size of a single mini-batch
+    `n_epochs` : int, default=100
+        Number of epochs for training
+    `valid_size` : float, default=0.1
+        Fractional size of validation set
+    `lambda_` : float, default=0.0
+        L2 regularization strength
+    `smoothing` : float, default=0.1
+        Label smoothing factor
+    `early_stopping` : bool, default=False
+        Whether to early-stop the training when the valid score stagnates
+    `patience` : int, default=10
+        Number of epochs to wait until early-stopping
+    `shuffle` : bool, default=True
+        Whethter to shuffle the data at the beginning of every epoch
+
+    References
+    ----------
+    [1] Tan, Mingxing, and Quoc V. Le. "EfficientNet: Rethinking Model Scaling
+    for Convolutional Neural Networks." International Conference on Machine
+    Learning, 2020, pp. 6105-6114. arXiv:1905.11946.
+
+    """
 
 
-class EfficientNet_B4(efficient._EfficientNet_B4): ...
+class EfficientNet_B4(efficient._EfficientNet_B4):
+    """
+    EfficientNet-B4 is the baseline model in the EfficientNet family,
+    designed using compound scaling to optimize width, depth, and resolution.
+    It builds on MobileNetV3, utilizing inverted residual blocks and
+    Squeeze-and-Excitation (SE) blocks to improve efficiency and performance
+    on tasks like ImageNet classification.
+
+    Specs
+    -----
+    Input/Output Shapes:
+    ```py
+    Tensor[-1, 3, 380, 380] -> Matrix[-1, 1000]
+    ```
+    Parameter Size:
+    ```
+    17,877,155 weights, 72,278 biases -> 17,949,433 params
+    ```
+    Components
+    ----------
+    Blocks Used:
+    ```py
+    EfficientBlock.MBConv()
+    ```
+    Arguments
+    ---------
+    `activation` : callable, default=Activation.Swish
+        Type of activation function
+    `initializer` : InitStr, default=None
+        Type of weight initializer
+    `out_features` : int, default=1000
+        Number of output features
+    `batch_size` : int, default=100
+        Size of a single mini-batch
+    `n_epochs` : int, default=100
+        Number of epochs for training
+    `valid_size` : float, default=0.1
+        Fractional size of validation set
+    `lambda_` : float, default=0.0
+        L2 regularization strength
+    `smoothing` : float, default=0.1
+        Label smoothing factor
+    `early_stopping` : bool, default=False
+        Whether to early-stop the training when the valid score stagnates
+    `patience` : int, default=10
+        Number of epochs to wait until early-stopping
+    `shuffle` : bool, default=True
+        Whethter to shuffle the data at the beginning of every epoch
+
+    References
+    ----------
+    [1] Tan, Mingxing, and Quoc V. Le. "EfficientNet: Rethinking Model Scaling
+    for Convolutional Neural Networks." International Conference on Machine
+    Learning, 2020, pp. 6105-6114. arXiv:1905.11946.
+
+    """
 
 
-class EfficientNet_B5(efficient._EfficientNet_B5): ...
+class EfficientNet_B5(efficient._EfficientNet_B5):
+    """
+    EfficientNet-B5 is the baseline model in the EfficientNet family,
+    designed using compound scaling to optimize width, depth, and resolution.
+    It builds on MobileNetV3, utilizing inverted residual blocks and
+    Squeeze-and-Excitation (SE) blocks to improve efficiency and performance
+    on tasks like ImageNet classification.
+
+    Specs
+    -----
+    Input/Output Shapes:
+    ```py
+    Tensor[-1, 3, 456, 456] -> Matrix[-1, 1000]
+    ```
+    Parameter Size:
+    ```
+    24,674,011 weights, 94,261 biases -> 24,768,272 params
+    ```
+    Components
+    ----------
+    Blocks Used:
+    ```py
+    EfficientBlock.MBConv()
+    ```
+    Arguments
+    ---------
+    `activation` : callable, default=Activation.Swish
+        Type of activation function
+    `initializer` : InitStr, default=None
+        Type of weight initializer
+    `out_features` : int, default=1000
+        Number of output features
+    `batch_size` : int, default=100
+        Size of a single mini-batch
+    `n_epochs` : int, default=100
+        Number of epochs for training
+    `valid_size` : float, default=0.1
+        Fractional size of validation set
+    `lambda_` : float, default=0.0
+        L2 regularization strength
+    `smoothing` : float, default=0.1
+        Label smoothing factor
+    `early_stopping` : bool, default=False
+        Whether to early-stop the training when the valid score stagnates
+    `patience` : int, default=10
+        Number of epochs to wait until early-stopping
+    `shuffle` : bool, default=True
+        Whethter to shuffle the data at the beginning of every epoch
+
+    References
+    ----------
+    [1] Tan, Mingxing, and Quoc V. Le. "EfficientNet: Rethinking Model Scaling
+    for Convolutional Neural Networks." International Conference on Machine
+    Learning, 2020, pp. 6105-6114. arXiv:1905.11946.
+
+    """
 
 
-class EfficientNet_B6(efficient._EfficientNet_B6): ...
+class EfficientNet_B6(efficient._EfficientNet_B6):
+    """
+    EfficientNet-B6 is the baseline model in the EfficientNet family,
+    designed using compound scaling to optimize width, depth, and resolution.
+    It builds on MobileNetV3, utilizing inverted residual blocks and
+    Squeeze-and-Excitation (SE) blocks to improve efficiency and performance
+    on tasks like ImageNet classification.
+
+    Specs
+    -----
+    Input/Output Shapes:
+    ```py
+    Tensor[-1, 3, 528, 528] -> Matrix[-1, 1000]
+    ```
+    Parameter Size:
+    ```
+    38,260,230 weights, 132,704 biases -> 38,392,934 params
+    ```
+    Components
+    ----------
+    Blocks Used:
+    ```py
+    EfficientBlock.MBConv()
+    ```
+    Arguments
+    ---------
+    `activation` : callable, default=Activation.Swish
+        Type of activation function
+    `initializer` : InitStr, default=None
+        Type of weight initializer
+    `out_features` : int, default=1000
+        Number of output features
+    `batch_size` : int, default=100
+        Size of a single mini-batch
+    `n_epochs` : int, default=100
+        Number of epochs for training
+    `valid_size` : float, default=0.1
+        Fractional size of validation set
+    `lambda_` : float, default=0.0
+        L2 regularization strength
+    `smoothing` : float, default=0.1
+        Label smoothing factor
+    `early_stopping` : bool, default=False
+        Whether to early-stop the training when the valid score stagnates
+    `patience` : int, default=10
+        Number of epochs to wait until early-stopping
+    `shuffle` : bool, default=True
+        Whethter to shuffle the data at the beginning of every epoch
+
+    References
+    ----------
+    [1] Tan, Mingxing, and Quoc V. Le. "EfficientNet: Rethinking Model Scaling
+    for Convolutional Neural Networks." International Conference on Machine
+    Learning, 2020, pp. 6105-6114. arXiv:1905.11946.
+
+    """
 
 
-class EfficientNet_B7(efficient._EfficientNet_B7): ...
+class EfficientNet_B7(efficient._EfficientNet_B7):
+    """
+    EfficientNet-B7 is the baseline model in the EfficientNet family,
+    designed using compound scaling to optimize width, depth, and resolution.
+    It builds on MobileNetV3, utilizing inverted residual blocks and
+    Squeeze-and-Excitation (SE) blocks to improve efficiency and performance
+    on tasks like ImageNet classification.
+
+    Specs
+    -----
+    Input/Output Shapes:
+    ```py
+    Tensor[-1, 3, 600, 600] -> Matrix[-1, 1000]
+    ```
+    Parameter Size:
+    ```
+    56,528,906 weights, 178,066 biases -> 56,706,972 params
+    ```
+    Components
+    ----------
+    Blocks Used:
+    ```py
+    EfficientBlock.MBConv()
+    ```
+    Arguments
+    ---------
+    `activation` : callable, default=Activation.Swish
+        Type of activation function
+    `initializer` : InitStr, default=None
+        Type of weight initializer
+    `out_features` : int, default=1000
+        Number of output features
+    `batch_size` : int, default=100
+        Size of a single mini-batch
+    `n_epochs` : int, default=100
+        Number of epochs for training
+    `valid_size` : float, default=0.1
+        Fractional size of validation set
+    `lambda_` : float, default=0.0
+        L2 regularization strength
+    `smoothing` : float, default=0.1
+        Label smoothing factor
+    `early_stopping` : bool, default=False
+        Whether to early-stop the training when the valid score stagnates
+    `patience` : int, default=10
+        Number of epochs to wait until early-stopping
+    `shuffle` : bool, default=True
+        Whethter to shuffle the data at the beginning of every epoch
+
+    References
+    ----------
+    [1] Tan, Mingxing, and Quoc V. Le. "EfficientNet: Rethinking Model Scaling
+    for Convolutional Neural Networks." International Conference on Machine
+    Learning, 2020, pp. 6105-6114. arXiv:1905.11946.
+
+    """
