@@ -473,7 +473,9 @@ class NeuralModel(ABC, NeuralBase):
     def param_size(self) -> tuple[int, int]:
         return self.model.param_size
 
-    def summarize(self, in_shape: tuple[int], n_lines: int | None = 20) -> None:
+    def summarize(
+        self, in_shape: tuple[int] | None = None, n_lines: int | None = 20
+    ) -> None:
         title = f"Summary of '{str(self)}'"
         print(f"{title:^83}")
         print("-" * 83)
@@ -485,6 +487,9 @@ class NeuralModel(ABC, NeuralBase):
         print("=" * 83)
         if n_lines is None:
             n_lines = len(self.model)
+
+        if in_shape is None and hasattr(type(self), "input_shape"):
+            in_shape = type(self).input_shape
 
         w_size, b_size = self.param_size
         for i, (name, layer) in enumerate(self.model):

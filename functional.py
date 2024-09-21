@@ -101,17 +101,7 @@ def get_efficient_net_mbconv_config(
         multipliers = Matrix(multipliers)
 
     new_config = base_config.copy()
-    new_config[:, :2] *= multipliers[n, :2]
+    new_config[:, :2] *= multipliers[n]
     new_config = new_config.round().astype(int)
 
     return new_config.tolist()
-
-
-def get_efficient_net_input_size(
-    multipliers: list | Matrix, n: int, original: int = 224
-) -> Tuple[int, int]:
-    if isinstance(multipliers, list):
-        multipliers = Matrix(multipliers)
-
-    new_size = int(np.round(original * multipliers[n, 2]))
-    return new_size, new_size

@@ -24,15 +24,17 @@ b0_config = [
 ]
 
 multipliers = [
-    [1.0, 1.0, 1.0],
-    [1.1, 1.2, 1.15],
-    [1.21, 1.44, 1.32],
-    [1.33, 1.72, 1.52],
-    [1.46, 2.07, 1.75],
-    [1.61, 2.48, 2.01],
-    [1.77, 2.99, 2.31],
-    [1.95, 3.58, 2.66],
+    [1.0, 1.0],
+    [1.1, 1.2],
+    [1.21, 1.44],
+    [1.33, 1.72],
+    [1.46, 2.07],
+    [1.61, 2.48],
+    [1.77, 2.99],
+    [1.95, 3.58],
 ]
+
+input_sizes = [224, 240, 260, 300, 380, 456, 528, 600]
 
 
 class _EfficientNet_B0(Estimator, Supervised, NeuralModel):
@@ -135,8 +137,7 @@ class _EfficientNet_B0(Estimator, Supervised, NeuralModel):
             Dense(dense_in_features, self.out_features, **base_args),
         )
 
-    input_size: ClassVar[tuple] = F.get_efficient_net_input_size(multipliers, n=0)
-    input_shape: ClassVar[tuple] = (-1, 3, *input_size)
+    input_shape: ClassVar[tuple] = (-1, 3, input_sizes[0], input_sizes[0])
 
     @Tensor.force_shape(input_shape)
     def fit(self, X: Tensor, y: Matrix) -> Self:
@@ -259,8 +260,7 @@ class _EfficientNet_B1(Estimator, Supervised, NeuralModel):
             Dense(dense_in_features, self.out_features, **base_args),
         )
 
-    input_size: ClassVar[tuple] = F.get_efficient_net_input_size(multipliers, n=1)
-    input_shape: ClassVar[tuple] = (-1, 3, *input_size)
+    input_shape: ClassVar[tuple] = (-1, 3, input_sizes[1], input_sizes[1])
 
     @Tensor.force_shape(input_shape)
     def fit(self, X: Tensor, y: Matrix) -> Self:
@@ -383,8 +383,7 @@ class _EfficientNet_B2(Estimator, Supervised, NeuralModel):
             Dense(dense_in_features, self.out_features, **base_args),
         )
 
-    input_size: ClassVar[tuple] = F.get_efficient_net_input_size(multipliers, n=2)
-    input_shape: ClassVar[tuple] = (-1, 3, *input_size)
+    input_shape: ClassVar[tuple] = (-1, 3, input_sizes[2], input_sizes[2])
 
     @Tensor.force_shape(input_shape)
     def fit(self, X: Tensor, y: Matrix) -> Self:
@@ -507,8 +506,7 @@ class _EfficientNet_B3(Estimator, Supervised, NeuralModel):
             Dense(dense_in_features, self.out_features, **base_args),
         )
 
-    input_size: ClassVar[tuple] = F.get_efficient_net_input_size(multipliers, n=3)
-    input_shape: ClassVar[tuple] = (-1, 3, *input_size)
+    input_shape: ClassVar[tuple] = (-1, 3, input_sizes[3], input_sizes[3])
 
     @Tensor.force_shape(input_shape)
     def fit(self, X: Tensor, y: Matrix) -> Self:
@@ -631,8 +629,7 @@ class _EfficientNet_B4(Estimator, Supervised, NeuralModel):
             Dense(dense_in_features, self.out_features, **base_args),
         )
 
-    input_size: ClassVar[tuple] = F.get_efficient_net_input_size(multipliers, n=4)
-    input_shape: ClassVar[tuple] = (-1, 3, *input_size)
+    input_shape: ClassVar[tuple] = (-1, 3, input_sizes[4], input_sizes[4])
 
     @Tensor.force_shape(input_shape)
     def fit(self, X: Tensor, y: Matrix) -> Self:
@@ -755,8 +752,7 @@ class _EfficientNet_B5(Estimator, Supervised, NeuralModel):
             Dense(dense_in_features, self.out_features, **base_args),
         )
 
-    input_size: ClassVar[tuple] = F.get_efficient_net_input_size(multipliers, n=5)
-    input_shape: ClassVar[tuple] = (-1, 3, *input_size)
+    input_shape: ClassVar[tuple] = (-1, 3, input_sizes[5], input_sizes[5])
 
     @Tensor.force_shape(input_shape)
     def fit(self, X: Tensor, y: Matrix) -> Self:
@@ -879,8 +875,7 @@ class _EfficientNet_B6(Estimator, Supervised, NeuralModel):
             Dense(dense_in_features, self.out_features, **base_args),
         )
 
-    input_size: ClassVar[tuple] = F.get_efficient_net_input_size(multipliers, n=6)
-    input_shape: ClassVar[tuple] = (-1, 3, *input_size)
+    input_shape: ClassVar[tuple] = (-1, 3, input_sizes[6], input_sizes[6])
 
     @Tensor.force_shape(input_shape)
     def fit(self, X: Tensor, y: Matrix) -> Self:
@@ -1003,8 +998,7 @@ class _EfficientNet_B7(Estimator, Supervised, NeuralModel):
             Dense(dense_in_features, self.out_features, **base_args),
         )
 
-    input_size: ClassVar[tuple] = F.get_efficient_net_input_size(multipliers, n=7)
-    input_shape: ClassVar[tuple] = (-1, 3, *input_size)
+    input_shape: ClassVar[tuple] = (-1, 3, input_sizes[7], input_sizes[7])
 
     @Tensor.force_shape(input_shape)
     def fit(self, X: Tensor, y: Matrix) -> Self:
