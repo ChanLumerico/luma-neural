@@ -1,0 +1,165 @@
+from typing import Tuple, Optional, Callable, Union
+from luma.core.super import Optimizer
+from luma.interface.typing import Tensor, TensorLike
+from luma.interface.util import InitUtil
+
+from luma.neural.layer import *
+from luma.neural.autoprop import LayerNode, LayerGraph, MergeMode
+
+from .se import _SEBlock2D
+
+
+class _FusedMBConv(LayerGraph):
+    def __init__(
+        self,
+        in_channels: int,
+        out_channels: int,
+        filter_size: Union[Tuple[int, int], int] = 3,
+        stride: int = 1,
+        expand: float = 1.0,
+        se_reduction: Optional[int] = 4,
+        activation: Callable = Activation.HardSwish,
+        optimizer: Optional[Optimizer] = None,
+        initializer: Optional[InitUtil.InitStr] = None,
+        lambda_: float = 0.0,
+        do_batch_norm: bool = True,
+        momentum: float = 0.9,
+        random_state: Optional[int] = None,
+    ) -> None:
+        self.in_channels = in_channels
+        self.out_channels = out_channels
+        self.filter_size = filter_size
+        self.stride = stride
+        self.expand = expand
+        self.activation = activation
+        self.se_reduction = se_reduction
+        self.optimizer = optimizer
+        self.initializer = initializer
+        self.lambda_ = lambda_
+        self.do_batch_norm = do_batch_norm
+        self.momentum = momentum
+
+        self.basic_args = {
+            "initializer": initializer,
+            "lambda_": lambda_,
+            "random_state": random_state,
+        }
+
+        assert self.stride in [1, 2], "Stride must be 1 or 2."
+        self.do_shortcut = stride == 1 and in_channels == out_channels
+        self.hid_channels = int(round(in_channels * self.expand))
+
+        # Initialize nodes assuming expand == 1
+        self.init_nodes()
+
+        # Initialize the graph assuming expand == 1
+        super(_FusedMBConv, self).__init__(
+            graph={
+                self.rt_: [self.conv_],
+                self.conv_: [self.se_block, self.scale_],
+                self.se_block: [self.scale_],
+                self.scale_: [self.tm_],
+            },
+            root=self.rt_,
+            term=self.tm_,
+        )
+
+        if self.do_shortcut:
+            self[self.rt_].append(self.tm_)
+
+        # Modify the graph after initialization if expand != 1
+        if self.expand != 1:
+            # Remove the edge from rt_ to conv_
+            self[self.rt_].remove(self.conv_)
+            # Initialize the conv_exp node
+            self.init_expansion_node()
+            # Add edge from rt_ to conv_exp
+            self[self.rt_].append(self.conv_exp)
+            # Remove conv_ node from the graph
+            del self.graph[self.conv_]
+            # Add conv_exp node to the graph
+            self.graph[self.conv_exp] = [self.se_block, self.scale_]
+
+        self.build()
+        if optimizer is not None:
+            self.set_optimizer(optimizer)
+
+    def init_nodes(self) -> None:
+        self.rt_ = LayerNode(Identity(), name="rt_")
+
+        # Define conv_ node (without expansion)
+        self.conv_ = LayerNode(
+            Sequential(
+                Conv2D(
+                    self.in_channels,
+                    self.out_channels,
+                    self.filter_size,
+                    self.stride,
+                    padding=self.filter_size // 2,
+                    **self.basic_args,
+                ),
+                BatchNorm2D(self.out_channels, self.momentum)
+                if self.do_batch_norm
+                else None,
+                self.activation(),
+            ),
+            name="conv_",
+        )
+
+        self.se_block = LayerNode(
+            _SEBlock2D(
+                self.out_channels,
+                self.se_reduction,
+                self.activation,
+                self.optimizer,
+                **self.basic_args,
+            ),
+            name="se_block",
+        )
+        self.scale_ = LayerNode(Identity(), MergeMode.HADAMARD, name="scale_")
+        self.tm_ = LayerNode(Identity(), MergeMode.SUM, name="tm_")
+
+    def init_expansion_node(self) -> None:
+        # Define conv_exp node (with expansion)
+        self.conv_exp = LayerNode(
+            Sequential(
+                Conv2D(
+                    self.in_channels,
+                    self.hid_channels,
+                    self.filter_size,
+                    self.stride,
+                    padding=self.filter_size // 2,
+                    **self.basic_args,
+                ),
+                BatchNorm2D(self.hid_channels, self.momentum)
+                if self.do_batch_norm
+                else None,
+                self.activation(),
+                Conv2D(
+                    self.hid_channels,
+                    self.out_channels,
+                    1,
+                    padding="valid",
+                    **self.basic_args,
+                ),
+                BatchNorm2D(self.out_channels, self.momentum)
+                if self.do_batch_norm
+                else None,
+                self.activation(),
+            ),
+            name="conv_exp",
+        )
+
+    @Tensor.force_dim(4)
+    def forward(self, X: TensorLike, is_train: bool = False) -> TensorLike:
+        return super().forward(X, is_train)
+
+    @Tensor.force_dim(4)
+    def backward(self, d_out: TensorLike) -> TensorLike:
+        return super().backward(d_out)
+
+    def out_shape(self, in_shape: Tuple[int]) -> Tuple[int]:
+        if self.expand == 1:
+            return self.conv_.out_shape(in_shape)
+        else:
+            return self.conv_exp.out_shape(in_shape)
