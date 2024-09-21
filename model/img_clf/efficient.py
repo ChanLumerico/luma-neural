@@ -1,7 +1,7 @@
 from typing import Self, override, ClassVar
 
 from luma.core.super import Estimator, Evaluator, Supervised
-from luma.interface.typing import Matrix, Tensor, Vector
+from luma.interface.typing import Matrix, Tensor, TensorLike, Vector
 from luma.interface.util import InitUtil
 from luma.metric.classification import Accuracy
 
@@ -9,6 +9,8 @@ from luma.neural.base import NeuralModel
 from luma.neural.block import EfficientBlock
 from luma.neural.layer import *
 from luma.neural import functional as F
+
+from luma.preprocessing.image import Resize
 
 MBConv = EfficientBlock.MBConv
 FusedMBConv = EfficientBlock.FusedMBConv
@@ -48,7 +50,6 @@ class _EfficientNet_B0(Estimator, Supervised, NeuralModel):
         valid_size: float = 0.1,
         lambda_: float = 0.0,
         momentum: float = 0.9,
-        growth_rate: float = 32,
         early_stopping: bool = False,
         patience: int = 10,
         shuffle: bool = True,
@@ -60,7 +61,6 @@ class _EfficientNet_B0(Estimator, Supervised, NeuralModel):
         self.out_features = out_features
         self.lambda_ = lambda_
         self.momentum = momentum
-        self.growth_rate = growth_rate
         self.shuffle = shuffle
         self.random_state = random_state
         self._fitted = False
@@ -171,7 +171,6 @@ class _EfficientNet_B1(Estimator, Supervised, NeuralModel):
         valid_size: float = 0.1,
         lambda_: float = 0.0,
         momentum: float = 0.9,
-        growth_rate: float = 32,
         early_stopping: bool = False,
         patience: int = 10,
         shuffle: bool = True,
@@ -183,7 +182,6 @@ class _EfficientNet_B1(Estimator, Supervised, NeuralModel):
         self.out_features = out_features
         self.lambda_ = lambda_
         self.momentum = momentum
-        self.growth_rate = growth_rate
         self.shuffle = shuffle
         self.random_state = random_state
         self._fitted = False
@@ -294,7 +292,6 @@ class _EfficientNet_B2(Estimator, Supervised, NeuralModel):
         valid_size: float = 0.1,
         lambda_: float = 0.0,
         momentum: float = 0.9,
-        growth_rate: float = 32,
         early_stopping: bool = False,
         patience: int = 10,
         shuffle: bool = True,
@@ -306,7 +303,6 @@ class _EfficientNet_B2(Estimator, Supervised, NeuralModel):
         self.out_features = out_features
         self.lambda_ = lambda_
         self.momentum = momentum
-        self.growth_rate = growth_rate
         self.shuffle = shuffle
         self.random_state = random_state
         self._fitted = False
@@ -417,7 +413,6 @@ class _EfficientNet_B3(Estimator, Supervised, NeuralModel):
         valid_size: float = 0.1,
         lambda_: float = 0.0,
         momentum: float = 0.9,
-        growth_rate: float = 32,
         early_stopping: bool = False,
         patience: int = 10,
         shuffle: bool = True,
@@ -429,7 +424,6 @@ class _EfficientNet_B3(Estimator, Supervised, NeuralModel):
         self.out_features = out_features
         self.lambda_ = lambda_
         self.momentum = momentum
-        self.growth_rate = growth_rate
         self.shuffle = shuffle
         self.random_state = random_state
         self._fitted = False
@@ -540,7 +534,6 @@ class _EfficientNet_B4(Estimator, Supervised, NeuralModel):
         valid_size: float = 0.1,
         lambda_: float = 0.0,
         momentum: float = 0.9,
-        growth_rate: float = 32,
         early_stopping: bool = False,
         patience: int = 10,
         shuffle: bool = True,
@@ -552,7 +545,6 @@ class _EfficientNet_B4(Estimator, Supervised, NeuralModel):
         self.out_features = out_features
         self.lambda_ = lambda_
         self.momentum = momentum
-        self.growth_rate = growth_rate
         self.shuffle = shuffle
         self.random_state = random_state
         self._fitted = False
@@ -663,7 +655,6 @@ class _EfficientNet_B5(Estimator, Supervised, NeuralModel):
         valid_size: float = 0.1,
         lambda_: float = 0.0,
         momentum: float = 0.9,
-        growth_rate: float = 32,
         early_stopping: bool = False,
         patience: int = 10,
         shuffle: bool = True,
@@ -675,7 +666,6 @@ class _EfficientNet_B5(Estimator, Supervised, NeuralModel):
         self.out_features = out_features
         self.lambda_ = lambda_
         self.momentum = momentum
-        self.growth_rate = growth_rate
         self.shuffle = shuffle
         self.random_state = random_state
         self._fitted = False
@@ -786,7 +776,6 @@ class _EfficientNet_B6(Estimator, Supervised, NeuralModel):
         valid_size: float = 0.1,
         lambda_: float = 0.0,
         momentum: float = 0.9,
-        growth_rate: float = 32,
         early_stopping: bool = False,
         patience: int = 10,
         shuffle: bool = True,
@@ -798,7 +787,6 @@ class _EfficientNet_B6(Estimator, Supervised, NeuralModel):
         self.out_features = out_features
         self.lambda_ = lambda_
         self.momentum = momentum
-        self.growth_rate = growth_rate
         self.shuffle = shuffle
         self.random_state = random_state
         self._fitted = False
@@ -909,7 +897,6 @@ class _EfficientNet_B7(Estimator, Supervised, NeuralModel):
         valid_size: float = 0.1,
         lambda_: float = 0.0,
         momentum: float = 0.9,
-        growth_rate: float = 32,
         early_stopping: bool = False,
         patience: int = 10,
         shuffle: bool = True,
@@ -921,7 +908,6 @@ class _EfficientNet_B7(Estimator, Supervised, NeuralModel):
         self.out_features = out_features
         self.lambda_ = lambda_
         self.momentum = momentum
-        self.growth_rate = growth_rate
         self.shuffle = shuffle
         self.random_state = random_state
         self._fitted = False
@@ -1021,10 +1007,457 @@ class _EfficientNet_B7(Estimator, Supervised, NeuralModel):
         return super(_EfficientNet_B7, self).score_nn(X, y, metric, argmax)
 
 
-class _EfficientNet_V2_Small(Estimator, Supervised, NeuralModel): ...
+class _EfficientNet_V2_Small(Estimator, Supervised, NeuralModel):
+    def __init__(
+        self,
+        initializer: InitUtil.InitStr = None,
+        out_features: int = 1000,
+        batch_size: int = 128,
+        n_epochs: int = 100,
+        valid_size: float = 0.1,
+        lambda_: float = 0.0,
+        momentum: float = 0.9,
+        dropout_rate: float = 0.1,
+        progressive_learning: bool = True,
+        early_stopping: bool = False,
+        patience: int = 10,
+        shuffle: bool = True,
+        random_state: int | None = None,
+        deep_verbose: bool = False,
+    ) -> None:
+        self.initializer = initializer
+        self.out_features = out_features
+        self.lambda_ = lambda_
+        self.momentum = momentum
+        self.dropout_rate = dropout_rate
+        self.progressive_learning = progressive_learning
+        self.shuffle = shuffle
+        self.random_state = random_state
+        self._fitted = False
+        self._cur_stage = 0
+
+        super().__init__(
+            batch_size,
+            n_epochs,
+            valid_size,
+            early_stopping,
+            patience,
+            shuffle,
+            random_state,
+            deep_verbose,
+        )
+        super().init_model()
+        self.model: Sequential = Sequential()
+
+        self.feature_sizes_ = []
+        self.feature_shapes_ = [
+            self._get_feature_shapes(sizes) for sizes in self.feature_sizes_
+        ]
+
+        self.set_param_ranges(
+            {
+                "out_features": ("0<,+inf", int),
+                "batch_size": ("0<,+inf", int),
+                "n_epochs": ("0<,+inf", int),
+                "valid_size": ("0<,<1", None),
+                "lambda_": ("0,+inf", None),
+                "patience": ("0<,+inf", int),
+                "growth_rate": ("0<,+inf", int),
+            }
+        )
+        self.check_param_ranges()
+        self.build_model()
+
+    def build_model(self) -> None:
+        base_args = {
+            "initializer": self.initializer,
+            "lambda_": self.lambda_,
+            "random_state": self.random_state,
+        }
+        mbconv_config = [
+            [2, 24, 1, 1, True, "relu"],
+            [4, 48, 4, 2, True, "relu"],
+            [4, 64, 4, 2, True, "relu"],
+            [6, 128, 4, 2, False, "swish"],
+            [9, 160, 6, 1, False, "swish"],
+            [15, 256, 6, 2, False, "swish"],
+        ]
+
+        self.model.extend(
+            Conv2D(3, 24, 3, 2, **base_args),
+            BatchNorm2D(24, self.momentum),
+            Activation.ReLU(),
+        )
+
+        in_ = 24
+        for i, (n, out, exp, s, is_fused, act) in enumerate(mbconv_config):
+            block = FusedMBConv if is_fused else MBConv
+            act = Activation.Swish if act == "swish" else Activation.ReLU
+
+            for j in range(n):
+                s_ = s if j == 0 else 1
+                self.model += (
+                    f"{block.__name__}{i + 1}_{j + 1}",
+                    block(in_, out, 3, s_, exp, 4, act, **base_args),
+                )
+                in_ = out
+
+        self.model.extend(
+            Conv2D(in_, 1280, 1, 1, "valid", **base_args),
+            BatchNorm2D(1280, self.momentum),
+            Activation.ReLU(),
+        )
+        self.model.extend(
+            Dropout(self.dropout_rate, self.random_state),
+            GlobalAvgPool2D(),
+            Flatten(),
+            Dense(1280, self.out_features, **base_args),
+        )
+
+    input_shape: ClassVar[tuple] = (-1, 3, 128, 128)
+
+    @Tensor.force_shape(input_shape)
+    def fit(self, X: Tensor, y: Matrix) -> Self:
+        return super(_EfficientNet_V2_Small, self).fit_nn(X, y)
+
+    @override
+    def train(self, X: TensorLike, y: TensorLike, epoch: int) -> list[float]:
+        new_stage = epoch // (self.n_epochs // 4)
+        if self._cur_stage != new_stage and self.progressive_learning:
+            self._cur_stage = new_stage
+            new_res, new_drop_rate = self.update_size_dropout_rate(self._cur_stage)
+
+            X = Resize((new_res, new_res)).fit_transform(X)
+
+            drop_layer = self.model.layers[-4]
+            if isinstance(drop_layer, Dropout):
+                drop_layer.dropout_rate = new_drop_rate
+
+        return super(_EfficientNet_V2_Small, self).train(X, y, epoch)
+
+    def update_size_dropout_rate(self, stage: int) -> tuple[int, float]:
+        res_arr = [128, 160, 192, 224]
+        drop_rate_arr = [0.1, 0.2, 0.3, 0.4]
+
+        assert stage < 4
+        return res_arr[stage], drop_rate_arr[stage]
+
+    @override
+    @Tensor.force_shape(input_shape)
+    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
+        return super(_EfficientNet_V2_Small, self).predict_nn(X, argmax)
+
+    @override
+    @Tensor.force_shape(input_shape)
+    def score(
+        self,
+        X: Tensor,
+        y: Matrix,
+        metric: Evaluator = Accuracy,
+        argmax: bool = True,
+    ) -> float:
+        return super(_EfficientNet_V2_Small, self).score_nn(X, y, metric, argmax)
 
 
-class _EfficientNet_V2_Medium(Estimator, Supervised, NeuralModel): ...
+class _EfficientNet_V2_Medium(Estimator, Supervised, NeuralModel):
+    def __init__(
+        self,
+        initializer: InitUtil.InitStr = None,
+        out_features: int = 1000,
+        batch_size: int = 128,
+        n_epochs: int = 100,
+        valid_size: float = 0.1,
+        lambda_: float = 0.0,
+        momentum: float = 0.9,
+        dropout_rate: float = 0.1,
+        progressive_learning: bool = True,
+        early_stopping: bool = False,
+        patience: int = 10,
+        shuffle: bool = True,
+        random_state: int | None = None,
+        deep_verbose: bool = False,
+    ) -> None:
+        self.initializer = initializer
+        self.out_features = out_features
+        self.lambda_ = lambda_
+        self.momentum = momentum
+        self.dropout_rate = dropout_rate
+        self.progressive_learning = progressive_learning
+        self.shuffle = shuffle
+        self.random_state = random_state
+        self._fitted = False
+        self._cur_stage = 0
+
+        super().__init__(
+            batch_size,
+            n_epochs,
+            valid_size,
+            early_stopping,
+            patience,
+            shuffle,
+            random_state,
+            deep_verbose,
+        )
+        super().init_model()
+        self.model: Sequential = Sequential()
+
+        self.feature_sizes_ = []
+        self.feature_shapes_ = [
+            self._get_feature_shapes(sizes) for sizes in self.feature_sizes_
+        ]
+
+        self.set_param_ranges(
+            {
+                "out_features": ("0<,+inf", int),
+                "batch_size": ("0<,+inf", int),
+                "n_epochs": ("0<,+inf", int),
+                "valid_size": ("0<,<1", None),
+                "lambda_": ("0,+inf", None),
+                "patience": ("0<,+inf", int),
+                "growth_rate": ("0<,+inf", int),
+            }
+        )
+        self.check_param_ranges()
+        self.build_model()
+
+    def build_model(self) -> None:
+        base_args = {
+            "initializer": self.initializer,
+            "lambda_": self.lambda_,
+            "random_state": self.random_state,
+        }
+        mbconv_config = [
+            [3, 24, 1, 1, True, "relu"],
+            [5, 48, 4, 2, True, "relu"],
+            [5, 80, 4, 2, True, "relu"],
+            [7, 160, 4, 2, False, "swish"],
+            [14, 176, 6, 1, False, "swish"],
+            [18, 304, 6, 2, False, "swish"],
+        ]
+
+        self.model.extend(
+            Conv2D(3, 24, 3, 2, **base_args),
+            BatchNorm2D(24, self.momentum),
+            Activation.ReLU(),
+        )
+
+        in_ = 24
+        for i, (n, out, exp, s, is_fused, act) in enumerate(mbconv_config):
+            block = FusedMBConv if is_fused else MBConv
+            act = Activation.Swish if act == "swish" else Activation.ReLU
+
+            for j in range(n):
+                s_ = s if j == 0 else 1
+                self.model += (
+                    f"{block.__name__}{i + 1}_{j + 1}",
+                    block(in_, out, 3, s_, exp, 4, act, **base_args),
+                )
+                in_ = out
+
+        self.model.extend(
+            Conv2D(in_, 1280, 1, 1, "valid", **base_args),
+            BatchNorm2D(1280, self.momentum),
+            Activation.ReLU(),
+        )
+        self.model.extend(
+            Dropout(self.dropout_rate, self.random_state),
+            GlobalAvgPool2D(),
+            Flatten(),
+            Dense(1280, self.out_features, **base_args),
+        )
+
+    input_shape: ClassVar[tuple] = (-1, 3, 160, 160)
+
+    @Tensor.force_shape(input_shape)
+    def fit(self, X: Tensor, y: Matrix) -> Self:
+        return super(_EfficientNet_V2_Medium, self).fit_nn(X, y)
+
+    @override
+    def train(self, X: TensorLike, y: TensorLike, epoch: int) -> list[float]:
+        new_stage = epoch // (self.n_epochs // 4)
+        if self._cur_stage != new_stage and self.progressive_learning:
+            self._cur_stage = new_stage
+            new_res, new_drop_rate = self.update_size_dropout_rate(self._cur_stage)
+
+            X = Resize((new_res, new_res)).fit_transform(X)
+
+            drop_layer = self.model.layers[-4]
+            if isinstance(drop_layer, Dropout):
+                drop_layer.dropout_rate = new_drop_rate
+
+        return super(_EfficientNet_V2_Medium, self).train(X, y, epoch)
+
+    def update_size_dropout_rate(self, stage: int) -> tuple[int, float]:
+        res_arr = [160, 192, 224, 256]
+        drop_rate_arr = [0.2, 0.3, 0.4, 0.5]
+
+        assert stage < 4
+        return res_arr[stage], drop_rate_arr[stage]
+
+    @override
+    @Tensor.force_shape(input_shape)
+    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
+        return super(_EfficientNet_V2_Medium, self).predict_nn(X, argmax)
+
+    @override
+    @Tensor.force_shape(input_shape)
+    def score(
+        self,
+        X: Tensor,
+        y: Matrix,
+        metric: Evaluator = Accuracy,
+        argmax: bool = True,
+    ) -> float:
+        return super(_EfficientNet_V2_Medium, self).score_nn(X, y, metric, argmax)
 
 
-class _EfficientNet_V2_Large(Estimator, Supervised, NeuralModel): ...
+class _EfficientNet_V2_Large(Estimator, Supervised, NeuralModel):
+    def __init__(
+        self,
+        initializer: InitUtil.InitStr = None,
+        out_features: int = 1000,
+        batch_size: int = 128,
+        n_epochs: int = 100,
+        valid_size: float = 0.1,
+        lambda_: float = 0.0,
+        momentum: float = 0.9,
+        dropout_rate: float = 0.1,
+        progressive_learning: bool = True,
+        early_stopping: bool = False,
+        patience: int = 10,
+        shuffle: bool = True,
+        random_state: int | None = None,
+        deep_verbose: bool = False,
+    ) -> None:
+        self.initializer = initializer
+        self.out_features = out_features
+        self.lambda_ = lambda_
+        self.momentum = momentum
+        self.dropout_rate = dropout_rate
+        self.progressive_learning = progressive_learning
+        self.shuffle = shuffle
+        self.random_state = random_state
+        self._fitted = False
+        self._cur_stage = 0
+
+        super().__init__(
+            batch_size,
+            n_epochs,
+            valid_size,
+            early_stopping,
+            patience,
+            shuffle,
+            random_state,
+            deep_verbose,
+        )
+        super().init_model()
+        self.model: Sequential = Sequential()
+
+        self.feature_sizes_ = []
+        self.feature_shapes_ = [
+            self._get_feature_shapes(sizes) for sizes in self.feature_sizes_
+        ]
+
+        self.set_param_ranges(
+            {
+                "out_features": ("0<,+inf", int),
+                "batch_size": ("0<,+inf", int),
+                "n_epochs": ("0<,+inf", int),
+                "valid_size": ("0<,<1", None),
+                "lambda_": ("0,+inf", None),
+                "patience": ("0<,+inf", int),
+                "growth_rate": ("0<,+inf", int),
+            }
+        )
+        self.check_param_ranges()
+        self.build_model()
+
+    def build_model(self) -> None:
+        base_args = {
+            "initializer": self.initializer,
+            "lambda_": self.lambda_,
+            "random_state": self.random_state,
+        }
+        mbconv_config = [
+            [4, 32, 1, 1, True, "relu"],
+            [7, 64, 4, 2, True, "relu"],
+            [7, 96, 4, 2, True, "relu"],
+            [10, 192, 4, 2, False, "swish"],
+            [19, 224, 6, 1, False, "swish"],
+            [25, 384, 6, 2, False, "swish"],
+        ]
+
+        self.model.extend(
+            Conv2D(3, 24, 3, 2, **base_args),
+            BatchNorm2D(24, self.momentum),
+            Activation.ReLU(),
+        )
+
+        in_ = 24
+        for i, (n, out, exp, s, is_fused, act) in enumerate(mbconv_config):
+            block = FusedMBConv if is_fused else MBConv
+            act = Activation.Swish if act == "swish" else Activation.ReLU
+
+            for j in range(n):
+                s_ = s if j == 0 else 1
+                self.model += (
+                    f"{block.__name__}{i + 1}_{j + 1}",
+                    block(in_, out, 3, s_, exp, 4, act, **base_args),
+                )
+                in_ = out
+
+        self.model.extend(
+            Conv2D(in_, 1280, 1, 1, "valid", **base_args),
+            BatchNorm2D(1280, self.momentum),
+            Activation.ReLU(),
+        )
+        self.model.extend(
+            Dropout(self.dropout_rate, self.random_state),
+            GlobalAvgPool2D(),
+            Flatten(),
+            Dense(1280, self.out_features, **base_args),
+        )
+
+    input_shape: ClassVar[tuple] = (-1, 3, 192, 192)
+
+    @Tensor.force_shape(input_shape)
+    def fit(self, X: Tensor, y: Matrix) -> Self:
+        return super(_EfficientNet_V2_Large, self).fit_nn(X, y)
+
+    @override
+    def train(self, X: TensorLike, y: TensorLike, epoch: int) -> list[float]:
+        new_stage = epoch // (self.n_epochs // 4)
+        if self._cur_stage != new_stage and self.progressive_learning:
+            self._cur_stage = new_stage
+            new_res, new_drop_rate = self.update_size_dropout_rate(self._cur_stage)
+
+            X = Resize((new_res, new_res)).fit_transform(X)
+
+            drop_layer = self.model.layers[-4]
+            if isinstance(drop_layer, Dropout):
+                drop_layer.dropout_rate = new_drop_rate
+
+        return super(_EfficientNet_V2_Large, self).train(X, y, epoch)
+
+    def update_size_dropout_rate(self, stage: int) -> tuple[int, float]:
+        res_arr = [192, 224, 256, 300]
+        drop_rate_arr = [0.3, 0.4, 0.5, 0.6]
+
+        assert stage < 4
+        return res_arr[stage], drop_rate_arr[stage]
+
+    @override
+    @Tensor.force_shape(input_shape)
+    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
+        return super(_EfficientNet_V2_Large, self).predict_nn(X, argmax)
+
+    @override
+    @Tensor.force_shape(input_shape)
+    def score(
+        self,
+        X: Tensor,
+        y: Matrix,
+        metric: Evaluator = Accuracy,
+        argmax: bool = True,
+    ) -> float:
+        return super(_EfficientNet_V2_Large, self).score_nn(X, y, metric, argmax)

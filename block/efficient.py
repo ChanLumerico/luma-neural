@@ -19,7 +19,7 @@ class _FusedMBConv(LayerGraph):
         stride: int = 1,
         expand: int = 1,
         se_reduction: int = 4,
-        activation: callable = Activation.HardSwish,
+        activation: callable = Activation.Swish,
         optimizer: Optimizer | None = None,
         initializer: InitUtil.InitStr = None,
         lambda_: float = 0.0,
