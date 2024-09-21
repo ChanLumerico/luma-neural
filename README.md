@@ -150,6 +150,13 @@ Deep learning models and neural network utilities of Luma
 | `DenseNetBlock.DenseUnit` | $6\times l$ | $(N,C,H,W)$ | $(N,C+L\times G,H,W)$ |
 | `DenseNetBlock.Transition` | 4 | $(N,C,H,W)$ | $(N,\lfloor\theta\times C\rfloor,\lfloor H/2\rfloor,\lfloor W/2\rfloor)$ |
 
+### EfficientNet Blocks
+
+| Class | # of Layers | Input Shape | Output Shape |
+| --- | --- | --- | --- |
+| `EfficientBlock.MBConv` |  |  |  |
+| `EfficientBlock.FusedMBConv` |  |  |  |
+
 ---
 
 ## Neural Models
@@ -297,6 +304,32 @@ Information Processing Systems, 2012.
 | `DenseNet_169` | 508 | $(N,3,224,224)$ | 14,148,480 | 15,208 | 14,163,688 | ✅ |
 | `DenseNet_201` | 604 | $(N,3,299,299)$ | 20,012,928 | 18,024 | 20,030,952 | ✅ |
 | `DenseNet_264` | 794 | $(N,3,299,299)$ | 33,336,704 | 23,400 | 33,360,104 | ✅ |
+
+### EfficientNet Series
+
+*EfficientNet-B0, B1, B2, B3, B4, B5, B6, B7*
+
+> Tan, Mingxing, and Quoc V. Le. "EfficientNet: Rethinking Model Scaling for Convolutional Neural Networks." International Conference on Machine Learning, 2020, pp. 6105-6114. arXiv:1905.11946.
+>
+
+*EfficientNet-v2-Small, Medium, Large*
+
+>Tan, Mingxing, and Quoc Le. “EfficientNetV2: Smaller Models and Faster Training.” Proceedings of the 38th International Conference on Machine Learning (ICML), vol. 139, 2021, pp. 10096-10106.
+>
+
+| Class | # of Layers | Input Shape | Weights | Biases | Total Param. | Implemented |
+| --- | --- | --- | --- | --- | --- | --- |
+| `EfficientNet_B0` |  |  |  |  |  |  |
+| `EfficientNet_B1` |  |  |  |  |  |  |
+| `EfficientNet_B2` |  |  |  |  |  |  |
+| `EfficientNet_B3` |  |  |  |  |  |  |
+| `EfficientNet_B4` |  |  |  |  |  |  |
+| `EfficientNet_B5` |  |  |  |  |  |  |
+| `EfficientNet_B6` |  |  |  |  |  |  |
+| `EfficientNet_B7` |  |  |  |  |  |  |
+| `EfficientNet_V2_Small` |  |  |  |  |  |  |
+| `EfficientNet_V2_Medium` |  |  |  |  |  |  |
+| `EfficientNet_V2_Large` |  |  |  |  |  |  |
 
 *Waiting for future updates…🔮*
 

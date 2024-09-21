@@ -1094,6 +1094,11 @@ class EfficientBlock:
         Model Scaling for Convolutional Neural Networks." International
         Conference on Machine Learning, 2020, pp. 6105-6114. arXiv:1905.11946.
 
+    `EfficientNet-v2` :
+        [2] Tan, Mingxing, and Quoc Le. “EfficientNetV2: Smaller Models and
+        Faster Training.” Proceedings of the 38th International Conference on
+        Machine Learning (ICML), vol. 139, 2021, pp. 10096-10106.
+
     """
 
     class MBConv(MobileNetBlock.InvRes_SE):
@@ -1109,4 +1114,14 @@ class EfficientBlock:
         Refer to the figures shown in the original paper[1].
         """
 
-    class FusedMBConv(efficient.FusedMBConv): ...
+    class FusedMBConv(efficient._FusedMBConv):
+        """
+        Fused Mobile block used in EfficientNet-v2 architecture.
+
+        Parameters
+        ----------
+        `se_reduction` : float, default=4
+            Reduction factor for SE block
+
+        Refer to the figures shown in the original paper[2].
+        """

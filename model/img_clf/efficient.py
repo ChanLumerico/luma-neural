@@ -11,6 +11,7 @@ from luma.neural.layer import *
 from luma.neural import functional as F
 
 MBConv = EfficientBlock.MBConv
+FusedMBConv = EfficientBlock.FusedMBConv
 
 b0_config = [
     [16, 1, 1, 1, 3],
@@ -1018,3 +1019,12 @@ class _EfficientNet_B7(Estimator, Supervised, NeuralModel):
         argmax: bool = True,
     ) -> float:
         return super(_EfficientNet_B7, self).score_nn(X, y, metric, argmax)
+
+
+class _EfficientNet_V2_Small(Estimator, Supervised, NeuralModel): ...
+
+
+class _EfficientNet_V2_Medium(Estimator, Supervised, NeuralModel): ...
+
+
+class _EfficientNet_V2_Large(Estimator, Supervised, NeuralModel): ...

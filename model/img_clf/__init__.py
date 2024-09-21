@@ -64,6 +64,9 @@ __all__ = (
     "EfficientNet_B5",
     "EfficientNet_B6",
     "EfficientNet_B7",
+    "EfficientNet_V2_Small",
+    "EfficientNet_V2_Medium",
+    "EfficientNet_V2_Large",
 )
 
 
@@ -2619,3 +2622,12 @@ class EfficientNet_B7(efficient._EfficientNet_B7):
     Learning, 2020, pp. 6105-6114. arXiv:1905.11946.
 
     """
+
+
+class EfficientNet_V2_Small(efficient._EfficientNet_V2_Small): ...
+
+
+class EfficientNet_V2_Medium(efficient._EfficientNet_V2_Medium): ...
+
+
+class EfficientNet_V2_Large(efficient._EfficientNet_V2_Large): ...
