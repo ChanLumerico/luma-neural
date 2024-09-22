@@ -64,10 +64,10 @@ __all__ = (
     "EfficientNet_B5",
     "EfficientNet_B6",
     "EfficientNet_B7",
-    "EfficientNet_V2S",
-    "EfficientNet_V2M",
-    "EfficientNet_V2L",
-    "EfficientNet_V2XL",
+    "EfficientNet_V2_Small",
+    "EfficientNet_V2_Medium",
+    "EfficientNet_V2_Large",
+    "EfficientNet_V2_XLarge",
 )
 
 
@@ -1854,8 +1854,6 @@ class SE_DenseNet_121(dense._SE_DenseNet_121):
         Fractional size of validation set
     `lambda_` : float, default=0.0
         L2 regularization strength
-    `smoothing` : float, default=0.1
-        Label smoothing factor
     `early_stopping` : bool, default=False
         Whether to early-stop the training when the valid score stagnates
     `patience` : int, default=10
@@ -1909,8 +1907,6 @@ class SE_DenseNet_169(dense._SE_DenseNet_169):
         Fractional size of validation set
     `lambda_` : float, default=0.0
         L2 regularization strength
-    `smoothing` : float, default=0.1
-        Label smoothing factor
     `early_stopping` : bool, default=False
         Whether to early-stop the training when the valid score stagnates
     `patience` : int, default=10
@@ -1963,8 +1959,6 @@ class DenseNet_121(dense._DenseNet_121):
         Fractional size of validation set
     `lambda_` : float, default=0.0
         L2 regularization strength
-    `smoothing` : float, default=0.1
-        Label smoothing factor
     `early_stopping` : bool, default=False
         Whether to early-stop the training when the valid score stagnates
     `patience` : int, default=10
@@ -2023,8 +2017,6 @@ class DenseNet_169(dense._DenseNet_169):
         Fractional size of validation set
     `lambda_` : float, default=0.0
         L2 regularization strength
-    `smoothing` : float, default=0.1
-        Label smoothing factor
     `early_stopping` : bool, default=False
         Whether to early-stop the training when the valid score stagnates
     `patience` : int, default=10
@@ -2083,8 +2075,6 @@ class DenseNet_201(dense._DenseNet_201):
         Fractional size of validation set
     `lambda_` : float, default=0.0
         L2 regularization strength
-    `smoothing` : float, default=0.1
-        Label smoothing factor
     `early_stopping` : bool, default=False
         Whether to early-stop the training when the valid score stagnates
     `patience` : int, default=10
@@ -2143,8 +2133,6 @@ class DenseNet_264(dense._DenseNet_264):
         Fractional size of validation set
     `lambda_` : float, default=0.0
         L2 regularization strength
-    `smoothing` : float, default=0.1
-        Label smoothing factor
     `early_stopping` : bool, default=False
         Whether to early-stop the training when the valid score stagnates
     `patience` : int, default=10
@@ -2201,8 +2189,6 @@ class EfficientNet_B0(efficient._EfficientNet_B0):
         Fractional size of validation set
     `lambda_` : float, default=0.0
         L2 regularization strength
-    `smoothing` : float, default=0.1
-        Label smoothing factor
     `early_stopping` : bool, default=False
         Whether to early-stop the training when the valid score stagnates
     `patience` : int, default=10
@@ -2259,8 +2245,6 @@ class EfficientNet_B1(efficient._EfficientNet_B1):
         Fractional size of validation set
     `lambda_` : float, default=0.0
         L2 regularization strength
-    `smoothing` : float, default=0.1
-        Label smoothing factor
     `early_stopping` : bool, default=False
         Whether to early-stop the training when the valid score stagnates
     `patience` : int, default=10
@@ -2317,8 +2301,6 @@ class EfficientNet_B2(efficient._EfficientNet_B2):
         Fractional size of validation set
     `lambda_` : float, default=0.0
         L2 regularization strength
-    `smoothing` : float, default=0.1
-        Label smoothing factor
     `early_stopping` : bool, default=False
         Whether to early-stop the training when the valid score stagnates
     `patience` : int, default=10
@@ -2375,8 +2357,6 @@ class EfficientNet_B3(efficient._EfficientNet_B3):
         Fractional size of validation set
     `lambda_` : float, default=0.0
         L2 regularization strength
-    `smoothing` : float, default=0.1
-        Label smoothing factor
     `early_stopping` : bool, default=False
         Whether to early-stop the training when the valid score stagnates
     `patience` : int, default=10
@@ -2433,8 +2413,6 @@ class EfficientNet_B4(efficient._EfficientNet_B4):
         Fractional size of validation set
     `lambda_` : float, default=0.0
         L2 regularization strength
-    `smoothing` : float, default=0.1
-        Label smoothing factor
     `early_stopping` : bool, default=False
         Whether to early-stop the training when the valid score stagnates
     `patience` : int, default=10
@@ -2491,8 +2469,6 @@ class EfficientNet_B5(efficient._EfficientNet_B5):
         Fractional size of validation set
     `lambda_` : float, default=0.0
         L2 regularization strength
-    `smoothing` : float, default=0.1
-        Label smoothing factor
     `early_stopping` : bool, default=False
         Whether to early-stop the training when the valid score stagnates
     `patience` : int, default=10
@@ -2549,8 +2525,6 @@ class EfficientNet_B6(efficient._EfficientNet_B6):
         Fractional size of validation set
     `lambda_` : float, default=0.0
         L2 regularization strength
-    `smoothing` : float, default=0.1
-        Label smoothing factor
     `early_stopping` : bool, default=False
         Whether to early-stop the training when the valid score stagnates
     `patience` : int, default=10
@@ -2607,8 +2581,6 @@ class EfficientNet_B7(efficient._EfficientNet_B7):
         Fractional size of validation set
     `lambda_` : float, default=0.0
         L2 regularization strength
-    `smoothing` : float, default=0.1
-        Label smoothing factor
     `early_stopping` : bool, default=False
         Whether to early-stop the training when the valid score stagnates
     `patience` : int, default=10
@@ -2625,13 +2597,249 @@ class EfficientNet_B7(efficient._EfficientNet_B7):
     """
 
 
-class EfficientNet_V2S(efficient._EfficientNet_V2S): ...
+class EfficientNet_V2_Small(efficient._EfficientNet_V2_Small):
+    """
+    EfficientNet-V2-S is a smaller variant in the EfficientNet-V2 family,
+    designed with improved training speed and better parameter efficiency
+    compared to its predecessor. It introduces advancements like Fused-MBConv
+    blocks, which combine depthwise convolutions and regular convolutions for
+    faster computation, and further optimizes the scaling of width, depth, and
+    resolution.
+
+    Specs
+    -----
+    Input/Output Shapes:
+    ```py
+    Tensor[-1, 3, 384, 384] -> Matrix[-1, 1000]
+    ```
+    Parameter Size:
+    ```
+    18,414,552 weights, 86,116 biases -> 18,500,668 params
+    ```
+    Components
+    ----------
+    Blocks Used:
+    ```py
+    EfficientBlock.MBConv(),
+    EfficientBlock.FusedMBConv()
+    ```
+    Arguments
+    ---------
+    `activation` : callable, default=Activation.Swish
+        Type of activation function
+    `initializer` : InitStr, default=None
+        Type of weight initializer
+    `out_features` : int, default=1000
+        Number of output features
+    `batch_size` : int, default=100
+        Size of a single mini-batch
+    `n_epochs` : int, default=100
+        Number of epochs for training
+    `valid_size` : float, default=0.1
+        Fractional size of validation set
+    `lambda_` : float, default=0.0
+        L2 regularization strength
+    `dropout_rate` : float, default=0.1
+        Initial dropout rate
+    `progressive_learning` : bool, default=True
+        Whether to perform a progressive learning mentioned in the paper
+    `early_stopping` : bool, default=False
+        Whether to early-stop the training when the valid score stagnates
+    `patience` : int, default=10
+        Number of epochs to wait until early-stopping
+    `shuffle` : bool, default=True
+        Whethter to shuffle the data at the beginning of every epoch
+
+    References
+    ----------
+    [1] Tan, Mingxing, and Quoc Le. “EfficientNetV2: Smaller Models and
+    Faster Training.” Proceedings of the 38th International Conference on
+    Machine Learning (ICML), vol. 139, 2021, pp. 10096-10106.
+
+    """
 
 
-class EfficientNet_V2M(efficient._EfficientNet_V2M): ...
+class EfficientNet_V2_Medium(efficient._EfficientNet_V2_Medium):
+    """
+    EfficientNet-V2-M is a medium-sized variant in the EfficientNet-V2 family,
+    designed with improved training speed and better parameter efficiency
+    compared to its predecessor. It introduces advancements like Fused-MBConv
+    blocks, which combine depthwise convolutions and regular convolutions for
+    faster computation, and further optimizes the scaling of width, depth, and
+    resolution.
+
+    Specs
+    -----
+    Input/Output Shapes:
+    ```py
+    Tensor[-1, 3, 480, 480] -> Matrix[-1, 1000]
+    ```
+    Parameter Size:
+    ```
+    46,012,920 weights, 162,264 biases -> 46,175,184 params
+    ```
+    Components
+    ----------
+    Blocks Used:
+    ```py
+    EfficientBlock.MBConv(),
+    EfficientBlock.FusedMBConv()
+    ```
+    Arguments
+    ---------
+    `activation` : callable, default=Activation.Swish
+        Type of activation function
+    `initializer` : InitStr, default=None
+        Type of weight initializer
+    `out_features` : int, default=1000
+        Number of output features
+    `batch_size` : int, default=100
+        Size of a single mini-batch
+    `n_epochs` : int, default=100
+        Number of epochs for training
+    `valid_size` : float, default=0.1
+        Fractional size of validation set
+    `lambda_` : float, default=0.0
+        L2 regularization strength
+    `dropout_rate` : float, default=0.1
+        Initial dropout rate
+    `progressive_learning` : bool, default=True
+        Whether to perform a progressive learning mentioned in the paper
+    `early_stopping` : bool, default=False
+        Whether to early-stop the training when the valid score stagnates
+    `patience` : int, default=10
+        Number of epochs to wait until early-stopping
+    `shuffle` : bool, default=True
+        Whethter to shuffle the data at the beginning of every epoch
+
+    References
+    ----------
+    [1] Tan, Mingxing, and Quoc Le. “EfficientNetV2: Smaller Models and
+    Faster Training.” Proceedings of the 38th International Conference on
+    Machine Learning (ICML), vol. 139, 2021, pp. 10096-10106.
+
+    """
 
 
-class EfficientNet_V2L(efficient._EfficientNet_V2L): ...
+class EfficientNet_V2_Large(efficient._EfficientNet_V2_Large):
+    """
+    EfficientNet-V2-L is a larger variant in the EfficientNet-V2 family,
+    designed with improved training speed and better parameter efficiency
+    compared to its predecessor. It introduces advancements like Fused-MBConv
+    blocks, which combine depthwise convolutions and regular convolutions for
+    faster computation, and further optimizes the scaling of width, depth, and
+    resolution.
+
+    Specs
+    -----
+    Input/Output Shapes:
+    ```py
+    Tensor[-1, 3, 480, 480] -> Matrix[-1, 1000]
+    ```
+    Parameter Size:
+    ```
+    104,084,896 weights, 303,032 biases -> 104,387,928 params
+    ```
+    Components
+    ----------
+    Blocks Used:
+    ```py
+    EfficientBlock.MBConv(),
+    EfficientBlock.FusedMBConv()
+    ```
+    Arguments
+    ---------
+    `activation` : callable, default=Activation.Swish
+        Type of activation function
+    `initializer` : InitStr, default=None
+        Type of weight initializer
+    `out_features` : int, default=1000
+        Number of output features
+    `batch_size` : int, default=100
+        Size of a single mini-batch
+    `n_epochs` : int, default=100
+        Number of epochs for training
+    `valid_size` : float, default=0.1
+        Fractional size of validation set
+    `lambda_` : float, default=0.0
+        L2 regularization strength
+    `dropout_rate` : float, default=0.1
+        Initial dropout rate
+    `progressive_learning` : bool, default=True
+        Whether to perform a progressive learning mentioned in the paper
+    `early_stopping` : bool, default=False
+        Whether to early-stop the training when the valid score stagnates
+    `patience` : int, default=10
+        Number of epochs to wait until early-stopping
+    `shuffle` : bool, default=True
+        Whethter to shuffle the data at the beginning of every epoch
+
+    References
+    ----------
+    [1] Tan, Mingxing, and Quoc Le. “EfficientNetV2: Smaller Models and
+    Faster Training.” Proceedings of the 38th International Conference on
+    Machine Learning (ICML), vol. 139, 2021, pp. 10096-10106.
+
+    """
 
 
-class EfficientNet_V2XL(efficient._EfficientNet_V2XL): ...
+class EfficientNet_V2_XLarge(efficient._EfficientNet_V2_XLarge):
+    """
+    EfficientNet-V2-XL is the largest model in the EfficientNet-V2 family,
+    designed specifically for large-scale datasets like ImageNet-21k.
+    It employs advanced compound scaling and Fused-MBConv blocks to optimize
+    both training speed and accuracy. EfficientNetV2-XL is particularly suited
+    for high-performance applications requiring extensive computational power,
+    offering state-of-the-art results on large classification tasks.
+
+    Specs
+    -----
+    Input/Output Shapes:
+    ```py
+    Tensor[-1, 3, 480, 480] -> Matrix[-1, 21,843]
+    ```
+    Parameter Size:
+    ```
+    201,762,976 weights, 450,227 biases -> 202,213,203 params
+    ```
+    Components
+    ----------
+    Blocks Used:
+    ```py
+    EfficientBlock.MBConv(),
+    EfficientBlock.FusedMBConv()
+    ```
+    Arguments
+    ---------
+    `activation` : callable, default=Activation.Swish
+        Type of activation function
+    `initializer` : InitStr, default=None
+        Type of weight initializer
+    `out_features` : int, default=21843
+        Number of output features
+    `batch_size` : int, default=100
+        Size of a single mini-batch
+    `n_epochs` : int, default=100
+        Number of epochs for training
+    `valid_size` : float, default=0.1
+        Fractional size of validation set
+    `lambda_` : float, default=0.0
+        L2 regularization strength
+    `dropout_rate` : float, default=0.1
+        Initial dropout rate
+    `progressive_learning` : bool, default=True
+        Whether to perform a progressive learning mentioned in the paper
+    `early_stopping` : bool, default=False
+        Whether to early-stop the training when the valid score stagnates
+    `patience` : int, default=10
+        Number of epochs to wait until early-stopping
+    `shuffle` : bool, default=True
+        Whethter to shuffle the data at the beginning of every epoch
+
+    References
+    ----------
+    [1] Tan, Mingxing, and Quoc Le. “EfficientNetV2: Smaller Models and
+    Faster Training.” Proceedings of the 38th International Conference on
+    Machine Learning (ICML), vol. 139, 2021, pp. 10096-10106.
+
+    """
