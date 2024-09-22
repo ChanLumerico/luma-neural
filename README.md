@@ -154,8 +154,8 @@ Deep learning models and neural network utilities of Luma
 
 | Class | # of Layers | Input Shape | Output Shape |
 | --- | --- | --- | --- |
-| `EfficientBlock.MBConv` |  |  |  |
-| `EfficientBlock.FusedMBConv` |  |  |  |
+| `EfficientBlock.MBConv` | 14~17 | $(N,C_{in},H_{in},W_{in})$ | $(N,C_{out},H_{out},W_{out})$ |
+| `EfficientBlock.FusedMBConv` | 12~15 | $(N,C_{in},H_{in},W_{in})$ | $(N,C_{out},H_{out},W_{out})$ |
 
 ---
 
@@ -312,7 +312,7 @@ Information Processing Systems, 2012.
 > Tan, Mingxing, and Quoc V. Le. "EfficientNet: Rethinking Model Scaling for Convolutional Neural Networks." International Conference on Machine Learning, 2020, pp. 6105-6114. arXiv:1905.11946.
 >
 
-*EfficientNet-v2-Small, Medium, Large*
+*EfficientNet-v2-S, M, L, XL*
 
 >Tan, Mingxing, and Quoc Le. “EfficientNetV2: Smaller Models and Faster Training.” Proceedings of the 38th International Conference on Machine Learning (ICML), vol. 139, 2021, pp. 10096-10106.
 >
@@ -330,6 +330,7 @@ Information Processing Systems, 2012.
 | `EfficientNet_V2_Small` |  |  |  |  |  |  |
 | `EfficientNet_V2_Medium` |  |  |  |  |  |  |
 | `EfficientNet_V2_Large` |  |  |  |  |  |  |
+| `EfficientNet_V2_XLarge` |  |  |  |  |  |  |
 
 *Waiting for future updates…🔮*
 
