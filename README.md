@@ -163,7 +163,9 @@ Deep learning models and neural network utilities of Luma
 
 *luma.neural.model 🔗*
 
-### LeNet Series
+### Image Classification Models
+
+#### LeNet Series
 
 > LeCun, Yann, et al. "Backpropagation Applied to Handwritten Zip Code Recognition." Neural Computation, vol. 1, no. 4, 1989, pp. 541-551.
 > 
@@ -174,7 +176,7 @@ Deep learning models and neural network utilities of Luma
 | `LeNet_4` | 8 | $(N,1,32,32)$ | 50,902 | 150 | 51,052 | ✅ |
 | `LeNet_5` | 10 | $(N,1,32,32)$ | 61,474 | 236 | 61,170 | ✅ |
 
-### AlexNet Series
+#### AlexNet Series
 
 > Krizhevsky, Alex, Ilya Sutskever, and Geoffrey E. Hinton. "ImageNet Classification with Deep Convolutional Neural Networks." Advances in Neural
 Information Processing Systems, 2012.
@@ -185,7 +187,7 @@ Information Processing Systems, 2012.
 | `AlexNet` | 21 | $(N,3,227,227)$ | 62,367,776 | 10,568 | 62,378,344 | ✅ |
 | `ZFNet` | 21 | $(N,3,227,227)$ | 58,292,000 | 9,578 | 58,301,578 | ✅ |
 
-### VGGNet Series
+#### VGGNet Series
 
 > Simonyan, Karen, and Andrew Zisserman. "Very Deep Convolutional Networks for Large-Scale Image Recognition." arXiv preprint arXiv:1409.1556, 2014.
 > 
@@ -197,7 +199,7 @@ Information Processing Systems, 2012.
 | `VGGNet_16` | 37 | $(N,3,224,224)$ | 138,344,128 | 13,416 | 138,357,544 | ✅ |
 | `VGGNet_19` | 43 | $(N,3,224,224)$ | 143,652,544 | 14,696 | 143,667,240 | ✅ |
 
-### InceptionNet Series
+#### InceptionNet Series
 
 *InceptionNet-v1, v2, v3*
 
@@ -230,7 +232,7 @@ Information Processing Systems, 2012.
 | --- | --- | --- | --- | --- | --- | --- |
 | `XceptionNet` | 174 | $(N,3,299,299)$ | 22,113,984 | 50,288 | 22,164,272 | ✅ |
 
-### ResNet Series
+#### ResNet Series
 
 *ResNet-18, 34, 50, 101, 152*
 
@@ -256,7 +258,7 @@ Information Processing Systems, 2012.
 | `ResNet_269` | 1,069 | $(N,3,244,244)$ | 102,068,416 | 127,400 | 102,195,816 | ✅ |
 | `ResNet_1001` | 1,657 | $(N,3,224,224)$ | 159,884,992 | 208,040 | 160,093,032 | ✅ |
 
-### MobileNet Series
+#### MobileNet Series
 
 *MobileNet-v1*
 
@@ -280,7 +282,7 @@ Information Processing Systems, 2012.
 | `MobileNet_V3_Small` | 161 | $(N,3,224,224)$ | 32,455,856 | 326,138 | 32,781,994 | ✅ |
 | `MobileNet_V3_Large` | 180 | $(N,3,224,224)$ | 167,606,960 | 1,136,502 | 168,743,462 | ✅ |
 
-### SENet Series
+#### SENet Series
 
 > Hu, Jie, et al. “Squeeze-and-Excitation Networks.” Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR), 2018, pp. 7132-7141.
 > 
@@ -293,7 +295,7 @@ Information Processing Systems, 2012.
 | `SE_DenseNet_121` | 388 | $(N,3,224,224)$ | 9,190,272 | 14,760 | 9,205,032 | ✅ |
 | `SE_DenseNet_169` | 532 | $(N,3,224,224)$ | 16,515,968 | 19,848 | 16,535,816 | ✅ |
 
-### DenseNet Series
+#### DenseNet Series
 
 > Huang, Gao, et al. "Densely Connected Convolutional Networks." Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition, 2017, pp. 4700-4708.
 > 
@@ -305,7 +307,7 @@ Information Processing Systems, 2012.
 | `DenseNet_201` | 604 | $(N,3,299,299)$ | 20,012,928 | 18,024 | 20,030,952 | ✅ |
 | `DenseNet_264` | 794 | $(N,3,299,299)$ | 33,336,704 | 23,400 | 33,360,104 | ✅ |
 
-### EfficientNet Series
+#### EfficientNet Series
 
 *EfficientNet-B0, B1, B2, B3, B4, B5, B6, B7*
 
@@ -319,18 +321,18 @@ Information Processing Systems, 2012.
 
 | Class | # of Layers | Input Shape | Weights | Biases | Total Param. | Implemented |
 | --- | --- | --- | --- | --- | --- | --- |
-| `EfficientNet_B0` |  |  |  |  |  |  |
-| `EfficientNet_B1` |  |  |  |  |  |  |
-| `EfficientNet_B2` |  |  |  |  |  |  |
-| `EfficientNet_B3` |  |  |  |  |  |  |
-| `EfficientNet_B4` |  |  |  |  |  |  |
-| `EfficientNet_B5` |  |  |  |  |  |  |
-| `EfficientNet_B6` |  |  |  |  |  |  |
-| `EfficientNet_B7` |  |  |  |  |  |  |
-| `EfficientNet_V2_Small` |  |  |  |  |  |  |
-| `EfficientNet_V2_Medium` |  |  |  |  |  |  |
-| `EfficientNet_V2_Large` |  |  |  |  |  |  |
-| `EfficientNet_V2_XLarge` |  |  |  |  |  |  |
+| `EfficientNet_B0` | 237 | $(N,3,224,224)$ | 4,803,040 | 24,268 | 4,827,308 | ✅ |
+| `EfficientNet_B1` | 267 | $(N,3,240,240)$ | 6,544,500 | 32,568 | 6,577,068 | ✅ |
+| `EfficientNet_B2` | 304 | $(N,3,260,260)$ | 8,503,007 | 40,160 | 8,543,167 | ✅ |
+| `EfficientNet_B3` | 390 | $(N,3,300,300)$ | 13,657,980 | 57,390 | 13,715,370 | ✅ |
+| `EfficientNet_B4` | 528 | $(N,3,380,380)$ | 17,877,155 | 72,278 | 17,949,433 | ✅ |
+| `EfficientNet_B5` | 667 | $(N,3,456,456)$ | 24,674,011 | 94,261 | 24,768,272 | ✅ |
+| `EfficientNet_B6` | 823 | $(N,3,528,528)$ | 38,260,230 | 132,704 | 38,392,934 | ✅ |
+| `EfficientNet_B7` | 980 | $(N,3,600,600)$ | 56,528,906 | 178,066 | 56,706,972 | ✅ |
+| `EfficientNet_V2_Small` | 321 | $(N,3,384,384)$ | 18,414,552 | 86,116 | 18,500,668 | ✅ |
+| `EfficientNet_V2_Medium` | 420 | $(N,3,480,480)$ | 46,012,920 | 162,264 | 46,175,184 | ✅ |
+| `EfficientNet_V2_Large` | 569 | $(N,3,480,480)$ | 104,084,896 | 303,032 | 104,387,928 | ✅ |
+| `EfficientNet_V2_XLarge` | 813 | $(N,3,480,480)$ | 201,762,976 | 450,227 | 202,213,203 | ✅ |
 
 *Waiting for future updates…🔮*
 
