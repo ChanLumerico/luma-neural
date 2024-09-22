@@ -1,6 +1,6 @@
 from typing import Self, override, ClassVar
 
-from luma.core.super import Estimator, Evaluator, Supervised
+from luma.core.super import Estimator, Evaluator
 from luma.interface.typing import Matrix, Tensor, Vector
 from luma.interface.util import InitUtil
 from luma.metric.classification import Accuracy
@@ -9,11 +9,13 @@ from luma.neural.base import NeuralModel
 from luma.neural.block import ConvBlock2D, DenseBlock
 from luma.neural.layer import Activation, Dense, Flatten, Sequential
 
+from ..types import ImageClassifier
+
 
 __all__ = ("_LeNet_1", "_LeNet_4", "_LeNet_5")
 
 
-class _LeNet_1(Estimator, Supervised, NeuralModel):
+class _LeNet_1(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = Activation.Tanh,
@@ -136,7 +138,7 @@ class _LeNet_1(Estimator, Supervised, NeuralModel):
         return super(_LeNet_1, self).score_nn(X, y, metric, argmax)
 
 
-class _LeNet_4(Estimator, Supervised, NeuralModel):
+class _LeNet_4(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = Activation.Tanh,
@@ -270,7 +272,7 @@ class _LeNet_4(Estimator, Supervised, NeuralModel):
         return super(_LeNet_4, self).score_nn(X, y, metric, argmax)
 
 
-class _LeNet_5(Estimator, Supervised, NeuralModel):
+class _LeNet_5(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = Activation.Tanh,

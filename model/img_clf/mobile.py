@@ -1,6 +1,6 @@
 from typing import Self, override, ClassVar, List
 
-from luma.core.super import Estimator, Evaluator, Supervised
+from luma.core.super import Estimator, Evaluator
 from luma.interface.typing import Matrix, Tensor, Vector
 from luma.interface.util import InitUtil
 from luma.metric.classification import Accuracy
@@ -8,6 +8,8 @@ from luma.metric.classification import Accuracy
 from luma.neural.base import NeuralModel
 from luma.neural.layer import *
 from luma.neural.block import SeparableConv2D, MobileNetBlock
+
+from ..types import ImageClassifier
 
 
 __all__ = (
@@ -22,7 +24,7 @@ InvRes = MobileNetBlock.InvRes
 InvRes_SE = MobileNetBlock.InvRes_SE
 
 
-class _Mobile_V1(Estimator, Supervised, NeuralModel):
+class _Mobile_V1(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = Activation.ReLU,
@@ -162,7 +164,7 @@ class _Mobile_V1(Estimator, Supervised, NeuralModel):
         return super(_Mobile_V1, self).score_nn(X, y, metric, argmax)
 
 
-class _Mobile_V2(Estimator, Supervised, NeuralModel):
+class _Mobile_V2(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = Activation.ReLU6,
@@ -302,7 +304,7 @@ class _Mobile_V2(Estimator, Supervised, NeuralModel):
         return super(_Mobile_V2, self).score_nn(X, y, metric, argmax)
 
 
-class _Mobile_V3_Small(Estimator, Supervised, NeuralModel):
+class _Mobile_V3_Small(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         initializer: InitUtil.InitStr = None,
@@ -435,7 +437,7 @@ class _Mobile_V3_Small(Estimator, Supervised, NeuralModel):
         return super(_Mobile_V3_Small, self).score_nn(X, y, metric, argmax)
 
 
-class _Mobile_V3_Large(Estimator, Supervised, NeuralModel):
+class _Mobile_V3_Large(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         initializer: InitUtil.InitStr = None,

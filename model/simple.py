@@ -12,7 +12,7 @@ from luma.neural.layer import Dense, Dropout, Flatten, Sequential
 __all__ = ("SimpleMLP", "SimpleCNN")
 
 
-class SimpleMLP(Estimator, Supervised, NeuralModel):
+class SimpleMLP(Estimator, NeuralModel):
     """
     An MLP (Multilayer Perceptron) is a type of artificial neural network
     composed of at least three layers: an input layer, one or more hidden
@@ -166,7 +166,7 @@ class SimpleMLP(Estimator, Supervised, NeuralModel):
         return super(SimpleMLP, self).score_nn(X, y, metric, argmax)
 
 
-class SimpleCNN(Estimator, Supervised, NeuralModel):
+class SimpleCNN(Estimator, NeuralModel):
     """
     A Convolutional Neural Network (CNN) is a type of deep neural network
     primarily used in image recognition and processing that is particularly

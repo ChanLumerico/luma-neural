@@ -1,6 +1,6 @@
 from typing import Any, Self, override, ClassVar
 
-from luma.core.super import Estimator, Evaluator, Supervised
+from luma.core.super import Estimator, Evaluator
 from luma.interface.typing import Matrix, Tensor, Vector
 from luma.interface.util import InitUtil
 from luma.metric.classification import Accuracy
@@ -19,13 +19,15 @@ from luma.neural.layer import (
 )
 from luma.neural import functional as F
 
+from ..types import ImageClassifier
+
 BasicBlock = ResNetBlock.Basic
 Bottleneck = ResNetBlock.Bottleneck
 PreActBottle = ResNetBlock.PreActBottleneck
 Bottleneck_SE = ResNetBlock.Bottleneck_SE
 
 
-class _ResNet_18(Estimator, Supervised, NeuralModel):
+class _ResNet_18(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = Activation.ReLU,
@@ -158,7 +160,7 @@ class _ResNet_18(Estimator, Supervised, NeuralModel):
         return super(_ResNet_18, self).score_nn(X, y, metric, argmax)
 
 
-class _ResNet_34(Estimator, Supervised, NeuralModel):
+class _ResNet_34(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = Activation.ReLU,
@@ -291,7 +293,7 @@ class _ResNet_34(Estimator, Supervised, NeuralModel):
         return super(_ResNet_34, self).score_nn(X, y, metric, argmax)
 
 
-class _ResNet_50(Estimator, Supervised, NeuralModel):
+class _ResNet_50(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = Activation.ReLU,
@@ -424,7 +426,7 @@ class _ResNet_50(Estimator, Supervised, NeuralModel):
         return super(_ResNet_50, self).score_nn(X, y, metric, argmax)
 
 
-class _ResNet_101(Estimator, Supervised, NeuralModel):
+class _ResNet_101(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = Activation.ReLU,
@@ -557,7 +559,7 @@ class _ResNet_101(Estimator, Supervised, NeuralModel):
         return super(_ResNet_101, self).score_nn(X, y, metric, argmax)
 
 
-class _ResNet_152(Estimator, Supervised, NeuralModel):
+class _ResNet_152(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = Activation.ReLU,
@@ -690,7 +692,7 @@ class _ResNet_152(Estimator, Supervised, NeuralModel):
         return super(_ResNet_152, self).score_nn(X, y, metric, argmax)
 
 
-class _ResNet_200(Estimator, Supervised, NeuralModel):
+class _ResNet_200(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = Activation.ReLU,
@@ -827,7 +829,7 @@ class _ResNet_200(Estimator, Supervised, NeuralModel):
         return super(_ResNet_200, self).score_nn(X, y, metric, argmax)
 
 
-class _ResNet_269(Estimator, Supervised, NeuralModel):
+class _ResNet_269(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = Activation.ReLU,
@@ -964,7 +966,7 @@ class _ResNet_269(Estimator, Supervised, NeuralModel):
         return super(_ResNet_269, self).score_nn(X, y, metric, argmax)
 
 
-class _ResNet_1001(Estimator, Supervised, NeuralModel):
+class _ResNet_1001(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = Activation.ReLU,
@@ -1101,7 +1103,7 @@ class _ResNet_1001(Estimator, Supervised, NeuralModel):
         return super(_ResNet_1001, self).score_nn(X, y, metric, argmax)
 
 
-class _SE_ResNet_50(Estimator, Supervised, NeuralModel):
+class _SE_ResNet_50(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = Activation.ReLU,
@@ -1233,7 +1235,7 @@ class _SE_ResNet_50(Estimator, Supervised, NeuralModel):
         return super(_SE_ResNet_50, self).score_nn(X, y, metric, argmax)
 
 
-class _SE_ResNet_152(Estimator, Supervised, NeuralModel):
+class _SE_ResNet_152(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = Activation.ReLU,

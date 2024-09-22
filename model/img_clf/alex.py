@@ -1,7 +1,7 @@
 from typing import Self, override, ClassVar
 from dataclasses import asdict
 
-from luma.core.super import Estimator, Evaluator, Supervised
+from luma.core.super import Estimator, Evaluator
 from luma.interface.typing import Matrix, Tensor, Vector
 from luma.interface.util import InitUtil
 from luma.metric.classification import Accuracy
@@ -16,11 +16,13 @@ from luma.neural.layer import (
     Sequential,
 )
 
+from ..types import ImageClassifier
+
 
 __all__ = ("_AlexNet", "_ZFNet")
 
 
-class _AlexNet(Estimator, Supervised, NeuralModel):
+class _AlexNet(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = Activation.ReLU,
@@ -228,7 +230,7 @@ class _AlexNet(Estimator, Supervised, NeuralModel):
         return super(_AlexNet, self).score_nn(X, y, metric, argmax)
 
 
-class _ZFNet(Estimator, Supervised, NeuralModel):
+class _ZFNet(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = Activation.ReLU,

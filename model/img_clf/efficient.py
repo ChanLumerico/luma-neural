@@ -1,16 +1,17 @@
 from typing import Self, override, ClassVar
 
-from luma.core.super import Estimator, Evaluator, Supervised
+from luma.core.super import Estimator, Evaluator
 from luma.interface.typing import Matrix, Tensor, TensorLike, Vector
 from luma.interface.util import InitUtil
 from luma.metric.classification import Accuracy
+from luma.preprocessing.image import Resize
 
 from luma.neural.base import NeuralModel
 from luma.neural.block import EfficientBlock
 from luma.neural.layer import *
 from luma.neural import functional as F
 
-from luma.preprocessing.image import Resize
+from ..types import ImageClassifier
 
 MBConv = EfficientBlock.MBConv
 FusedMBConv = EfficientBlock.FusedMBConv
@@ -39,7 +40,7 @@ multipliers = [
 input_sizes = [224, 240, 260, 300, 380, 456, 528, 600]
 
 
-class _EfficientNet_B0(Estimator, Supervised, NeuralModel):
+class _EfficientNet_B0(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = Activation.Swish,
@@ -160,7 +161,7 @@ class _EfficientNet_B0(Estimator, Supervised, NeuralModel):
         return super(_EfficientNet_B0, self).score_nn(X, y, metric, argmax)
 
 
-class _EfficientNet_B1(Estimator, Supervised, NeuralModel):
+class _EfficientNet_B1(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = Activation.Swish,
@@ -281,7 +282,7 @@ class _EfficientNet_B1(Estimator, Supervised, NeuralModel):
         return super(_EfficientNet_B1, self).score_nn(X, y, metric, argmax)
 
 
-class _EfficientNet_B2(Estimator, Supervised, NeuralModel):
+class _EfficientNet_B2(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = Activation.Swish,
@@ -402,7 +403,7 @@ class _EfficientNet_B2(Estimator, Supervised, NeuralModel):
         return super(_EfficientNet_B2, self).score_nn(X, y, metric, argmax)
 
 
-class _EfficientNet_B3(Estimator, Supervised, NeuralModel):
+class _EfficientNet_B3(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = Activation.Swish,
@@ -523,7 +524,7 @@ class _EfficientNet_B3(Estimator, Supervised, NeuralModel):
         return super(_EfficientNet_B3, self).score_nn(X, y, metric, argmax)
 
 
-class _EfficientNet_B4(Estimator, Supervised, NeuralModel):
+class _EfficientNet_B4(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = Activation.Swish,
@@ -644,7 +645,7 @@ class _EfficientNet_B4(Estimator, Supervised, NeuralModel):
         return super(_EfficientNet_B4, self).score_nn(X, y, metric, argmax)
 
 
-class _EfficientNet_B5(Estimator, Supervised, NeuralModel):
+class _EfficientNet_B5(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = Activation.Swish,
@@ -765,7 +766,7 @@ class _EfficientNet_B5(Estimator, Supervised, NeuralModel):
         return super(_EfficientNet_B5, self).score_nn(X, y, metric, argmax)
 
 
-class _EfficientNet_B6(Estimator, Supervised, NeuralModel):
+class _EfficientNet_B6(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = Activation.Swish,
@@ -886,7 +887,7 @@ class _EfficientNet_B6(Estimator, Supervised, NeuralModel):
         return super(_EfficientNet_B6, self).score_nn(X, y, metric, argmax)
 
 
-class _EfficientNet_B7(Estimator, Supervised, NeuralModel):
+class _EfficientNet_B7(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = Activation.Swish,
@@ -1007,7 +1008,7 @@ class _EfficientNet_B7(Estimator, Supervised, NeuralModel):
         return super(_EfficientNet_B7, self).score_nn(X, y, metric, argmax)
 
 
-class _EfficientNet_V2_Small(Estimator, Supervised, NeuralModel):
+class _EfficientNet_V2_Small(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = Activation.Swish,
@@ -1159,7 +1160,7 @@ class _EfficientNet_V2_Small(Estimator, Supervised, NeuralModel):
         return super(_EfficientNet_V2_Small, self).score_nn(X, y, metric, argmax)
 
 
-class _EfficientNet_V2_Medium(Estimator, Supervised, NeuralModel):
+class _EfficientNet_V2_Medium(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = Activation.Swish,
@@ -1311,7 +1312,7 @@ class _EfficientNet_V2_Medium(Estimator, Supervised, NeuralModel):
         return super(_EfficientNet_V2_Medium, self).score_nn(X, y, metric, argmax)
 
 
-class _EfficientNet_V2_Large(Estimator, Supervised, NeuralModel):
+class _EfficientNet_V2_Large(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = Activation.Swish,
@@ -1463,7 +1464,7 @@ class _EfficientNet_V2_Large(Estimator, Supervised, NeuralModel):
         return super(_EfficientNet_V2_Large, self).score_nn(X, y, metric, argmax)
 
 
-class _EfficientNet_V2_XLarge(Estimator, Supervised, NeuralModel):
+class _EfficientNet_V2_XLarge(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = Activation.Swish,

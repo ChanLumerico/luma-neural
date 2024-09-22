@@ -1,7 +1,7 @@
 from typing import Self, override, ClassVar
 from dataclasses import asdict
 
-from luma.core.super import Estimator, Evaluator, Supervised
+from luma.core.super import Estimator, Evaluator
 from luma.interface.typing import Matrix, Tensor, Vector
 from luma.interface.util import InitUtil
 from luma.metric.classification import Accuracy
@@ -15,6 +15,8 @@ from luma.neural.layer import (
     Sequential,
 )
 
+from ..types import ImageClassifier
+
 
 __all__ = (
     "_VGGNet_11",
@@ -24,7 +26,7 @@ __all__ = (
 )
 
 
-class _VGGNet_11(Estimator, Supervised, NeuralModel):
+class _VGGNet_11(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = Activation.ReLU,
@@ -191,7 +193,7 @@ class _VGGNet_11(Estimator, Supervised, NeuralModel):
         return super(_VGGNet_11, self).score_nn(X, y, metric, argmax)
 
 
-class _VGGNet_13(Estimator, Supervised, NeuralModel):
+class _VGGNet_13(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = Activation.ReLU,
@@ -370,7 +372,7 @@ class _VGGNet_13(Estimator, Supervised, NeuralModel):
         return super(_VGGNet_13, self).score_nn(X, y, metric, argmax)
 
 
-class _VGGNet_16(Estimator, Supervised, NeuralModel):
+class _VGGNet_16(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = Activation.ReLU,
@@ -561,7 +563,7 @@ class _VGGNet_16(Estimator, Supervised, NeuralModel):
         return super(_VGGNet_16, self).score_nn(X, y, metric, argmax)
 
 
-class _VGGNet_19(Estimator, Supervised, NeuralModel):
+class _VGGNet_19(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = Activation.ReLU,

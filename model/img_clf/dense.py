@@ -1,6 +1,6 @@
 from typing import Self, override, ClassVar, List
 
-from luma.core.super import Estimator, Evaluator, Supervised
+from luma.core.super import Estimator, Evaluator
 from luma.interface.typing import Matrix, Tensor, Vector
 from luma.interface.util import InitUtil
 from luma.metric.classification import Accuracy
@@ -10,12 +10,14 @@ from luma.neural.block import DenseNetBlock, SEBlock2D
 from luma.neural.layer import *
 from luma.neural import functional as F
 
+from ..types import ImageClassifier
+
 Composite = DenseNetBlock.Composite
 DenseUnit = DenseNetBlock.DenseUnit
 Transition = DenseNetBlock.Transition
 
 
-class _DenseNet_121(Estimator, Supervised, NeuralModel):
+class _DenseNet_121(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = Activation.ReLU,
@@ -138,7 +140,7 @@ class _DenseNet_121(Estimator, Supervised, NeuralModel):
         return super(_DenseNet_121, self).score_nn(X, y, metric, argmax)
 
 
-class _DenseNet_169(Estimator, Supervised, NeuralModel):
+class _DenseNet_169(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = Activation.ReLU,
@@ -261,7 +263,7 @@ class _DenseNet_169(Estimator, Supervised, NeuralModel):
         return super(_DenseNet_169, self).score_nn(X, y, metric, argmax)
 
 
-class _DenseNet_201(Estimator, Supervised, NeuralModel):
+class _DenseNet_201(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = Activation.ReLU,
@@ -384,7 +386,7 @@ class _DenseNet_201(Estimator, Supervised, NeuralModel):
         return super(_DenseNet_201, self).score_nn(X, y, metric, argmax)
 
 
-class _DenseNet_264(Estimator, Supervised, NeuralModel):
+class _DenseNet_264(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = Activation.ReLU,
@@ -507,7 +509,7 @@ class _DenseNet_264(Estimator, Supervised, NeuralModel):
         return super(_DenseNet_264, self).score_nn(X, y, metric, argmax)
 
 
-class _SE_DenseNet_121(Estimator, Supervised, NeuralModel):
+class _SE_DenseNet_121(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = Activation.ReLU,
@@ -643,7 +645,7 @@ class _SE_DenseNet_121(Estimator, Supervised, NeuralModel):
         return super(_SE_DenseNet_121, self).score_nn(X, y, metric, argmax)
 
 
-class _SE_DenseNet_169(Estimator, Supervised, NeuralModel):
+class _SE_DenseNet_169(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = Activation.ReLU,

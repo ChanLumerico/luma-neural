@@ -1,7 +1,7 @@
 from typing import Any, Self, override, ClassVar
 from dataclasses import asdict
 
-from luma.core.super import Estimator, Evaluator, Optimizer, Supervised
+from luma.core.super import Estimator, Evaluator, Optimizer
 from luma.interface.typing import Matrix, Tensor, Vector
 from luma.interface.util import InitUtil
 from luma.metric.classification import Accuracy
@@ -29,6 +29,8 @@ from luma.neural.layer import (
     Sequential,
 )
 
+from ..types import ImageClassifier
+
 
 __all__ = (
     "_Inception_V1",
@@ -42,7 +44,7 @@ __all__ = (
 )
 
 
-class _Inception_V1(Estimator, Supervised, NeuralModel):
+class _Inception_V1(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = Activation.ReLU,
@@ -209,7 +211,7 @@ class _Inception_V1(Estimator, Supervised, NeuralModel):
         return super(_Inception_V1, self).score_nn(X, y, metric, argmax)
 
 
-class _Inception_V2(Estimator, Supervised, NeuralModel):
+class _Inception_V2(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = Activation.ReLU,
@@ -415,7 +417,7 @@ class _Inception_V2(Estimator, Supervised, NeuralModel):
         return super(_Inception_V2, self).score_nn(X, y, metric, argmax)
 
 
-class _Inception_V3(Estimator, Supervised, NeuralModel):
+class _Inception_V3(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         optimizer: Optimizer,
@@ -632,7 +634,7 @@ class _Inception_V3(Estimator, Supervised, NeuralModel):
         return super(_Inception_V3, self).score_nn(X, y, metric, argmax)
 
 
-class _Inception_V4(Estimator, Supervised, NeuralModel):
+class _Inception_V4(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = Activation.ReLU,
@@ -758,7 +760,7 @@ class _Inception_V4(Estimator, Supervised, NeuralModel):
         return super(_Inception_V4, self).score_nn(X, y, metric, argmax)
 
 
-class _InceptionRes_V1(Estimator, Supervised, NeuralModel):
+class _InceptionRes_V1(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = Activation.ReLU,
@@ -883,7 +885,7 @@ class _InceptionRes_V1(Estimator, Supervised, NeuralModel):
         return super(_InceptionRes_V1, self).score_nn(X, y, metric, argmax)
 
 
-class _InceptionRes_V2(Estimator, Supervised, NeuralModel):
+class _InceptionRes_V2(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = Activation.ReLU,
@@ -1011,7 +1013,7 @@ class _InceptionRes_V2(Estimator, Supervised, NeuralModel):
         return super(_InceptionRes_V2, self).score_nn(X, y, metric, argmax)
 
 
-class _Xception(Estimator, Supervised, NeuralModel):
+class _Xception(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = Activation.ReLU,
@@ -1119,7 +1121,7 @@ class _Xception(Estimator, Supervised, NeuralModel):
         return super(_Xception, self).score_nn(X, y, metric, argmax)
 
 
-class _SE_InceptionRes_V2(Estimator, Supervised, NeuralModel):
+class _SE_InceptionRes_V2(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = Activation.ReLU,
