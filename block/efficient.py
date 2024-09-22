@@ -1,5 +1,4 @@
-from typing import Tuple, override
-
+from typing import Tuple, Callable
 from luma.core.super import Optimizer
 from luma.interface.typing import Tensor, TensorLike
 from luma.interface.util import InitUtil
@@ -17,9 +16,9 @@ class _FusedMBConv(LayerGraph):
         out_channels: int,
         filter_size: Tuple[int, int] | int = 3,
         stride: int = 1,
-        expand: int = 1,
+        expand: float = 1.0,
         se_reduction: int = 4,
-        activation: callable = Activation.Swish,
+        activation: Callable = Activation.Swish,
         optimizer: Optimizer | None = None,
         initializer: InitUtil.InitStr = None,
         lambda_: float = 0.0,
@@ -54,8 +53,8 @@ class _FusedMBConv(LayerGraph):
         super(_FusedMBConv, self).__init__(
             graph={
                 self.rt_: [self.conv_],
-                self.conv_: [self.se_, self.scale_],
-                self.se_: [self.scale_],
+                self.conv_: [self.se_block, self.scale_],
+                self.se_block: [self.scale_],
                 self.scale_: [self.tm_],
             },
             root=self.rt_,
@@ -65,40 +64,83 @@ class _FusedMBConv(LayerGraph):
         if self.do_shortcut:
             self[self.rt_].append(self.tm_)
 
+        if self.expand != 1:
+            self[self.rt_].remove(self.conv_)
+            self[self.rt_].append(self.conv_exp)
+
+            del self.graph[self.conv_]
+            self.graph[self.conv_exp] = [self.se_block, self.scale_]
+
         self.build()
         if optimizer is not None:
             self.set_optimizer(optimizer)
 
     def init_nodes(self) -> None:
         self.rt_ = LayerNode(Identity(), name="rt_")
+
         self.conv_ = LayerNode(
             Sequential(
                 Conv2D(
                     self.in_channels,
-                    self.hid_channels,
-                    1,
-                    padding="valid",
-                    **self.basic_args
+                    self.out_channels,
+                    self.filter_size,
+                    self.stride,
+                    padding=self.filter_size // 2,
+                    **self.basic_args,
                 ),
-                BatchNorm2D(self.hid_channels, self.momentum),
+                (
+                    BatchNorm2D(self.out_channels, self.momentum)
+                    if self.do_batch_norm
+                    else None
+                ),
+                self.activation(),
+            ),
+            name="conv_",
+        )
+        self.conv_exp = LayerNode(
+            Sequential(
+                Conv2D(
+                    self.in_channels,
+                    self.hid_channels,
+                    self.filter_size,
+                    self.stride,
+                    padding=self.filter_size // 2,
+                    **self.basic_args,
+                ),
+                (
+                    BatchNorm2D(self.hid_channels, self.momentum)
+                    if self.do_batch_norm
+                    else None
+                ),
                 self.activation(),
                 Conv2D(
                     self.hid_channels,
                     self.out_channels,
-                    self.filter_size,
-                    self.stride,
-                    self.filter_size // 2,
-                    **self.basic_args
+                    1,
+                    padding="valid",
+                    **self.basic_args,
                 ),
-                BatchNorm2D(self.out_channels, self.momentum),
+                (
+                    BatchNorm2D(self.out_channels, self.momentum)
+                    if self.do_batch_norm
+                    else None
+                ),
+                self.activation(),
             ),
-            name="conv_",
+            name="conv_exp",
         )
-        self.se_ = LayerNode(
-            _SEBlock2D(self.out_channels, self.se_reduction, **self.basic_args),
-            name="se_",
+
+        self.se_block = LayerNode(
+            _SEBlock2D(
+                self.out_channels,
+                self.se_reduction,
+                self.activation,
+                self.optimizer,
+                **self.basic_args,
+            ),
+            name="se_block",
         )
-        self.scale_ = LayerNode(Identity(), MergeMode.HADAMARD, name="scales_")
+        self.scale_ = LayerNode(Identity(), MergeMode.HADAMARD, name="scale_")
         self.tm_ = LayerNode(Identity(), MergeMode.SUM, name="tm_")
 
     @Tensor.force_dim(4)
@@ -109,6 +151,8 @@ class _FusedMBConv(LayerGraph):
     def backward(self, d_out: TensorLike) -> TensorLike:
         return super().backward(d_out)
 
-    @override
     def out_shape(self, in_shape: Tuple[int]) -> Tuple[int]:
-        return self.conv_.out_shape(in_shape)
+        if self.expand == 1:
+            return self.conv_.out_shape(in_shape)
+        else:
+            return self.conv_exp.out_shape(in_shape)

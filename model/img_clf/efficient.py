@@ -1010,6 +1010,7 @@ class _EfficientNet_B7(Estimator, Supervised, NeuralModel):
 class _EfficientNet_V2_Small(Estimator, Supervised, NeuralModel):
     def __init__(
         self,
+        activation: callable = Activation.Swish,
         initializer: InitUtil.InitStr = None,
         out_features: int = 1000,
         batch_size: int = 128,
@@ -1025,6 +1026,7 @@ class _EfficientNet_V2_Small(Estimator, Supervised, NeuralModel):
         random_state: int | None = None,
         deep_verbose: bool = False,
     ) -> None:
+        self.activation = activation
         self.initializer = initializer
         self.out_features = out_features
         self.lambda_ = lambda_
@@ -1075,37 +1077,35 @@ class _EfficientNet_V2_Small(Estimator, Supervised, NeuralModel):
             "random_state": self.random_state,
         }
         mbconv_config = [
-            [2, 24, 1, 1, True, "relu"],
-            [4, 48, 4, 2, True, "relu"],
-            [4, 64, 4, 2, True, "relu"],
-            [6, 128, 4, 2, False, "swish"],
-            [9, 160, 6, 1, False, "swish"],
-            [15, 256, 6, 2, False, "swish"],
+            [2, 24, 1, 1, True],
+            [4, 48, 4, 2, True],
+            [4, 64, 4, 2, True],
+            [6, 128, 4, 2, False],
+            [9, 160, 6, 1, False],
+            [15, 256, 6, 2, False],
         ]
 
         self.model.extend(
             Conv2D(3, 24, 3, 2, **base_args),
             BatchNorm2D(24, self.momentum),
-            Activation.ReLU(),
+            self.activation(),
         )
 
         in_ = 24
-        for i, (n, out, exp, s, is_fused, act) in enumerate(mbconv_config):
+        for i, (n, out, exp, s, is_fused) in enumerate(mbconv_config):
             block = FusedMBConv if is_fused else MBConv
-            act = Activation.Swish if act == "swish" else Activation.ReLU
-
             for j in range(n):
                 s_ = s if j == 0 else 1
                 self.model += (
                     f"{block.__name__}{i + 1}_{j + 1}",
-                    block(in_, out, 3, s_, exp, 4, act, **base_args),
+                    block(in_, out, 3, s_, exp, 4, **base_args),
                 )
                 in_ = out
 
         self.model.extend(
             Conv2D(in_, 1280, 1, 1, "valid", **base_args),
             BatchNorm2D(1280, self.momentum),
-            Activation.ReLU(),
+            self.activation(),
         )
         self.model.extend(
             Dropout(self.dropout_rate, self.random_state),
@@ -1162,6 +1162,7 @@ class _EfficientNet_V2_Small(Estimator, Supervised, NeuralModel):
 class _EfficientNet_V2_Medium(Estimator, Supervised, NeuralModel):
     def __init__(
         self,
+        activation: callable = Activation.Swish,
         initializer: InitUtil.InitStr = None,
         out_features: int = 1000,
         batch_size: int = 128,
@@ -1177,6 +1178,7 @@ class _EfficientNet_V2_Medium(Estimator, Supervised, NeuralModel):
         random_state: int | None = None,
         deep_verbose: bool = False,
     ) -> None:
+        self.activation = activation
         self.initializer = initializer
         self.out_features = out_features
         self.lambda_ = lambda_
@@ -1227,37 +1229,35 @@ class _EfficientNet_V2_Medium(Estimator, Supervised, NeuralModel):
             "random_state": self.random_state,
         }
         mbconv_config = [
-            [3, 24, 1, 1, True, "relu"],
-            [5, 48, 4, 2, True, "relu"],
-            [5, 80, 4, 2, True, "relu"],
-            [7, 160, 4, 2, False, "swish"],
-            [14, 176, 6, 1, False, "swish"],
-            [18, 304, 6, 2, False, "swish"],
+            [3, 24, 1, 1, True],
+            [5, 48, 4, 2, True],
+            [5, 80, 4, 2, True],
+            [7, 160, 4, 2, False],
+            [14, 176, 6, 1, False],
+            [18, 304, 6, 2, False],
         ]
 
         self.model.extend(
             Conv2D(3, 24, 3, 2, **base_args),
             BatchNorm2D(24, self.momentum),
-            Activation.ReLU(),
+            self.activation(),
         )
 
         in_ = 24
-        for i, (n, out, exp, s, is_fused, act) in enumerate(mbconv_config):
+        for i, (n, out, exp, s, is_fused) in enumerate(mbconv_config):
             block = FusedMBConv if is_fused else MBConv
-            act = Activation.Swish if act == "swish" else Activation.ReLU
-
             for j in range(n):
                 s_ = s if j == 0 else 1
                 self.model += (
                     f"{block.__name__}{i + 1}_{j + 1}",
-                    block(in_, out, 3, s_, exp, 4, act, **base_args),
+                    block(in_, out, 3, s_, exp, 4, **base_args),
                 )
                 in_ = out
 
         self.model.extend(
             Conv2D(in_, 1280, 1, 1, "valid", **base_args),
             BatchNorm2D(1280, self.momentum),
-            Activation.ReLU(),
+            self.activation(),
         )
         self.model.extend(
             Dropout(self.dropout_rate, self.random_state),
@@ -1440,7 +1440,7 @@ class _EfficientNet_V2_Large(Estimator, Supervised, NeuralModel):
         return super(_EfficientNet_V2_Large, self).train(X, y, epoch)
 
     def update_size_dropout_rate(self, stage: int) -> tuple[int, float]:
-        res_arr = [192, 224, 256, 300]
+        res_arr = [192, 224, 256, 320]
         drop_rate_arr = [0.3, 0.4, 0.5, 0.6]
 
         assert stage < 4
