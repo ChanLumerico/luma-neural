@@ -1036,7 +1036,7 @@ class _EfficientNet_V2_Small(Estimator, Supervised, NeuralModel):
         self.shuffle = shuffle
         self.random_state = random_state
         self._fitted = False
-        self._cur_stage = 0
+        self._cur_stage = -1
 
         super().__init__(
             batch_size,
@@ -1077,21 +1077,19 @@ class _EfficientNet_V2_Small(Estimator, Supervised, NeuralModel):
             "random_state": self.random_state,
         }
         mbconv_config = [
-            [2, 24, 1, 1, True],
-            [4, 48, 4, 2, True],
-            [4, 64, 4, 2, True],
-            [6, 128, 4, 2, False],
-            [9, 160, 6, 1, False],
-            [15, 256, 6, 2, False],
+            [2, 64, 4, 1, True],
+            [3, 80, 4, 2, True],
+            [4, 256, 4, 2, False],
+            [6, 512, 4, 2, False],
         ]
 
         self.model.extend(
-            Conv2D(3, 24, 3, 2, **base_args),
-            BatchNorm2D(24, self.momentum),
+            Conv2D(3, 64, 3, 2, **base_args),
+            BatchNorm2D(64, self.momentum),
             self.activation(),
         )
 
-        in_ = 24
+        in_ = 64
         for i, (n, out, exp, s, is_fused) in enumerate(mbconv_config):
             block = FusedMBConv if is_fused else MBConv
             for j in range(n):
@@ -1114,7 +1112,7 @@ class _EfficientNet_V2_Small(Estimator, Supervised, NeuralModel):
             Dense(1280, self.out_features, **base_args),
         )
 
-    input_shape: ClassVar[tuple] = (-1, 3, 128, 128)
+    input_shape: ClassVar[tuple] = (-1, 3, 384, 384)
 
     @Tensor.force_shape(input_shape)
     def fit(self, X: Tensor, y: Matrix) -> Self:
@@ -1188,7 +1186,7 @@ class _EfficientNet_V2_Medium(Estimator, Supervised, NeuralModel):
         self.shuffle = shuffle
         self.random_state = random_state
         self._fitted = False
-        self._cur_stage = 0
+        self._cur_stage = -1
 
         super().__init__(
             batch_size,
@@ -1229,21 +1227,19 @@ class _EfficientNet_V2_Medium(Estimator, Supervised, NeuralModel):
             "random_state": self.random_state,
         }
         mbconv_config = [
-            [3, 24, 1, 1, True],
-            [5, 48, 4, 2, True],
-            [5, 80, 4, 2, True],
-            [7, 160, 4, 2, False],
-            [14, 176, 6, 1, False],
-            [18, 304, 6, 2, False],
+            [3, 80, 4, 1, True],
+            [4, 160, 4, 2, True],
+            [4, 224, 4, 2, False],
+            [6, 512, 4, 2, False],
         ]
 
         self.model.extend(
-            Conv2D(3, 24, 3, 2, **base_args),
-            BatchNorm2D(24, self.momentum),
+            Conv2D(3, 80, 3, 2, **base_args),
+            BatchNorm2D(80, self.momentum),
             self.activation(),
         )
 
-        in_ = 24
+        in_ = 80
         for i, (n, out, exp, s, is_fused) in enumerate(mbconv_config):
             block = FusedMBConv if is_fused else MBConv
             for j in range(n):
@@ -1266,7 +1262,7 @@ class _EfficientNet_V2_Medium(Estimator, Supervised, NeuralModel):
             Dense(1280, self.out_features, **base_args),
         )
 
-    input_shape: ClassVar[tuple] = (-1, 3, 160, 160)
+    input_shape: ClassVar[tuple] = (-1, 3, 480, 480)
 
     @Tensor.force_shape(input_shape)
     def fit(self, X: Tensor, y: Matrix) -> Self:
@@ -1289,7 +1285,7 @@ class _EfficientNet_V2_Medium(Estimator, Supervised, NeuralModel):
 
     def update_size_dropout_rate(self, stage: int) -> tuple[int, float]:
         res_arr = [160, 192, 224, 256]
-        drop_rate_arr = [0.2, 0.3, 0.4, 0.5]
+        drop_rate_arr = [0.1, 0.2, 0.3, 0.4]
 
         assert stage < 4
         return res_arr[stage], drop_rate_arr[stage]
@@ -1314,6 +1310,7 @@ class _EfficientNet_V2_Medium(Estimator, Supervised, NeuralModel):
 class _EfficientNet_V2_Large(Estimator, Supervised, NeuralModel):
     def __init__(
         self,
+        activation: callable = Activation.Swish,
         initializer: InitUtil.InitStr = None,
         out_features: int = 1000,
         batch_size: int = 128,
@@ -1329,6 +1326,7 @@ class _EfficientNet_V2_Large(Estimator, Supervised, NeuralModel):
         random_state: int | None = None,
         deep_verbose: bool = False,
     ) -> None:
+        self.activation = activation
         self.initializer = initializer
         self.out_features = out_features
         self.lambda_ = lambda_
@@ -1338,7 +1336,7 @@ class _EfficientNet_V2_Large(Estimator, Supervised, NeuralModel):
         self.shuffle = shuffle
         self.random_state = random_state
         self._fitted = False
-        self._cur_stage = 0
+        self._cur_stage = -1
 
         super().__init__(
             batch_size,
@@ -1379,37 +1377,33 @@ class _EfficientNet_V2_Large(Estimator, Supervised, NeuralModel):
             "random_state": self.random_state,
         }
         mbconv_config = [
-            [4, 32, 1, 1, True, "relu"],
-            [7, 64, 4, 2, True, "relu"],
-            [7, 96, 4, 2, True, "relu"],
-            [10, 192, 4, 2, False, "swish"],
-            [19, 224, 6, 1, False, "swish"],
-            [25, 384, 6, 2, False, "swish"],
+            [4, 112, 4, 1, True],
+            [6, 160, 4, 2, True],
+            [5, 272, 4, 2, False],
+            [6, 640, 4, 2, False],
         ]
 
         self.model.extend(
-            Conv2D(3, 24, 3, 2, **base_args),
-            BatchNorm2D(24, self.momentum),
-            Activation.ReLU(),
+            Conv2D(3, 112, 3, 2, **base_args),
+            BatchNorm2D(112, self.momentum),
+            self.activation(),
         )
 
-        in_ = 24
-        for i, (n, out, exp, s, is_fused, act) in enumerate(mbconv_config):
+        in_ = 112
+        for i, (n, out, exp, s, is_fused) in enumerate(mbconv_config):
             block = FusedMBConv if is_fused else MBConv
-            act = Activation.Swish if act == "swish" else Activation.ReLU
-
             for j in range(n):
                 s_ = s if j == 0 else 1
                 self.model += (
                     f"{block.__name__}{i + 1}_{j + 1}",
-                    block(in_, out, 3, s_, exp, 4, act, **base_args),
+                    block(in_, out, 3, s_, exp, 4, **base_args),
                 )
                 in_ = out
 
         self.model.extend(
             Conv2D(in_, 1280, 1, 1, "valid", **base_args),
             BatchNorm2D(1280, self.momentum),
-            Activation.ReLU(),
+            self.activation(),
         )
         self.model.extend(
             Dropout(self.dropout_rate, self.random_state),
@@ -1418,7 +1412,7 @@ class _EfficientNet_V2_Large(Estimator, Supervised, NeuralModel):
             Dense(1280, self.out_features, **base_args),
         )
 
-    input_shape: ClassVar[tuple] = (-1, 3, 192, 192)
+    input_shape: ClassVar[tuple] = (-1, 3, 480, 480)
 
     @Tensor.force_shape(input_shape)
     def fit(self, X: Tensor, y: Matrix) -> Self:
@@ -1441,7 +1435,7 @@ class _EfficientNet_V2_Large(Estimator, Supervised, NeuralModel):
 
     def update_size_dropout_rate(self, stage: int) -> tuple[int, float]:
         res_arr = [192, 224, 256, 320]
-        drop_rate_arr = [0.3, 0.4, 0.5, 0.6]
+        drop_rate_arr = [0.1, 0.2, 0.3, 0.4]
 
         assert stage < 4
         return res_arr[stage], drop_rate_arr[stage]
