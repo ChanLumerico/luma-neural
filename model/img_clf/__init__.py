@@ -64,9 +64,10 @@ __all__ = (
     "EfficientNet_B5",
     "EfficientNet_B6",
     "EfficientNet_B7",
-    "EfficientNet_V2_Small",
-    "EfficientNet_V2_Medium",
-    "EfficientNet_V2_Large",
+    "EfficientNet_V2S",
+    "EfficientNet_V2M",
+    "EfficientNet_V2L",
+    "EfficientNet_V2XL",
 )
 
 
@@ -2624,10 +2625,13 @@ class EfficientNet_B7(efficient._EfficientNet_B7):
     """
 
 
-class EfficientNet_V2_Small(efficient._EfficientNet_V2_Small): ...
+class EfficientNet_V2S(efficient._EfficientNet_V2S): ...
 
 
-class EfficientNet_V2_Medium(efficient._EfficientNet_V2_Medium): ...
+class EfficientNet_V2M(efficient._EfficientNet_V2M): ...
 
 
-class EfficientNet_V2_Large(efficient._EfficientNet_V2_Large): ...
+class EfficientNet_V2L(efficient._EfficientNet_V2L): ...
+
+
+class EfficientNet_V2XL(efficient._EfficientNet_V2XL): ...

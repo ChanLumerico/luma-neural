@@ -1007,7 +1007,7 @@ class _EfficientNet_B7(Estimator, Supervised, NeuralModel):
         return super(_EfficientNet_B7, self).score_nn(X, y, metric, argmax)
 
 
-class _EfficientNet_V2_Small(Estimator, Supervised, NeuralModel):
+class _EfficientNet_V2S(Estimator, Supervised, NeuralModel):
     def __init__(
         self,
         activation: callable = Activation.Swish,
@@ -1077,19 +1077,21 @@ class _EfficientNet_V2_Small(Estimator, Supervised, NeuralModel):
             "random_state": self.random_state,
         }
         mbconv_config = [
-            [2, 64, 4, 1, True],
-            [3, 80, 4, 2, True],
-            [4, 256, 4, 2, False],
-            [6, 512, 4, 2, False],
+            [2, 24, 1, 1, True],
+            [4, 48, 4, 2, True],
+            [4, 64, 4, 2, True],
+            [6, 128, 4, 2, False],
+            [9, 160, 6, 1, False],
+            [15, 256, 6, 2, False],
         ]
 
         self.model.extend(
-            Conv2D(3, 64, 3, 2, **base_args),
-            BatchNorm2D(64, self.momentum),
+            Conv2D(3, 24, 3, 2, **base_args),
+            BatchNorm2D(24, self.momentum),
             self.activation(),
         )
 
-        in_ = 64
+        in_ = 24
         for i, (n, out, exp, s, is_fused) in enumerate(mbconv_config):
             block = FusedMBConv if is_fused else MBConv
             for j in range(n):
@@ -1116,7 +1118,7 @@ class _EfficientNet_V2_Small(Estimator, Supervised, NeuralModel):
 
     @Tensor.force_shape(input_shape)
     def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_EfficientNet_V2_Small, self).fit_nn(X, y)
+        return super(_EfficientNet_V2S, self).fit_nn(X, y)
 
     @override
     def train(self, X: TensorLike, y: TensorLike, epoch: int) -> list[float]:
@@ -1131,7 +1133,7 @@ class _EfficientNet_V2_Small(Estimator, Supervised, NeuralModel):
             if isinstance(drop_layer, Dropout):
                 drop_layer.dropout_rate = new_drop_rate
 
-        return super(_EfficientNet_V2_Small, self).train(X, y, epoch)
+        return super(_EfficientNet_V2S, self).train(X, y, epoch)
 
     def update_size_dropout_rate(self, stage: int) -> tuple[int, float]:
         res_arr = [128, 160, 192, 224]
@@ -1143,7 +1145,7 @@ class _EfficientNet_V2_Small(Estimator, Supervised, NeuralModel):
     @override
     @Tensor.force_shape(input_shape)
     def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_EfficientNet_V2_Small, self).predict_nn(X, argmax)
+        return super(_EfficientNet_V2S, self).predict_nn(X, argmax)
 
     @override
     @Tensor.force_shape(input_shape)
@@ -1154,10 +1156,10 @@ class _EfficientNet_V2_Small(Estimator, Supervised, NeuralModel):
         metric: Evaluator = Accuracy,
         argmax: bool = True,
     ) -> float:
-        return super(_EfficientNet_V2_Small, self).score_nn(X, y, metric, argmax)
+        return super(_EfficientNet_V2S, self).score_nn(X, y, metric, argmax)
 
 
-class _EfficientNet_V2_Medium(Estimator, Supervised, NeuralModel):
+class _EfficientNet_V2M(Estimator, Supervised, NeuralModel):
     def __init__(
         self,
         activation: callable = Activation.Swish,
@@ -1227,19 +1229,21 @@ class _EfficientNet_V2_Medium(Estimator, Supervised, NeuralModel):
             "random_state": self.random_state,
         }
         mbconv_config = [
-            [3, 80, 4, 1, True],
-            [4, 160, 4, 2, True],
-            [4, 224, 4, 2, False],
-            [6, 512, 4, 2, False],
+            [5, 48, 4, 2, True],
+            [5, 80, 4, 2, True],
+            [7, 160, 4, 2, False],
+            [14, 176, 6, 1, False],
+            [18, 304, 6, 2, False],
+            [5, 512, 6, 1, False],
         ]
 
         self.model.extend(
-            Conv2D(3, 80, 3, 2, **base_args),
-            BatchNorm2D(80, self.momentum),
+            Conv2D(3, 24, 3, 2, **base_args),
+            BatchNorm2D(24, self.momentum),
             self.activation(),
         )
 
-        in_ = 80
+        in_ = 24
         for i, (n, out, exp, s, is_fused) in enumerate(mbconv_config):
             block = FusedMBConv if is_fused else MBConv
             for j in range(n):
@@ -1266,7 +1270,7 @@ class _EfficientNet_V2_Medium(Estimator, Supervised, NeuralModel):
 
     @Tensor.force_shape(input_shape)
     def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_EfficientNet_V2_Medium, self).fit_nn(X, y)
+        return super(_EfficientNet_V2M, self).fit_nn(X, y)
 
     @override
     def train(self, X: TensorLike, y: TensorLike, epoch: int) -> list[float]:
@@ -1281,7 +1285,7 @@ class _EfficientNet_V2_Medium(Estimator, Supervised, NeuralModel):
             if isinstance(drop_layer, Dropout):
                 drop_layer.dropout_rate = new_drop_rate
 
-        return super(_EfficientNet_V2_Medium, self).train(X, y, epoch)
+        return super(_EfficientNet_V2M, self).train(X, y, epoch)
 
     def update_size_dropout_rate(self, stage: int) -> tuple[int, float]:
         res_arr = [160, 192, 224, 256]
@@ -1293,7 +1297,7 @@ class _EfficientNet_V2_Medium(Estimator, Supervised, NeuralModel):
     @override
     @Tensor.force_shape(input_shape)
     def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_EfficientNet_V2_Medium, self).predict_nn(X, argmax)
+        return super(_EfficientNet_V2M, self).predict_nn(X, argmax)
 
     @override
     @Tensor.force_shape(input_shape)
@@ -1304,10 +1308,10 @@ class _EfficientNet_V2_Medium(Estimator, Supervised, NeuralModel):
         metric: Evaluator = Accuracy,
         argmax: bool = True,
     ) -> float:
-        return super(_EfficientNet_V2_Medium, self).score_nn(X, y, metric, argmax)
+        return super(_EfficientNet_V2M, self).score_nn(X, y, metric, argmax)
 
 
-class _EfficientNet_V2_Large(Estimator, Supervised, NeuralModel):
+class _EfficientNet_V2L(Estimator, Supervised, NeuralModel):
     def __init__(
         self,
         activation: callable = Activation.Swish,
@@ -1377,19 +1381,21 @@ class _EfficientNet_V2_Large(Estimator, Supervised, NeuralModel):
             "random_state": self.random_state,
         }
         mbconv_config = [
-            [4, 112, 4, 1, True],
-            [6, 160, 4, 2, True],
-            [5, 272, 4, 2, False],
-            [6, 640, 4, 2, False],
+            [7, 64, 4, 2, True],
+            [7, 96, 4, 2, True],
+            [10, 192, 4, 2, False],
+            [25, 224, 6, 1, False],
+            [25, 384, 6, 2, False],
+            [7, 640, 6, 1, False],
         ]
 
         self.model.extend(
-            Conv2D(3, 112, 3, 2, **base_args),
-            BatchNorm2D(112, self.momentum),
+            Conv2D(3, 32, 3, 2, **base_args),
+            BatchNorm2D(32, self.momentum),
             self.activation(),
         )
 
-        in_ = 112
+        in_ = 32
         for i, (n, out, exp, s, is_fused) in enumerate(mbconv_config):
             block = FusedMBConv if is_fused else MBConv
             for j in range(n):
@@ -1416,7 +1422,7 @@ class _EfficientNet_V2_Large(Estimator, Supervised, NeuralModel):
 
     @Tensor.force_shape(input_shape)
     def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_EfficientNet_V2_Large, self).fit_nn(X, y)
+        return super(_EfficientNet_V2L, self).fit_nn(X, y)
 
     @override
     def train(self, X: TensorLike, y: TensorLike, epoch: int) -> list[float]:
@@ -1431,7 +1437,7 @@ class _EfficientNet_V2_Large(Estimator, Supervised, NeuralModel):
             if isinstance(drop_layer, Dropout):
                 drop_layer.dropout_rate = new_drop_rate
 
-        return super(_EfficientNet_V2_Large, self).train(X, y, epoch)
+        return super(_EfficientNet_V2L, self).train(X, y, epoch)
 
     def update_size_dropout_rate(self, stage: int) -> tuple[int, float]:
         res_arr = [192, 224, 256, 320]
@@ -1443,7 +1449,7 @@ class _EfficientNet_V2_Large(Estimator, Supervised, NeuralModel):
     @override
     @Tensor.force_shape(input_shape)
     def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_EfficientNet_V2_Large, self).predict_nn(X, argmax)
+        return super(_EfficientNet_V2L, self).predict_nn(X, argmax)
 
     @override
     @Tensor.force_shape(input_shape)
@@ -1454,4 +1460,7 @@ class _EfficientNet_V2_Large(Estimator, Supervised, NeuralModel):
         metric: Evaluator = Accuracy,
         argmax: bool = True,
     ) -> float:
-        return super(_EfficientNet_V2_Large, self).score_nn(X, y, metric, argmax)
+        return super(_EfficientNet_V2L, self).score_nn(X, y, metric, argmax)
+
+
+class _EfficientNet_V2XL(Estimator, Supervised, NeuralModel): ...
