@@ -78,6 +78,8 @@ class Conv1D(conv._Conv1D):
         Step size for filters during convolution
     `padding` : tuple of int or int or {"valid", "same"}, default="same"
         Padding strategies ("valid" for no padding, "same" for zero-padding)
+    `groups` : int, default=1
+        Number of convolutional groups
     `initializer` : InitStr, default=None
         Type of weight initializer
     `optimizer` : Optimizer, optional, default=None
@@ -103,6 +105,7 @@ class Conv1D(conv._Conv1D):
         filter_size: Tuple[int] | int,
         stride: int = 1,
         padding: Tuple[int] | int | Literal["valid", "same"] = "same",
+        groups: int = 1,
         initializer: InitUtil.InitStr = None,
         optimizer: Optimizer | None = None,
         lambda_: float = 0,
@@ -114,6 +117,7 @@ class Conv1D(conv._Conv1D):
             filter_size,
             stride,
             padding,
+            groups,
             initializer,
             optimizer,
             lambda_,
@@ -143,6 +147,8 @@ class Conv2D(conv._Conv2D):
         Step size for filters during convolution
     `padding` : tuple of int or int or {"valid", "same"}, default="same"
         Padding strategies ("valid" for no padding, "same" for zero-padding)
+    `groups` : int, default=1
+        Number of convolutional groups
     `initializer` : InitStr, default=None
         Type of weight initializer
     `optimizer` : Optimizer, optional, default=None
@@ -168,6 +174,7 @@ class Conv2D(conv._Conv2D):
         filter_size: Tuple[int, int] | int,
         stride: int = 1,
         padding: Tuple[int, int] | int | Literal["valid", "same"] = "same",
+        groups: int = 1,
         initializer: InitUtil.InitStr = None,
         optimizer: Optimizer = None,
         lambda_: float = 0,
@@ -179,6 +186,7 @@ class Conv2D(conv._Conv2D):
             filter_size,
             stride,
             padding,
+            groups,
             initializer,
             optimizer,
             lambda_,
@@ -208,6 +216,8 @@ class Conv3D(conv._Conv3D):
         Step size for filters during convolution
     `padding` : tuple of int or int or {"valid", "same"}, default="same"
         Padding strategies ("valid" for no padding, "same" for zero-padding)
+    `groups` : int, default=1
+        Number of convolutional groups
     `initializer` : InitStr, default=None
         Type of weight initializer
     `optimizer` : Optimizer, optional, default=None
@@ -233,6 +243,7 @@ class Conv3D(conv._Conv3D):
         filter_size: Tuple[int, int, int] | int,
         stride: int = 1,
         padding: Tuple[int, int, int] | int | Literal["valid", "same"] = "same",
+        groups: int = 1,
         initializer: InitUtil.InitStr = None,
         optimizer: Optimizer = None,
         lambda_: float = 0,
@@ -244,6 +255,7 @@ class Conv3D(conv._Conv3D):
             filter_size,
             stride,
             padding,
+            groups,
             initializer,
             optimizer,
             lambda_,

@@ -26,6 +26,7 @@ class _Conv1D(Layer):
         filter_size: Tuple[int] | int,
         stride: int = 1,
         padding: Tuple[int] | int | Literal["valid", "same"] = "same",
+        groups: int = 1,
         initializer: InitUtil.InitStr = None,
         optimizer: Optimizer | None = None,
         lambda_: float = 0.0,
@@ -36,11 +37,23 @@ class _Conv1D(Layer):
         self.out_channels = out_channels
         self.stride = stride
         self.padding = padding
+        self.groups = groups
         self.initializer = initializer
         self.optimizer = optimizer
         self.lambda_ = lambda_
         self.random_state = random_state
         self.rs_ = np.random.RandomState(self.random_state)
+
+        if self.in_channels % self.groups != 0:
+            raise ValueError(
+                f"in_channels ({self.in_channels})"
+                + f" must be divisible by groups ({self.groups})."
+            )
+        if self.out_channels % self.groups != 0:
+            raise ValueError(
+                f"out_channels ({self.out_channels})"
+                + f" must be divisible by groups ({self.groups})."
+            )
 
         if isinstance(filter_size, int):
             self.filter_size = (filter_size,)
@@ -50,16 +63,18 @@ class _Conv1D(Layer):
         self.init_params(
             w_shape=(
                 self.out_channels,
-                self.in_channels,
+                self.in_channels // self.groups,
                 *self.filter_size,
             ),
             b_shape=(1, self.out_channels),
         )
+
         self.set_param_ranges(
             {
                 "in_channels": ("0<,+inf", int),
                 "out_channels": ("0<,+inf", int),
                 "stride": ("0<,+inf", int),
+                "groups": ("0<,+inf", int),
                 "lambda_": ("0,+inf", None),
             }
         )
@@ -84,18 +99,37 @@ class _Conv1D(Layer):
 
         X_padded = np.pad(X, ((0, 0), (0, 0), (pad_w, pad_w)), mode="constant")
         X_fft = np.fft.rfft(X_padded, n=padded_w, axis=2)
-        filter_fft = np.fft.rfft(
-            self.weights_,
-            n=padded_w,
-            axis=2,
+
+        W_grouped = self.weights_.reshape(
+            self.groups,
+            self.out_channels // self.groups,
+            self.in_channels // self.groups,
+            self.filter_size[0],
         )
 
-        for i in range(batch_size):
-            for f in range(self.out_channels):
-                result_fft = np.sum(X_fft[i] * filter_fft[f], axis=0)
-                result = np.fft.irfft(result_fft, n=padded_w)
+        filter_fft = np.fft.rfft(
+            W_grouped,
+            n=padded_w,
+            axis=3,
+        )
+        for g in range(self.groups):
+            in_start = g * (self.in_channels // self.groups)
+            in_end = (g + 1) * (self.in_channels // self.groups)
 
-                out[i, f] = result[pad_w : padded_w - pad_w : self.stride][:out_width]
+            out_start = g * (self.out_channels // self.groups)
+            out_end = (g + 1) * (self.out_channels // self.groups)
+
+            X_fft_group = X_fft[:, in_start:in_end, :]
+            filter_fft_group = filter_fft[g]
+
+            conv_fft = np.einsum("ncj,fcj->nfj", X_fft_group, filter_fft_group)
+            conv_spatial = np.fft.irfft(conv_fft, n=padded_w, axis=2)
+
+            conv_strided = conv_spatial[:, :, pad_w : padded_w - pad_w : self.stride][
+                :, :, :out_width
+            ]
+
+            out[:, out_start:out_end, :] = conv_strided
 
         out += self.biases_[:, :, np.newaxis]
         return out
@@ -111,37 +145,55 @@ class _Conv1D(Layer):
         self.dB = np.zeros_like(self.biases_)
 
         X_padded = np.pad(X, ((0, 0), (0, 0), (pad_w, pad_w)), mode="constant")
+
         X_fft = np.fft.rfft(X_padded, n=padded_w, axis=2)
         d_out_fft = np.fft.rfft(d_out, n=padded_w, axis=2)
 
-        for f in range(self.out_channels):
-            self.dB[:, f] = np.sum(d_out[:, f, :])
+        for g in range(self.groups):
+            in_start = g * (self.in_channels // self.groups)
+            in_end = (g + 1) * (self.in_channels // self.groups)
 
-        for f in range(self.out_channels):
-            for c in range(channels):
-                filter_d_out_fft = np.sum(
-                    X_fft[:, c] * d_out_fft[:, f].conj(),
-                    axis=0,
-                )
-                self.dW[f, c] = np.fft.irfftn(
-                    filter_d_out_fft,
-                    s=(padded_w,),
-                )[pad_w : pad_w + self.filter_size[0]]
+            out_start = g * (self.out_channels // self.groups)
+            out_end = (g + 1) * (self.out_channels // self.groups)
 
-        self.dW += 2 * self.lambda_ * self.weights_
+            X_fft_group = X_fft[:, in_start:in_end, :]
 
-        for i in range(batch_size):
-            for c in range(channels):
-                temp = np.zeros(padded_w // 2 + 1, dtype=np.complex128)
-                for f in range(self.out_channels):
-                    filter_fft = np.fft.rfft(self.weights_[f, c], n=padded_w)
-                    temp += filter_fft * d_out_fft[i, f]
-                dX_padded[i, c] = np.fft.irfft(temp, n=padded_w)
+            d_out_group = d_out_fft[:, out_start:out_end, :]
 
-        self.dX = dX_padded[:, :, pad_w:-pad_w] if pad_w > 0 else dX_padded
+            self.dB[:, out_start:out_end] += np.sum(
+                d_out[:, out_start:out_end, :], axis=(0, 2)
+            )
+
+            dW_fft = np.einsum("ncj,nfj->fcj", X_fft_group, d_out_group)
+            dW_spatial = np.fft.irfft(dW_fft, n=padded_w, axis=2)
+            dW_group = dW_spatial[:, :, pad_w : pad_w + self.filter_size[0]]
+
+            self.dW[out_start:out_end, :, :] = np.sum(dW_group, axis=0)
+            self.dW[out_start:out_end] += (
+                2 * self.lambda_ * self.weights_[out_start:out_end]
+            )
+
+            flipped_weights = np.flip(self.weights_[out_start:out_end], axis=2)
+            flipped_weights_grouped_fft = np.fft.rfft(
+                flipped_weights,
+                n=padded_w,
+                axis=2,
+            )
+
+            dX_fft_group = np.einsum(
+                "fcj,nfj->ncj", flipped_weights_grouped_fft, d_out_group
+            )
+            dX_spatial = np.fft.irfft(dX_fft_group, n=padded_w, axis=2)
+            dX_padded[:, in_start:in_end, :] += dX_spatial
+
+        if pad_w > 0:
+            self.dX = dX_padded[:, :, pad_w:-pad_w]
+        else:
+            self.dX = dX_padded
+
         return self.dX
 
-    def _get_padding_dim(self, width: int) -> Tuple[int, ...]:
+    def _get_padding_dim(self, width: int) -> Tuple[int, int]:
         if isinstance(self.padding, tuple):
             if len(self.padding) != 1:
                 raise ValueError("Padding tuple must have exactly one value.")
@@ -159,11 +211,14 @@ class _Conv1D(Layer):
         padded_w = width + 2 * pad_w
         return pad_w, padded_w
 
-    def out_shape(self, in_shape: Tuple[int]) -> Tuple[int]:
+    def out_shape(self, in_shape: Tuple[int, ...]) -> Tuple[int, ...]:
+        if len(in_shape) != 3:
+            raise ValueError("Input shape must be a 3-tuple (N, C, W).")
+
         batch_size, _, width = in_shape
         _, padded_w = self._get_padding_dim(width)
-        out_width = ((padded_w - self.filter_size[0]) // self.stride) + 1
 
+        out_width = ((padded_w - self.filter_size[0]) // self.stride) + 1
         return (batch_size, self.out_channels, out_width)
 
 
@@ -175,6 +230,7 @@ class _Conv2D(Layer):
         filter_size: Tuple[int, int] | int,
         stride: int = 1,
         padding: Tuple[int, int] | int | Literal["valid", "same"] = "same",
+        groups: int = 1,
         initializer: InitUtil.InitStr = None,
         optimizer: Optimizer | None = None,
         lambda_: float = 0.0,
@@ -185,11 +241,23 @@ class _Conv2D(Layer):
         self.out_channels = out_channels
         self.stride = stride
         self.padding = padding
+        self.groups = groups
         self.initializer = initializer
         self.optimizer = optimizer
         self.lambda_ = lambda_
         self.random_state = random_state
         self.rs_ = np.random.RandomState(self.random_state)
+
+        if self.in_channels % self.groups != 0:
+            raise ValueError(
+                f"in_channels ({self.in_channels})"
+                + f" must be divisible by groups ({self.groups})."
+            )
+        if self.out_channels % self.groups != 0:
+            raise ValueError(
+                f"out_channels ({self.out_channels})"
+                + f" must be divisible by groups ({self.groups})."
+            )
 
         if isinstance(filter_size, int):
             self.filter_size = (filter_size, filter_size)
@@ -199,16 +267,18 @@ class _Conv2D(Layer):
         self.init_params(
             w_shape=(
                 self.out_channels,
-                self.in_channels,
+                self.in_channels // self.groups,
                 *self.filter_size,
             ),
             b_shape=(1, self.out_channels),
         )
+
         self.set_param_ranges(
             {
                 "in_channels": ("0<,+inf", int),
                 "out_channels": ("0<,+inf", int),
                 "stride": ("0<,+inf", int),
+                "groups": ("0<,+inf", int),
                 "lambda_": ("0,+inf", None),
             }
         )
@@ -243,21 +313,43 @@ class _Conv2D(Layer):
             X, ((0, 0), (0, 0), (pad_h, pad_h), (pad_w, pad_w)), mode="constant"
         )
         X_fft = np.fft.rfftn(X_padded, s=(padded_h, padded_w), axes=[2, 3])
-        filter_fft = np.fft.rfftn(
-            self.weights_,
-            s=(padded_h, padded_w),
-            axes=[2, 3],
-        )
-        for i in range(batch_size):
-            for f in range(self.out_channels):
-                result_fft = np.sum(X_fft[i] * filter_fft[f], axis=0)
-                result = np.fft.irfftn(result_fft, s=(padded_h, padded_w))
 
-                sampled_result = result[
-                    pad_h : padded_h - pad_h : self.stride,
-                    pad_w : padded_w - pad_w : self.stride,
-                ]
-                out[i, f] = sampled_result[:out_height, :out_width]
+        W_grouped = self.weights_.reshape(
+            self.groups,
+            self.out_channels // self.groups,
+            self.in_channels // self.groups,
+            self.filter_size[0],
+            self.filter_size[1],
+        )
+
+        filter_fft = np.fft.rfftn(
+            W_grouped,
+            s=(padded_h, padded_w),
+            axes=[3, 4],
+        )
+        for g in range(self.groups):
+            in_start = g * (self.in_channels // self.groups)
+            in_end = (g + 1) * (self.in_channels // self.groups)
+
+            out_start = g * (self.out_channels // self.groups)
+            out_end = (g + 1) * (self.out_channels // self.groups)
+
+            X_fft_group = X_fft[:, in_start:in_end, :, :]
+            filter_fft_group = filter_fft[g]
+
+            conv_fft = np.einsum("ncij,fcij->nfij", X_fft_group, filter_fft_group)
+            conv_spatial = np.fft.irfftn(conv_fft, s=(padded_h, padded_w), axes=[2, 3])
+
+            conv_strided = conv_spatial[
+                :,
+                :,
+                pad_h : padded_h - pad_h : self.stride,
+                pad_w : padded_w - pad_w : self.stride,
+            ]
+
+            out[:, out_start:out_end, :, :] = conv_strided[
+                :, :, :out_height, :out_width
+            ]
 
         out += self.biases_[:, :, np.newaxis, np.newaxis]
         return out
@@ -278,40 +370,54 @@ class _Conv2D(Layer):
         X_fft = np.fft.rfftn(X_padded, s=(padded_h, padded_w), axes=[2, 3])
         d_out_fft = np.fft.rfftn(d_out, s=(padded_h, padded_w), axes=[2, 3])
 
-        for f in range(self.out_channels):
-            self.dB[:, f] = np.sum(d_out[:, f, :, :])
+        for g in range(self.groups):
+            in_start = g * (self.in_channels // self.groups)
+            in_end = (g + 1) * (self.in_channels // self.groups)
 
-        for f in range(self.out_channels):
-            for c in range(channels):
-                filter_d_out_fft = np.sum(
-                    X_fft[:, c] * d_out_fft[:, f].conj(),
-                    axis=0,
-                )
-                self.dW[f, c] = np.fft.irfftn(
-                    filter_d_out_fft,
-                    s=(padded_h, padded_w),
-                )[
-                    pad_h : pad_h + self.filter_size[0],
-                    pad_w : pad_w + self.filter_size[1],
-                ]
+            out_start = g * (self.out_channels // self.groups)
+            out_end = (g + 1) * (self.out_channels // self.groups)
 
-        self.dW += 2 * self.lambda_ * self.weights_
+            X_fft_group = X_fft[:, in_start:in_end, :, :]
+            d_out_group = d_out_fft[:, out_start:out_end, :, :]
 
-        for i in range(batch_size):
-            for c in range(channels):
-                temp = np.zeros((padded_h, padded_w // 2 + 1), dtype=np.complex128)
-                for f in range(self.out_channels):
-                    filter_fft = np.fft.rfftn(
-                        self.weights_[f, c], s=(padded_h, padded_w)
-                    )
-                    temp += filter_fft * d_out_fft[i, f]
-                dX_padded[i, c] = np.fft.irfftn(temp, s=(padded_h, padded_w))
+            self.dB[:, out_start:out_end] += np.sum(
+                d_out[:, out_start:out_end, :, :], axis=(0, 2, 3)
+            )
 
-        self.dX = (
-            dX_padded[:, :, pad_h:-pad_h, pad_w:-pad_w]
-            if pad_h > 0 or pad_w > 0
-            else dX_padded
-        )
+            dW_fft = np.einsum("ncij,nfij->fcij", X_fft_group, d_out_group)
+            dW_spatial = np.fft.irfftn(dW_fft, s=(padded_h, padded_w), axes=[2, 3])
+
+            dW_group = dW_spatial[
+                :,
+                :,
+                pad_h : pad_h + self.filter_size[0],
+                pad_w : pad_w + self.filter_size[1],
+            ]
+
+            self.dW[out_start:out_end, :, :, :] = np.sum(dW_group, axis=0)
+            self.dW[out_start:out_end] += (
+                2 * self.lambda_ * self.weights_[out_start:out_end]
+            )
+
+            flipped_weights = np.flip(self.weights_[out_start:out_end], axis=(2, 3))
+            flipped_weights_grouped_fft = np.fft.rfftn(
+                flipped_weights,
+                s=(padded_h, padded_w),
+                axes=[2, 3],
+            )
+            dX_fft_group = np.einsum(
+                "fcij,nfij->ncij", flipped_weights_grouped_fft, d_out_group
+            )
+            dX_spatial = np.fft.irfftn(
+                dX_fft_group, s=(padded_h, padded_w), axes=[2, 3]
+            )
+            dX_padded[:, in_start:in_end, :, :] += dX_spatial[:, :, :, :]
+
+        if pad_h > 0 or pad_w > 0:
+            self.dX = dX_padded[:, :, pad_h:-pad_h, pad_w:-pad_w]
+        else:
+            self.dX = dX_padded
+
         return self.dX
 
     def _get_padding_dim(self, height: int, width: int) -> Tuple[int, ...]:
@@ -319,9 +425,9 @@ class _Conv2D(Layer):
             if len(self.padding) != 2:
                 raise ValueError("Padding tuple must have exactly two values.")
             pad_h, pad_w = self.padding
+
         elif isinstance(self.padding, int):
             pad_h = pad_w = self.padding
-
         elif self.padding == "same":
             pad_h = (self.filter_size[0] - 1) // 2
             pad_w = (self.filter_size[1] - 1) // 2
@@ -335,7 +441,9 @@ class _Conv2D(Layer):
 
         return pad_h, pad_w, padded_h, padded_w
 
-    def out_shape(self, in_shape: Tuple[int]) -> Tuple[int]:
+    def out_shape(self, in_shape: Tuple[int, ...]) -> Tuple[int, ...]:
+        if len(in_shape) != 4:
+            raise ValueError("Input shape must be a 4-tuple (N, C, H, W).")
         batch_size, _, height, width = in_shape
         _, _, padded_h, padded_w = self._get_padding_dim(height, width)
 
@@ -353,6 +461,7 @@ class _Conv3D(Layer):
         filter_size: Tuple[int, int, int] | int,
         stride: int = 1,
         padding: Tuple[int, int, int] | int | Literal["valid", "same"] = "same",
+        groups: int = 1,
         initializer: InitUtil.InitStr = None,
         optimizer: Optimizer | None = None,
         lambda_: float = 0.0,
@@ -363,11 +472,23 @@ class _Conv3D(Layer):
         self.out_channels = out_channels
         self.stride = stride
         self.padding = padding
+        self.groups = groups
         self.initializer = initializer
         self.optimizer = optimizer
         self.lambda_ = lambda_
         self.random_state = random_state
         self.rs_ = np.random.RandomState(self.random_state)
+
+        if self.in_channels % self.groups != 0:
+            raise ValueError(
+                f"in_channels ({self.in_channels})"
+                + f" must be divisible by groups ({self.groups})."
+            )
+        if self.out_channels % self.groups != 0:
+            raise ValueError(
+                f"out_channels ({self.out_channels})"
+                + f" must be divisible by groups ({self.groups})."
+            )
 
         if isinstance(filter_size, int):
             self.filter_size = (filter_size, filter_size, filter_size)
@@ -377,16 +498,18 @@ class _Conv3D(Layer):
         self.init_params(
             w_shape=(
                 self.out_channels,
-                self.in_channels,
+                self.in_channels // self.groups,
                 *self.filter_size,
             ),
             b_shape=(1, self.out_channels),
         )
+
         self.set_param_ranges(
             {
                 "in_channels": ("0<,+inf", int),
                 "out_channels": ("0<,+inf", int),
                 "stride": ("0<,+inf", int),
+                "groups": ("0<,+inf", int),
                 "lambda_": ("0,+inf", None),
             }
         )
@@ -419,28 +542,52 @@ class _Conv3D(Layer):
             ((0, 0), (0, 0), (pad_d, pad_d), (pad_h, pad_h), (pad_w, pad_w)),
             mode="constant",
         )
+
         X_fft = np.fft.rfftn(
             X_padded,
             s=(padded_d, padded_h, padded_w),
             axes=[2, 3, 4],
         )
-        filter_fft = np.fft.rfftn(
-            self.weights_,
-            s=(padded_d, padded_h, padded_w),
-            axes=[2, 3, 4],
+
+        W_grouped = self.weights_.reshape(
+            self.groups,
+            self.out_channels // self.groups,
+            self.in_channels // self.groups,
+            self.filter_size[0],
+            self.filter_size[1],
+            self.filter_size[2],
         )
 
-        for i in range(batch_size):
-            for f in range(self.out_channels):
-                result_fft = np.sum(X_fft[i] * filter_fft[f], axis=0)
-                result = np.fft.irfftn(result_fft, s=(padded_d, padded_h, padded_w))
+        filter_fft = np.fft.rfftn(
+            W_grouped,
+            s=(padded_d, padded_h, padded_w),
+            axes=[3, 4, 5],
+        )
 
-                sampled_result = result[
-                    pad_d : padded_d - pad_d : self.stride,
-                    pad_h : padded_h - pad_h : self.stride,
-                    pad_w : padded_w - pad_w : self.stride,
-                ]
-                out[i, f] = sampled_result[:out_depth, :out_height, :out_width]
+        for g in range(self.groups):
+            in_start = g * (self.in_channels // self.groups)
+            in_end = (g + 1) * (self.in_channels // self.groups)
+
+            out_start = g * (self.out_channels // self.groups)
+            out_end = (g + 1) * (self.out_channels // self.groups)
+
+            X_fft_group = X_fft[:, in_start:in_end, :, :, :]
+            filter_fft_group = filter_fft[g]
+
+            conv_fft = np.einsum("ncijk,fcijk->nfijk", X_fft_group, filter_fft_group)
+            conv_spatial = np.fft.irfftn(
+                conv_fft, s=(padded_d, padded_h, padded_w), axes=[2, 3, 4]
+            )
+            conv_strided = conv_spatial[
+                :,
+                :,
+                pad_d : padded_d - pad_d : self.stride,
+                pad_h : padded_h - pad_h : self.stride,
+                pad_w : padded_w - pad_w : self.stride,
+            ]
+            conv_strided = conv_strided[:, :, :out_depth, :out_height, :out_width]
+
+            out[:, out_start:out_end, :, :, :] = conv_strided
 
         out += self.biases_[:, :, np.newaxis, np.newaxis, np.newaxis]
         return out
@@ -473,48 +620,56 @@ class _Conv3D(Layer):
             axes=[2, 3, 4],
         )
 
-        for f in range(self.out_channels):
-            self.dB[:, f] = np.sum(d_out[:, f, :, :, :])
+        for g in range(self.groups):
+            in_start = g * (self.in_channels // self.groups)
+            in_end = (g + 1) * (self.in_channels // self.groups)
 
-        for f in range(self.out_channels):
-            for c in range(channels):
-                filter_d_out_fft = np.sum(
-                    X_fft[:, c] * d_out_fft[:, f].conj(),
-                    axis=0,
-                )
-                self.dW[f, c] = np.fft.irfftn(
-                    filter_d_out_fft,
-                    s=(padded_d, padded_h, padded_w),
-                )[
-                    pad_d : pad_d + self.filter_size[0],
-                    pad_h : pad_h + self.filter_size[1],
-                    pad_w : pad_w + self.filter_size[2],
-                ]
+            out_start = g * (self.out_channels // self.groups)
+            out_end = (g + 1) * (self.out_channels // self.groups)
 
-        self.dW += 2 * self.lambda_ * self.weights_
+            X_fft_group = X_fft[:, in_start:in_end, :, :, :]
+            d_out_group = d_out_fft[:, out_start:out_end, :, :, :]
 
-        for i in range(batch_size):
-            for c in range(channels):
-                temp = np.zeros(
-                    (padded_d, padded_h, padded_w // 2 + 1), dtype=np.complex128
-                )
-                for f in range(self.out_channels):
-                    filter_fft = np.fft.rfftn(
-                        self.weights_[f, c],
-                        s=(padded_d, padded_h, padded_w),
-                        axes=[2, 3, 4],
-                    )
-                    temp += filter_fft * d_out_fft[i, f]
-                dX_padded[i, c] = np.fft.irfftn(
-                    temp,
-                    s=(padded_d, padded_h, padded_w),
-                )
+            self.dB[:, out_start:out_end] += np.sum(
+                d_out[:, out_start:out_end, :, :, :], axis=(0, 2, 3, 4)
+            )
 
-        self.dX = (
-            dX_padded[:, :, pad_d:-pad_d, pad_h:-pad_h, pad_w:-pad_w]
-            if (pad_d > 0 or pad_h > 0 or pad_w > 0)
-            else dX_padded
-        )
+            dW_fft = np.einsum("ncijk,nfijk->fcijk", X_fft_group, d_out_group)
+            dW_spatial = np.fft.irfftn(
+                dW_fft, s=(padded_d, padded_h, padded_w), axes=[2, 3, 4]
+            )
+            dW_group = dW_spatial[
+                :,
+                :,
+                pad_d : pad_d + self.filter_size[0],
+                pad_h : pad_h + self.filter_size[1],
+                pad_w : pad_w + self.filter_size[2],
+            ]
+
+            self.dW[out_start:out_end, :, :, :, :] = np.sum(dW_group, axis=0)
+            self.dW[out_start:out_end] += (
+                2 * self.lambda_ * self.weights_[out_start:out_end]
+            )
+
+            flipped_weights = np.flip(self.weights_[out_start:out_end], axis=(2, 3, 4))
+            flipped_weights_grouped_fft = np.fft.rfftn(
+                flipped_weights,
+                s=(padded_d, padded_h, padded_w),
+                axes=[2, 3, 4],
+            )
+            dX_fft_group = np.einsum(
+                "fcijk,nfijk->ncijk", flipped_weights_grouped_fft, d_out_group
+            )
+            dX_spatial = np.fft.irfftn(
+                dX_fft_group, s=(padded_d, padded_h, padded_w), axes=[2, 3, 4]
+            )
+            dX_padded[:, in_start:in_end, :, :, :] += dX_spatial
+
+        if pad_d > 0 or pad_h > 0 or pad_w > 0:
+            self.dX = dX_padded[:, :, pad_d:-pad_d, pad_h:-pad_h, pad_w:-pad_w]
+        else:
+            self.dX = dX_padded
+
         return self.dX
 
     def _get_padding_dim(
