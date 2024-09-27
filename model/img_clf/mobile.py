@@ -90,16 +90,12 @@ class _Mobile_V1(Estimator, NeuralModel, ImageClassifier):
         self.build_model()
 
     def build_model(self) -> None:
-        base_args = {
-            "initializer": self.initializer,
-            "lambda_": self.lambda_,
-            "random_state": self.random_state,
-        }
-        sep_args = {
-            **base_args,
-            "do_batch_norm": True,
-            "momentum": self.momentum,
-        }
+        base_args = dict(
+            initializer=self.initializer,
+            lambda_=self.lambda_,
+            random_state=self.random_state,
+        )
+        sep_args = dict(**base_args, do_batch_norm=True, momentum=self.momentum)
         wp = self.width_param
 
         self.model += Conv2D(3, int(32 * wp), 3, 2, **base_args)
@@ -236,11 +232,11 @@ class _Mobile_V2(Estimator, NeuralModel, ImageClassifier):
             [6, 160, 3, 2],
             [6, 320, 1, 1],
         ]
-        base_args = {
-            "initializer": self.initializer,
-            "lambda_": self.lambda_,
-            "random_state": self.random_state,
-        }
+        base_args = dict(
+            initializer=self.initializer,
+            lambda_=self.lambda_,
+            random_state=self.random_state,
+        )
         invres_args = {**base_args, "activation": self.activation}
 
         wp = self.width_param
@@ -377,11 +373,11 @@ class _Mobile_V3_Small(Estimator, NeuralModel, ImageClassifier):
             [5, 576, 96, True, "HS", 1],
             [5, 576, 96, True, "HS", 1],
         ]
-        base_args = {
-            "initializer": self.initializer,
-            "lambda_": self.lambda_,
-            "random_state": self.random_state,
-        }
+        base_args = dict(
+            initializer=self.initializer,
+            lambda_=self.lambda_,
+            random_state=self.random_state,
+        )
 
         self.model.extend(
             Conv2D(3, 16, 3, 2, **base_args),
@@ -514,11 +510,11 @@ class _Mobile_V3_Large(Estimator, NeuralModel, ImageClassifier):
             [5, 960, 160, True, "HS", 1],
             [5, 960, 160, True, "HS", 1],
         ]
-        base_args = {
-            "initializer": self.initializer,
-            "lambda_": self.lambda_,
-            "random_state": self.random_state,
-        }
+        base_args = dict(
+            initializer=self.initializer,
+            lambda_=self.lambda_,
+            random_state=self.random_state,
+        )
 
         self.model.extend(
             Conv2D(3, 16, 3, 2, **base_args),

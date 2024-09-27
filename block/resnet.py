@@ -36,13 +36,11 @@ class _Basic(LayerGraph):
         self.do_batch_norm = do_batch_norm
         self.momentum = momentum
 
-        self.basic_args = {
-            "initializer": initializer,
-            "lambda_": lambda_,
-            "random_state": random_state,
-        }
-
+        self.basic_args = dict(
+            initializer=initializer, lambda_=lambda_, random_state=random_state
+        )
         self.init_nodes()
+
         super(_Basic, self).__init__(
             graph={
                 self.rt_: [self.down_, self.conv_],
@@ -115,6 +113,7 @@ class _Bottleneck(LayerGraph):
         out_channels: int,
         stride: int = 1,
         downsampling: LayerLike | None = None,
+        cardinality: int = 1,
         activation: callable = Activation.ReLU,
         optimizer: Optimizer | None = None,
         initializer: InitUtil.InitStr = None,
@@ -127,6 +126,7 @@ class _Bottleneck(LayerGraph):
         self.out_channels = out_channels
         self.stride = stride
         self.downsampling = downsampling
+        self.cardinality = cardinality
         self.activation = activation
         self.optimizer = optimizer
         self.initializer = initializer
@@ -134,13 +134,11 @@ class _Bottleneck(LayerGraph):
         self.do_batch_norm = do_batch_norm
         self.momentum = momentum
 
-        self.basic_args = {
-            "initializer": initializer,
-            "lambda_": lambda_,
-            "random_state": random_state,
-        }
-
+        self.basic_args = dict(
+            initializer=initializer, lambda_=lambda_, random_state=random_state
+        )
         self.init_nodes()
+
         super(_Bottleneck, self).__init__(
             graph={
                 self.rt_: [self.down_, self.conv_],
@@ -169,6 +167,7 @@ class _Bottleneck(LayerGraph):
                     self.out_channels,
                     3,
                     self.stride,
+                    groups=self.cardinality,
                     **self.basic_args,
                 ),
                 BatchNorm2D(self.out_channels, self.momentum),
@@ -235,13 +234,11 @@ class _PreActBottleneck(LayerGraph):
         self.do_batch_norm = do_batch_norm
         self.momentum = momentum
 
-        self.basic_args = {
-            "initializer": initializer,
-            "lambda_": lambda_,
-            "random_state": random_state,
-        }
-
+        self.basic_args = dict(
+            initializer=initializer, lambda_=lambda_, random_state=random_state
+        )
         self.init_nodes()
+
         super(_PreActBottleneck, self).__init__(
             graph={
                 self.rt_: [self.down_, self.conv_],
@@ -340,13 +337,11 @@ class _Bottleneck_SE(LayerGraph):
         self.do_batch_norm = do_batch_norm
         self.momentum = momentum
 
-        self.basic_args = {
-            "initializer": initializer,
-            "lambda_": lambda_,
-            "random_state": random_state,
-        }
-
+        self.basic_args = dict(
+            initializer=initializer, lambda_=lambda_, random_state=random_state
+        )
         self.init_nodes()
+
         super(_Bottleneck_SE, self).__init__(
             graph={
                 self.rt_: [self.conv_, self.down_],

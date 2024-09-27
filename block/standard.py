@@ -28,11 +28,9 @@ class _ConvBlock1D(Sequential):
         pool_mode: Literal["max", "avg"] = "max",
         random_state: int | None = None,
     ) -> None:
-        basic_args = {
-            "initializer": initializer,
-            "lambda_": lambda_,
-            "random_state": random_state,
-        }
+        basic_args = dict(
+            initializer=initializer, lambda_=lambda_, random_state=random_state
+        )
 
         self.set_param_ranges(
             {
@@ -92,11 +90,9 @@ class _ConvBlock2D(Sequential):
         pool_mode: Literal["max", "avg"] = "max",
         random_state: int | None = None,
     ) -> None:
-        basic_args = {
-            "initializer": initializer,
-            "lambda_": lambda_,
-            "random_state": random_state,
-        }
+        basic_args = dict(
+            initializer=initializer, lambda_=lambda_, random_state=random_state
+        )
 
         self.set_param_ranges(
             {
@@ -156,11 +152,9 @@ class _ConvBlock3D(Sequential):
         pool_mode: Literal["max", "avg"] = "max",
         random_state: int | None = None,
     ) -> None:
-        basic_args = {
-            "initializer": initializer,
-            "lambda_": lambda_,
-            "random_state": random_state,
-        }
+        basic_args = dict(
+            initializer=initializer, lambda_=lambda_, random_state=random_state
+        )
 
         self.set_param_ranges(
             {
@@ -215,11 +209,9 @@ class _SeparableConv1D(Sequential):
         momentum: float = 0.9,
         random_state: int | None = None,
     ) -> None:
-        basic_args = {
-            "initializer": initializer,
-            "lambda_": lambda_,
-            "random_state": random_state,
-        }
+        basic_args = dict(
+            initializer=initializer, lambda_=lambda_, random_state=random_state
+        )
 
         self.set_param_ranges(
             {
@@ -261,11 +253,9 @@ class _SeparableConv2D(Sequential):
         momentum: float = 0.9,
         random_state: int | None = None,
     ) -> None:
-        basic_args = {
-            "initializer": initializer,
-            "lambda_": lambda_,
-            "random_state": random_state,
-        }
+        basic_args = dict(
+            initializer=initializer, lambda_=lambda_, random_state=random_state
+        )
 
         self.set_param_ranges(
             {
@@ -307,11 +297,9 @@ class _SeparableConv3D(Sequential):
         momentum: float = 0.9,
         random_state: int | None = None,
     ) -> None:
-        basic_args = {
-            "initializer": initializer,
-            "lambda_": lambda_,
-            "random_state": random_state,
-        }
+        basic_args = dict(
+            initializer=initializer, lambda_=lambda_, random_state=random_state
+        )
 
         self.set_param_ranges(
             {
@@ -353,11 +341,9 @@ class _DenseBlock(Sequential):
         dropout_rate: float = 0.5,
         random_state: int | None = None,
     ) -> None:
-        basic_args = {
-            "initializer": initializer,
-            "lambda_": lambda_,
-            "random_state": random_state,
-        }
+        basic_args = dict(
+            initializer=initializer, lambda_=lambda_, random_state=random_state
+        )
 
         self.set_param_ranges(
             {

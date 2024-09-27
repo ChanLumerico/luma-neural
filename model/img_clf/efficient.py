@@ -99,11 +99,11 @@ class _EfficientNet_B0(Estimator, NeuralModel, ImageClassifier):
         self.build_model()
 
     def build_model(self) -> None:
-        base_args = {
-            "initializer": self.initializer,
-            "lambda_": self.lambda_,
-            "random_state": self.random_state,
-        }
+        base_args = dict(
+            initializer=self.initializer,
+            lambda_=self.lambda_,
+            random_state=self.random_state,
+        )
         mbconv_config = F.get_efficient_net_mbconv_config(
             b0_config,
             multipliers,
@@ -220,11 +220,11 @@ class _EfficientNet_B1(Estimator, NeuralModel, ImageClassifier):
         self.build_model()
 
     def build_model(self) -> None:
-        base_args = {
-            "initializer": self.initializer,
-            "lambda_": self.lambda_,
-            "random_state": self.random_state,
-        }
+        base_args = dict(
+            initializer=self.initializer,
+            lambda_=self.lambda_,
+            random_state=self.random_state,
+        )
         mbconv_config = F.get_efficient_net_mbconv_config(
             b0_config,
             multipliers,
@@ -341,11 +341,11 @@ class _EfficientNet_B2(Estimator, NeuralModel, ImageClassifier):
         self.build_model()
 
     def build_model(self) -> None:
-        base_args = {
-            "initializer": self.initializer,
-            "lambda_": self.lambda_,
-            "random_state": self.random_state,
-        }
+        base_args = dict(
+            initializer=self.initializer,
+            lambda_=self.lambda_,
+            random_state=self.random_state,
+        )
         mbconv_config = F.get_efficient_net_mbconv_config(
             b0_config,
             multipliers,
@@ -462,11 +462,11 @@ class _EfficientNet_B3(Estimator, NeuralModel, ImageClassifier):
         self.build_model()
 
     def build_model(self) -> None:
-        base_args = {
-            "initializer": self.initializer,
-            "lambda_": self.lambda_,
-            "random_state": self.random_state,
-        }
+        base_args = dict(
+            initializer=self.initializer,
+            lambda_=self.lambda_,
+            random_state=self.random_state,
+        )
         mbconv_config = F.get_efficient_net_mbconv_config(
             b0_config,
             multipliers,
@@ -583,11 +583,11 @@ class _EfficientNet_B4(Estimator, NeuralModel, ImageClassifier):
         self.build_model()
 
     def build_model(self) -> None:
-        base_args = {
-            "initializer": self.initializer,
-            "lambda_": self.lambda_,
-            "random_state": self.random_state,
-        }
+        base_args = dict(
+            initializer=self.initializer,
+            lambda_=self.lambda_,
+            random_state=self.random_state,
+        )
         mbconv_config = F.get_efficient_net_mbconv_config(
             b0_config,
             multipliers,
@@ -704,11 +704,11 @@ class _EfficientNet_B5(Estimator, NeuralModel, ImageClassifier):
         self.build_model()
 
     def build_model(self) -> None:
-        base_args = {
-            "initializer": self.initializer,
-            "lambda_": self.lambda_,
-            "random_state": self.random_state,
-        }
+        base_args = dict(
+            initializer=self.initializer,
+            lambda_=self.lambda_,
+            random_state=self.random_state,
+        )
         mbconv_config = F.get_efficient_net_mbconv_config(
             b0_config,
             multipliers,
@@ -825,11 +825,11 @@ class _EfficientNet_B6(Estimator, NeuralModel, ImageClassifier):
         self.build_model()
 
     def build_model(self) -> None:
-        base_args = {
-            "initializer": self.initializer,
-            "lambda_": self.lambda_,
-            "random_state": self.random_state,
-        }
+        base_args = dict(
+            initializer=self.initializer,
+            lambda_=self.lambda_,
+            random_state=self.random_state,
+        )
         mbconv_config = F.get_efficient_net_mbconv_config(
             b0_config,
             multipliers,
@@ -946,11 +946,11 @@ class _EfficientNet_B7(Estimator, NeuralModel, ImageClassifier):
         self.build_model()
 
     def build_model(self) -> None:
-        base_args = {
-            "initializer": self.initializer,
-            "lambda_": self.lambda_,
-            "random_state": self.random_state,
-        }
+        base_args = dict(
+            initializer=self.initializer,
+            lambda_=self.lambda_,
+            random_state=self.random_state,
+        )
         mbconv_config = F.get_efficient_net_mbconv_config(
             b0_config,
             multipliers,
@@ -1072,11 +1072,11 @@ class _EfficientNet_V2_Small(Estimator, NeuralModel, ImageClassifier):
         self.build_model()
 
     def build_model(self) -> None:
-        base_args = {
-            "initializer": self.initializer,
-            "lambda_": self.lambda_,
-            "random_state": self.random_state,
-        }
+        base_args = dict(
+            initializer=self.initializer,
+            lambda_=self.lambda_,
+            random_state=self.random_state,
+        )
         mbconv_config = [
             [2, 24, 1, 1, True],
             [4, 48, 4, 2, True],
@@ -1224,11 +1224,11 @@ class _EfficientNet_V2_Medium(Estimator, NeuralModel, ImageClassifier):
         self.build_model()
 
     def build_model(self) -> None:
-        base_args = {
-            "initializer": self.initializer,
-            "lambda_": self.lambda_,
-            "random_state": self.random_state,
-        }
+        base_args = dict(
+            initializer=self.initializer,
+            lambda_=self.lambda_,
+            random_state=self.random_state,
+        )
         mbconv_config = [
             [5, 48, 4, 2, True],
             [5, 80, 4, 2, True],
@@ -1376,11 +1376,11 @@ class _EfficientNet_V2_Large(Estimator, NeuralModel, ImageClassifier):
         self.build_model()
 
     def build_model(self) -> None:
-        base_args = {
-            "initializer": self.initializer,
-            "lambda_": self.lambda_,
-            "random_state": self.random_state,
-        }
+        base_args = dict(
+            initializer=self.initializer,
+            lambda_=self.lambda_,
+            random_state=self.random_state,
+        )
         mbconv_config = [
             [7, 64, 4, 2, True],
             [7, 96, 4, 2, True],
@@ -1528,11 +1528,11 @@ class _EfficientNet_V2_XLarge(Estimator, NeuralModel, ImageClassifier):
         self.build_model()
 
     def build_model(self) -> None:
-        base_args = {
-            "initializer": self.initializer,
-            "lambda_": self.lambda_,
-            "random_state": self.random_state,
-        }
+        base_args = dict(
+            initializer=self.initializer,
+            lambda_=self.lambda_,
+            random_state=self.random_state,
+        )
         mbconv_config = [
             [8, 64, 4, 2, True],
             [8, 96, 4, 2, True],

@@ -78,12 +78,12 @@ class _DenseNet_121(Estimator, NeuralModel, ImageClassifier):
         self.build_model()
 
     def build_model(self) -> None:
-        base_args = {
-            "initializer": self.initializer,
-            "lambda_": self.lambda_,
-            "random_state": self.random_state,
-        }
-        dense_args = {**base_args, "momentum": self.momentum}
+        base_args = dict(
+            initializer=self.initializer,
+            lambda_=self.lambda_,
+            random_state=self.random_state,
+        )
+        dense_args = dict(**base_args, momentum=self.momentum)
 
         self.model.extend(
             Conv2D(3, 64, 7, 2, 3, **base_args),
@@ -201,12 +201,12 @@ class _DenseNet_169(Estimator, NeuralModel, ImageClassifier):
         self.build_model()
 
     def build_model(self) -> None:
-        base_args = {
-            "initializer": self.initializer,
-            "lambda_": self.lambda_,
-            "random_state": self.random_state,
-        }
-        dense_args = {**base_args, "momentum": self.momentum}
+        base_args = dict(
+            initializer=self.initializer,
+            lambda_=self.lambda_,
+            random_state=self.random_state,
+        )
+        dense_args = dict(**base_args, momentum=self.momentum)
 
         self.model.extend(
             Conv2D(3, 64, 7, 2, 3, **base_args),
@@ -324,12 +324,12 @@ class _DenseNet_201(Estimator, NeuralModel, ImageClassifier):
         self.build_model()
 
     def build_model(self) -> None:
-        base_args = {
-            "initializer": self.initializer,
-            "lambda_": self.lambda_,
-            "random_state": self.random_state,
-        }
-        dense_args = {**base_args, "momentum": self.momentum}
+        base_args = dict(
+            initializer=self.initializer,
+            lambda_=self.lambda_,
+            random_state=self.random_state,
+        )
+        dense_args = dict(**base_args, momentum=self.momentum)
 
         self.model.extend(
             Conv2D(3, 64, 7, 2, 3, **base_args),
@@ -447,12 +447,12 @@ class _DenseNet_264(Estimator, NeuralModel, ImageClassifier):
         self.build_model()
 
     def build_model(self) -> None:
-        base_args = {
-            "initializer": self.initializer,
-            "lambda_": self.lambda_,
-            "random_state": self.random_state,
-        }
-        dense_args = {**base_args, "momentum": self.momentum}
+        base_args = dict(
+            initializer=self.initializer,
+            lambda_=self.lambda_,
+            random_state=self.random_state,
+        )
+        dense_args = dict(**base_args, momentum=self.momentum)
 
         self.model.extend(
             Conv2D(3, 64, 7, 2, 3, **base_args),
@@ -570,12 +570,12 @@ class _SE_DenseNet_121(Estimator, NeuralModel, ImageClassifier):
         self.build_model()
 
     def build_model(self) -> None:
-        base_args = {
-            "initializer": self.initializer,
-            "lambda_": self.lambda_,
-            "random_state": self.random_state,
-        }
-        dense_args = {**base_args, "momentum": self.momentum}
+        base_args = dict(
+            initializer=self.initializer,
+            lambda_=self.lambda_,
+            random_state=self.random_state,
+        )
+        dense_args = dict(**base_args, momentum=self.momentum)
 
         self.model.extend(
             Conv2D(3, 64, 7, 2, 3, **base_args),
@@ -706,12 +706,12 @@ class _SE_DenseNet_169(Estimator, NeuralModel, ImageClassifier):
         self.build_model()
 
     def build_model(self) -> None:
-        base_args = {
-            "initializer": self.initializer,
-            "lambda_": self.lambda_,
-            "random_state": self.random_state,
-        }
-        dense_args = {**base_args, "momentum": self.momentum}
+        base_args = dict(
+            initializer=self.initializer,
+            lambda_=self.lambda_,
+            random_state=self.random_state,
+        )
+        dense_args = dict(**base_args, momentum=self.momentum)
 
         self.model.extend(
             Conv2D(3, 64, 7, 2, 3, **base_args),

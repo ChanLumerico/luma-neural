@@ -22,11 +22,9 @@ class _Composite(Sequential):
         random_state: int | None = None,
     ) -> None:
         inter_channels = bn_size * growth_rate
-        basic_args = {
-            "initializer": initializer,
-            "lambda_": lambda_,
-            "random_state": random_state,
-        }
+        basic_args = dict(
+            initializer=initializer, lambda_=lambda_, random_state=random_state
+        )
 
         self.set_param_ranges(
             {
@@ -143,11 +141,9 @@ class _Transition(Sequential):
         random_state: int | None = None,
     ) -> None:
         out_channels = int(out_channels * compression)
-        basic_args = {
-            "initializer": initializer,
-            "lambda_": lambda_,
-            "random_state": random_state,
-        }
+        basic_args = dict(
+            initializer=initializer, lambda_=lambda_, random_state=random_state
+        )
 
         self.set_param_ranges(
             {

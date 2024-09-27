@@ -39,11 +39,9 @@ class _FusedMBConv(LayerGraph):
         self.do_batch_norm = do_batch_norm
         self.momentum = momentum
 
-        self.basic_args = {
-            "initializer": initializer,
-            "lambda_": lambda_,
-            "random_state": random_state,
-        }
+        self.basic_args = dict(
+            initializer=initializer, lambda_=lambda_, random_state=random_state
+        )
 
         assert self.stride in [1, 2]
         self.do_shortcut = stride == 1 and in_channels == out_channels

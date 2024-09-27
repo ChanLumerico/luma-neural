@@ -24,13 +24,11 @@ class _Entry(LayerGraph):
         self.lambda_ = lambda_
         self.momentum = momentum
 
-        self.basic_args = {
-            "initializer": initializer,
-            "lambda_": lambda_,
-            "random_state": random_state,
-        }
-
+        self.basic_args = dict(
+            initializer=initializer, lambda_=lambda_, random_state=random_state
+        )
         self.init_nodes()
+
         super(_Entry, self).__init__(
             graph={
                 self.rt_: [self.res_1, self.dsc_1],
@@ -162,13 +160,11 @@ class _Middle(LayerGraph):
         self.lambda_ = lambda_
         self.momentum = momentum
 
-        self.basic_args = {
-            "initializer": initializer,
-            "lambda_": lambda_,
-            "random_state": random_state,
-        }
-
+        self.basic_args = dict(
+            initializer=initializer, lambda_=lambda_, random_state=random_state
+        )
         self.init_nodes()
+
         super(_Middle, self).__init__(
             graph={
                 self.rt_: [self.sum_, self.dsc_],
@@ -233,13 +229,11 @@ class _Exit(LayerGraph):
         self.lambda_ = lambda_
         self.momentum = momentum
 
-        self.basic_args = {
-            "initializer": initializer,
-            "lambda_": lambda_,
-            "random_state": random_state,
-        }
-
+        self.basic_args = dict(
+            initializer=initializer, lambda_=lambda_, random_state=random_state
+        )
         self.init_nodes()
+
         super(_Exit, self).__init__(
             graph={
                 self.rt_: [self.sum_, self.dsc_],

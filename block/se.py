@@ -21,11 +21,9 @@ class _SEBlock1D(Sequential):
         random_state: int | None = None,
     ) -> None:
         self.keep_shape = keep_shape
-        basic_args = {
-            "initializer": initializer,
-            "lambda_": lambda_,
-            "random_state": random_state,
-        }
+        basic_args = dict(
+            initializer=initializer, lambda_=lambda_, random_state=random_state
+        )
 
         self.set_param_ranges(
             {
@@ -83,11 +81,9 @@ class _SEBlock2D(Sequential):
         random_state: int | None = None,
     ) -> None:
         self.keep_shape = keep_shape
-        basic_args = {
-            "initializer": initializer,
-            "lambda_": lambda_,
-            "random_state": random_state,
-        }
+        basic_args = dict(
+            initializer=initializer, lambda_=lambda_, random_state=random_state
+        )
 
         self.set_param_ranges(
             {
@@ -145,11 +141,9 @@ class _SEBlock3D(Sequential):
         random_state: int | None = None,
     ) -> None:
         self.keep_shape = keep_shape
-        basic_args = {
-            "initializer": initializer,
-            "lambda_": lambda_,
-            "random_state": random_state,
-        }
+        basic_args = dict(
+            initializer=initializer, lambda_=lambda_, random_state=random_state
+        )
 
         self.set_param_ranges(
             {

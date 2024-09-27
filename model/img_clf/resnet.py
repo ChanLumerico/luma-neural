@@ -93,11 +93,11 @@ class _ResNet_18(Estimator, NeuralModel, ImageClassifier):
         self.build_model()
 
     def build_model(self) -> None:
-        base_args = {
-            "initializer": self.initializer,
-            "lambda_": self.lambda_,
-            "random_state": self.random_state,
-        }
+        base_args = dict(
+            initializer=self.initializer,
+            lambda_=self.lambda_,
+            random_state=self.random_state,
+        )
         res_args = BaseBlockArgs(
             activation=self.activation,
             do_batch_norm=True,
@@ -226,11 +226,11 @@ class _ResNet_34(Estimator, NeuralModel, ImageClassifier):
         self.build_model()
 
     def build_model(self) -> None:
-        base_args = {
-            "initializer": self.initializer,
-            "lambda_": self.lambda_,
-            "random_state": self.random_state,
-        }
+        base_args = dict(
+            initializer=self.initializer,
+            lambda_=self.lambda_,
+            random_state=self.random_state,
+        )
         res_args = BaseBlockArgs(
             activation=self.activation,
             do_batch_norm=True,
@@ -359,11 +359,11 @@ class _ResNet_50(Estimator, NeuralModel, ImageClassifier):
         self.build_model()
 
     def build_model(self) -> None:
-        base_args = {
-            "initializer": self.initializer,
-            "lambda_": self.lambda_,
-            "random_state": self.random_state,
-        }
+        base_args = dict(
+            initializer=self.initializer,
+            lambda_=self.lambda_,
+            random_state=self.random_state,
+        )
         res_args = BaseBlockArgs(
             activation=self.activation,
             do_batch_norm=True,
@@ -492,11 +492,11 @@ class _ResNet_101(Estimator, NeuralModel, ImageClassifier):
         self.build_model()
 
     def build_model(self) -> None:
-        base_args = {
-            "initializer": self.initializer,
-            "lambda_": self.lambda_,
-            "random_state": self.random_state,
-        }
+        base_args = dict(
+            initializer=self.initializer,
+            lambda_=self.lambda_,
+            random_state=self.random_state,
+        )
         res_args = BaseBlockArgs(
             activation=self.activation,
             do_batch_norm=True,
@@ -625,11 +625,11 @@ class _ResNet_152(Estimator, NeuralModel, ImageClassifier):
         self.build_model()
 
     def build_model(self) -> None:
-        base_args = {
-            "initializer": self.initializer,
-            "lambda_": self.lambda_,
-            "random_state": self.random_state,
-        }
+        base_args = dict(
+            initializer=self.initializer,
+            lambda_=self.lambda_,
+            random_state=self.random_state,
+        )
         res_args = BaseBlockArgs(
             activation=self.activation,
             do_batch_norm=True,
@@ -758,11 +758,11 @@ class _ResNet_200(Estimator, NeuralModel, ImageClassifier):
         self.build_model()
 
     def build_model(self) -> None:
-        base_args = {
-            "initializer": self.initializer,
-            "lambda_": self.lambda_,
-            "random_state": self.random_state,
-        }
+        base_args = dict(
+            initializer=self.initializer,
+            lambda_=self.lambda_,
+            random_state=self.random_state,
+        )
         res_args = BaseBlockArgs(
             activation=self.activation,
             do_batch_norm=True,
@@ -895,11 +895,11 @@ class _ResNet_269(Estimator, NeuralModel, ImageClassifier):
         self.build_model()
 
     def build_model(self) -> None:
-        base_args = {
-            "initializer": self.initializer,
-            "lambda_": self.lambda_,
-            "random_state": self.random_state,
-        }
+        base_args = dict(
+            initializer=self.initializer,
+            lambda_=self.lambda_,
+            random_state=self.random_state,
+        )
         res_args = BaseBlockArgs(
             activation=self.activation,
             do_batch_norm=True,
@@ -1032,11 +1032,11 @@ class _ResNet_1001(Estimator, NeuralModel, ImageClassifier):
         self.build_model()
 
     def build_model(self) -> None:
-        base_args = {
-            "initializer": self.initializer,
-            "lambda_": self.lambda_,
-            "random_state": self.random_state,
-        }
+        base_args = dict(
+            initializer=self.initializer,
+            lambda_=self.lambda_,
+            random_state=self.random_state,
+        )
         res_args = BaseBlockArgs(
             activation=self.activation,
             do_batch_norm=True,
@@ -1168,11 +1168,11 @@ class _SE_ResNet_50(Estimator, NeuralModel, ImageClassifier):
         self.build_model()
 
     def build_model(self) -> None:
-        base_args = {
-            "initializer": self.initializer,
-            "lambda_": self.lambda_,
-            "random_state": self.random_state,
-        }
+        base_args = dict(
+            initializer=self.initializer,
+            lambda_=self.lambda_,
+            random_state=self.random_state,
+        )
         res_args = BaseBlockArgs(
             activation=self.activation,
             do_batch_norm=True,
@@ -1301,11 +1301,11 @@ class _SE_ResNet_152(Estimator, NeuralModel, ImageClassifier):
         self.build_model()
 
     def build_model(self) -> None:
-        base_args = {
-            "initializer": self.initializer,
-            "lambda_": self.lambda_,
-            "random_state": self.random_state,
-        }
+        base_args = dict(
+            initializer=self.initializer,
+            lambda_=self.lambda_,
+            random_state=self.random_state,
+        )
         res_args = BaseBlockArgs(
             activation=self.activation,
             do_batch_norm=True,
@@ -1366,3 +1366,9 @@ class _SE_ResNet_152(Estimator, NeuralModel, ImageClassifier):
         argmax: bool = True,
     ) -> float:
         return super(_SE_ResNet_152, self).score_nn(X, y, metric, argmax)
+
+
+class _ResNeXt_50(Estimator, NeuralModel, ImageClassifier): ...
+
+
+class _ResNeXt_101(Estimator, NeuralModel, ImageClassifier): ...

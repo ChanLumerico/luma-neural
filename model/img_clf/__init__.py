@@ -68,6 +68,8 @@ __all__ = (
     "EfficientNet_V2_Medium",
     "EfficientNet_V2_Large",
     "EfficientNet_V2_XLarge",
+    "ResNeXt-50",
+    "ResNeXt-101",
 )
 
 
@@ -2843,3 +2845,9 @@ class EfficientNet_V2_XLarge(efficient._EfficientNet_V2_XLarge):
     Machine Learning (ICML), vol. 139, 2021, pp. 10096-10106.
 
     """
+
+
+class ResNeXt_50: ...
+
+
+class ResNeXt_101: ...

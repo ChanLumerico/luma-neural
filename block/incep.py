@@ -32,11 +32,9 @@ class _Incep_V1_Default(Sequential):
         self.out_5x5 = out_5x5
         self.out_pool = out_pool
 
-        basic_args = {
-            "initializer": initializer,
-            "lambda_": lambda_,
-            "random_state": random_state,
-        }
+        basic_args = dict(
+            initializer=initializer, lambda_=lambda_, random_state=random_state
+        )
 
         self.set_param_ranges(
             {
@@ -164,11 +162,9 @@ class _Incep_V2_TypeA(Sequential):
         self.out_3x3_db = out_3x3_db
         self.out_pool = out_pool
 
-        basic_args = {
-            "initializer": initializer,
-            "lambda_": lambda_,
-            "random_state": random_state,
-        }
+        basic_args = dict(
+            initializer=initializer, lambda_=lambda_, random_state=random_state
+        )
 
         self.set_param_ranges(
             {
@@ -300,11 +296,9 @@ class _Incep_V2_TypeB(Sequential):
         self.out_7x7_db = out_7x7_db
         self.out_pool = out_pool
 
-        basic_args = {
-            "initializer": initializer,
-            "lambda_": lambda_,
-            "random_state": random_state,
-        }
+        basic_args = dict(
+            initializer=initializer, lambda_=lambda_, random_state=random_state
+        )
 
         self.set_param_ranges(
             {
@@ -448,11 +442,9 @@ class _Incep_V2_TypeC(Sequential):
         self.out_1x3_3x1_after = out_1x3_3x1_after
         self.out_pool = out_pool
 
-        basic_args = {
-            "initializer": initializer,
-            "lambda_": lambda_,
-            "random_state": random_state,
-        }
+        basic_args = dict(
+            initializer=initializer, lambda_=lambda_, random_state=random_state
+        )
 
         self.set_param_ranges(
             {
@@ -649,11 +641,9 @@ class _Incep_V2_Redux(Sequential):
         self.out_3x3 = out_3x3
         self.out_3x3_db = out_3x3_db
 
-        basic_args = {
-            "initializer": initializer,
-            "lambda_": lambda_,
-            "random_state": random_state,
-        }
+        basic_args = dict(
+            initializer=initializer, lambda_=lambda_, random_state=random_state
+        )
 
         self.set_param_ranges(
             {
@@ -756,13 +746,11 @@ class _Incep_V4_Stem(LayerGraph):
         self.do_batch_norm = do_batch_norm
         self.momentum = momentum
 
-        self.basic_args = {
-            "initializer": initializer,
-            "lambda_": lambda_,
-            "random_state": random_state,
-        }
-
+        self.basic_args = dict(
+            initializer=initializer, lambda_=lambda_, random_state=random_state
+        )
         self.init_nodes()
+
         super(_Incep_V4_Stem, self).__init__(
             graph={
                 self.rt_seq: [self.br1_l, self.br1_r],
@@ -883,13 +871,11 @@ class _Incep_V4_TypeA(LayerGraph):
         self.do_batch_norm = do_batch_norm
         self.momentum = momentum
 
-        self.basic_args = {
-            "initializer": initializer,
-            "lambda_": lambda_,
-            "random_state": random_state,
-        }
-
+        self.basic_args = dict(
+            initializer=initializer, lambda_=lambda_, random_state=random_state
+        )
         self.init_nodes()
+
         super(_Incep_V4_TypeA, self).__init__(
             graph={
                 self.rt_: [self.br_a, self.br_b, self.br_c, self.br_d],
@@ -986,13 +972,11 @@ class _Incep_V4_TypeB(LayerGraph):
         self.do_batch_norm = do_batch_norm
         self.momentum = momentum
 
-        self.basic_args = {
-            "initializer": initializer,
-            "lambda_": lambda_,
-            "random_state": random_state,
-        }
-
+        self.basic_args = dict(
+            initializer=initializer, lambda_=lambda_, random_state=random_state
+        )
         self.init_nodes()
+
         super(_Incep_V4_TypeB, self).__init__(
             graph={
                 self.rt_: [self.br_a, self.br_b, self.br_c, self.br_d],
@@ -1098,13 +1082,11 @@ class _Incep_V4_TypeC(LayerGraph):
         self.do_batch_norm = do_batch_norm
         self.momentum = momentum
 
-        self.basic_args = {
-            "initializer": initializer,
-            "lambda_": lambda_,
-            "random_state": random_state,
-        }
-
+        self.basic_args = dict(
+            initializer=initializer, lambda_=lambda_, random_state=random_state
+        )
         self.init_nodes()
+
         super(_Incep_V4_TypeC, self).__init__(
             graph={
                 self.rt_: [self.br_a, self.br_b, self.br_c, self.br_d],
@@ -1241,13 +1223,11 @@ class _Incep_V4_ReduxA(LayerGraph):
         self.in_channels = in_channels
         self.k_, self.l_, self.m_, self.n_ = out_channels_arr
 
-        self.basic_args = {
-            "initializer": initializer,
-            "lambda_": lambda_,
-            "random_state": random_state,
-        }
-
+        self.basic_args = dict(
+            initializer=initializer, lambda_=lambda_, random_state=random_state
+        )
         self.init_nodes()
+
         super(_Incep_V4_ReduxA, self).__init__(
             graph={
                 self.rt_: [self.br_a, self.br_b, self.br_c],
@@ -1326,13 +1306,11 @@ class _Incep_V4_ReduxB(LayerGraph):
         self.do_batch_norm = do_batch_norm
         self.momentum = momentum
 
-        self.basic_args = {
-            "initializer": initializer,
-            "lambda_": lambda_,
-            "random_state": random_state,
-        }
-
+        self.basic_args = dict(
+            initializer=initializer, lambda_=lambda_, random_state=random_state
+        )
         self.init_nodes()
+
         super(_Incep_V4_ReduxB, self).__init__(
             graph={
                 self.rt_: [self.br_a, self.br_b, self.br_c],

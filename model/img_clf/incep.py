@@ -108,11 +108,11 @@ class _Inception_V1(Estimator, NeuralModel, ImageClassifier):
         self.build_model()
 
     def build_model(self) -> None:
-        base_args = {
-            "initializer": self.initializer,
-            "lambda_": self.lambda_,
-            "random_state": self.random_state,
-        }
+        base_args = dict(
+            initializer=self.initializer,
+            lambda_=self.lambda_,
+            random_state=self.random_state,
+        )
         incep_args = BaseBlockArgs(
             activation=self.activation,
             do_batch_norm=False,
@@ -276,11 +276,11 @@ class _Inception_V2(Estimator, NeuralModel, ImageClassifier):
         self.build_model()
 
     def build_model(self) -> None:
-        base_args = {
-            "initializer": self.initializer,
-            "lambda_": self.lambda_,
-            "random_state": self.random_state,
-        }
+        base_args = dict(
+            initializer=self.initializer,
+            lambda_=self.lambda_,
+            random_state=self.random_state,
+        )
         incep_args = BaseBlockArgs(
             activation=self.activation,
             do_batch_norm=False,
@@ -485,11 +485,11 @@ class _Inception_V3(Estimator, NeuralModel, ImageClassifier):
         self.build_model()
 
     def build_model(self) -> None:
-        base_args = {
-            "initializer": self.initializer,
-            "lambda_": self.lambda_,
-            "random_state": self.random_state,
-        }
+        base_args = dict(
+            initializer=self.initializer,
+            lambda_=self.lambda_,
+            random_state=self.random_state,
+        )
         incep_args = BaseBlockArgs(
             activation=self.activation,
             do_batch_norm=True,
@@ -1071,11 +1071,11 @@ class _Xception(Estimator, NeuralModel, ImageClassifier):
         self.build_model()
 
     def build_model(self) -> None:
-        base_args = {
-            "initializer": self.initializer,
-            "lambda_": self.lambda_,
-            "random_state": self.random_state,
-        }
+        base_args = dict(
+            initializer=self.initializer,
+            lambda_=self.lambda_,
+            random_state=self.random_state,
+        )
 
         self.model.add(("EntryFlow", XceptionBlock.Entry(**base_args)))
         for i in range(1, 9):

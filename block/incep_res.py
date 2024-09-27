@@ -19,11 +19,9 @@ class _IncepRes_V1_Stem(Sequential):
         momentum: float = 0.9,
         random_state: int | None = None,
     ) -> None:
-        basic_args = {
-            "initializer": initializer,
-            "lambda_": lambda_,
-            "random_state": random_state,
-        }
+        basic_args = dict(
+            initializer=initializer, lambda_=lambda_, random_state=random_state
+        )
         _ = do_batch_norm
 
         self.set_param_ranges(
@@ -93,13 +91,11 @@ class _IncepRes_V1_TypeA(LayerGraph):
         self.do_batch_norm = do_batch_norm
         self.momentum = momentum
 
-        self.basic_args = {
-            "initializer": initializer,
-            "lambda_": lambda_,
-            "random_state": random_state,
-        }
-
+        self.basic_args = dict(
+            initializer=initializer, lambda_=lambda_, random_state=random_state
+        )
         self.init_nodes()
+
         super(_IncepRes_V1_TypeA, self).__init__(
             graph={
                 self.rt_: [self.res_sum, self.br_a, self.br_b, self.br_c],
@@ -199,13 +195,11 @@ class _IncepRes_V1_TypeB(LayerGraph):
         self.do_batch_norm = do_batch_norm
         self.momentum = momentum
 
-        self.basic_args = {
-            "initializer": initializer,
-            "lambda_": lambda_,
-            "random_state": random_state,
-        }
-
+        self.basic_args = dict(
+            initializer=initializer, lambda_=lambda_, random_state=random_state
+        )
         self.init_nodes()
+
         super(_IncepRes_V1_TypeB, self).__init__(
             graph={
                 self.rt_: [self.res_sum, self.br_a, self.br_b],
@@ -293,13 +287,11 @@ class _IncepRes_V1_TypeC(LayerGraph):
         self.do_batch_norm = do_batch_norm
         self.momentum = momentum
 
-        self.basic_args = {
-            "initializer": initializer,
-            "lambda_": lambda_,
-            "random_state": random_state,
-        }
-
+        self.basic_args = dict(
+            initializer=initializer, lambda_=lambda_, random_state=random_state
+        )
         self.init_nodes()
+
         super(_IncepRes_V1_TypeC, self).__init__(
             graph={
                 self.rt_: [self.res_sum, self.br_a, self.br_b],
@@ -387,13 +379,11 @@ class _IncepRes_V1_Redux(LayerGraph):
         self.do_batch_norm = do_batch_norm
         self.momentum = momentum
 
-        self.basic_args = {
-            "initializer": initializer,
-            "lambda_": lambda_,
-            "random_state": random_state,
-        }
-
+        self.basic_args = dict(
+            initializer=initializer, lambda_=lambda_, random_state=random_state
+        )
         self.init_nodes()
+
         super(_IncepRes_V1_Redux, self).__init__(
             graph={
                 self.rt_: [self.br_a, self.br_b, self.br_c, self.br_d],
@@ -485,13 +475,11 @@ class _IncepRes_V2_TypeA(LayerGraph):
         self.do_batch_norm = do_batch_norm
         self.momentum = momentum
 
-        self.basic_args = {
-            "initializer": initializer,
-            "lambda_": lambda_,
-            "random_state": random_state,
-        }
-
+        self.basic_args = dict(
+            initializer=initializer, lambda_=lambda_, random_state=random_state
+        )
         self.init_nodes()
+
         super(_IncepRes_V2_TypeA, self).__init__(
             graph={
                 self.rt_: [self.res_sum, self.br_a, self.br_b, self.br_c],
@@ -591,13 +579,11 @@ class _IncepRes_V2_TypeB(LayerGraph):
         self.do_batch_norm = do_batch_norm
         self.momentum = momentum
 
-        self.basic_args = {
-            "initializer": initializer,
-            "lambda_": lambda_,
-            "random_state": random_state,
-        }
-
+        self.basic_args = dict(
+            initializer=initializer, lambda_=lambda_, random_state=random_state
+        )
         self.init_nodes()
+
         super(_IncepRes_V2_TypeB, self).__init__(
             graph={
                 self.rt_: [self.res_sum, self.br_a, self.br_b],
@@ -685,13 +671,11 @@ class _IncepRes_V2_TypeC(LayerGraph):
         self.do_batch_norm = do_batch_norm
         self.momentum = momentum
 
-        self.basic_args = {
-            "initializer": initializer,
-            "lambda_": lambda_,
-            "random_state": random_state,
-        }
-
+        self.basic_args = dict(
+            initializer=initializer, lambda_=lambda_, random_state=random_state
+        )
         self.init_nodes()
+
         super(_IncepRes_V2_TypeC, self).__init__(
             graph={
                 self.rt_: [self.res_sum, self.br_a, self.br_b],
@@ -779,13 +763,11 @@ class _IncepRes_V2_Redux(LayerGraph):
         self.do_batch_norm = do_batch_norm
         self.momentum = momentum
 
-        self.basic_args = {
-            "initializer": initializer,
-            "lambda_": lambda_,
-            "random_state": random_state,
-        }
-
+        self.basic_args = dict(
+            initializer=initializer, lambda_=lambda_, random_state=random_state
+        )
         self.init_nodes()
+
         super(_IncepRes_V2_Redux, self).__init__(
             graph={
                 self.rt_: [self.br_a, self.br_b, self.br_c, self.br_d],

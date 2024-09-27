@@ -865,6 +865,12 @@ class ResNetBlock:
         Networks.” European Conference on Computer Vision (ECCV),
         2016, pp. 630-645.
 
+    `ResNeXt-(50, 101)` :
+        [3] Xie, Saining, et al. "Aggregated Residual Transformations
+        for Deep Neural Networks." Proceedings of the IEEE Conference
+        on Computer Vision and Pattern Recognition (CVPR),
+        2017, pp. 1492-1500.
+
     """
 
     class Basic(resnet._Basic):
@@ -884,13 +890,19 @@ class ResNetBlock:
         """
         Bottleneck block used in `ResNet-(50, 101, 152)`.
 
+        If `cardinality` is greater than 1, it is served for
+        `ResNeXt-50` and `ResNeXt-101`.
+
         Parameters
         ----------
         `downsampling` : LayerLike, optional
             An additional layer to the input signal which reduces
             its grid size to perform a downsampling
+        `cardinality` : int, default=1
+            The cardinality in terms of aggregated residual
+            transformations.
 
-        See [1] also for additional information.
+        See [1] and [3] also for additional information.
         """
 
     class PreActBottleneck(resnet._PreActBottleneck):
