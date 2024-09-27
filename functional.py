@@ -1,6 +1,4 @@
-from typing import Any, Optional, Tuple, override
-from dataclasses import dataclass, asdict
-import numpy as np
+from typing import Any, Optional, Tuple, Type, override
 
 from luma.interface.typing import LayerLike, Matrix
 from luma.neural.layer import *
@@ -10,14 +8,17 @@ from luma.neural.autoprop import LayerNode, LayerGraph, MergeMode
 def make_res_layers(
     in_channels: int,
     out_channels: int,
-    block: LayerLike,
+    block: Type[LayerLike],
     n_blocks: int,
     layer_num: int,
     conv_base_args: dict,
-    res_base_args_dc: dataclass,
+    res_base_args: dict,
     stride: int = 1,
     layer_label: str = "ResNetConv",
 ) -> tuple[Sequential, int]:
+    if not hasattr(block, "expansion"):
+        raise RuntimeError(f"'{block.__name__}' has no expansion factor!")
+
     downsampling: Optional[Sequential] = None
     if stride != 1 or in_channels != out_channels * block.expansion:
         downsampling = Sequential(
@@ -32,11 +33,7 @@ def make_res_layers(
         )
 
     first_block = block(
-        in_channels,
-        out_channels,
-        stride,
-        downsampling,
-        **asdict(res_base_args_dc),
+        in_channels, out_channels, stride, downsampling, **res_base_args
     )
     layers: list = [(f"{layer_label}{layer_num}_1", first_block)]
 
@@ -44,11 +41,7 @@ def make_res_layers(
     for i in range(1, n_blocks):
         new_block = (
             f"{layer_label}{layer_num}_{i + 1}",
-            block(
-                in_channels,
-                out_channels,
-                **asdict(res_base_args_dc),
-            ),
+            block(in_channels, out_channels, **res_base_args),
         )
         layers.append(new_block)
 

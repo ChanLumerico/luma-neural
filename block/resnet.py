@@ -72,12 +72,12 @@ class _Basic(LayerGraph):
                 self.activation(),
                 Conv2D(
                     self.out_channels,
-                    self.out_channels * _Basic.expansion,
+                    self.out_channels * type(self).expansion,
                     3,
                     **self.basic_args,
                 ),
                 BatchNorm2D(
-                    self.out_channels * _Basic.expansion,
+                    self.out_channels * type(self).expansion,
                     self.momentum,
                 ),
             ),
@@ -174,12 +174,12 @@ class _Bottleneck(LayerGraph):
                 self.activation(),
                 Conv2D(
                     self.out_channels,
-                    self.out_channels * _Bottleneck.expansion,
+                    self.out_channels * type(self).expansion,
                     1,
                     **self.basic_args,
                 ),
                 BatchNorm2D(
-                    self.out_channels * _Bottleneck.expansion,
+                    self.out_channels * type(self).expansion,
                     self.momentum,
                 ),
             ),
@@ -280,7 +280,7 @@ class _PreActBottleneck(LayerGraph):
                 self.activation(),
                 Conv2D(
                     self.out_channels,
-                    self.out_channels * _PreActBottleneck.expansion,
+                    self.out_channels * type(self).expansion,
                     1,
                     **self.basic_args,
                 ),
@@ -378,12 +378,12 @@ class _Bottleneck_SE(LayerGraph):
                 self.activation(),
                 Conv2D(
                     self.out_channels,
-                    self.out_channels * _Bottleneck.expansion,
+                    self.out_channels * type(self).expansion,
                     1,
                     **self.basic_args,
                 ),
                 BatchNorm2D(
-                    self.out_channels * _Bottleneck.expansion,
+                    self.out_channels * type(self).expansion,
                     self.momentum,
                 ),
             ),
@@ -391,7 +391,7 @@ class _Bottleneck_SE(LayerGraph):
         )
         self.se_ = LayerNode(
             _SEBlock2D(
-                self.out_channels * _Bottleneck_SE.expansion,
+                self.out_channels * type(self).expansion,
                 self.se_reduction,
                 **self.basic_args,
             ),

@@ -68,8 +68,8 @@ __all__ = (
     "EfficientNet_V2_Medium",
     "EfficientNet_V2_Large",
     "EfficientNet_V2_XLarge",
-    "ResNeXt-50",
-    "ResNeXt-101",
+    "ResNeXt_50",
+    "ResNeXt_101",
 )
 
 
@@ -2847,7 +2847,7 @@ class EfficientNet_V2_XLarge(efficient._EfficientNet_V2_XLarge):
     """
 
 
-class ResNeXt_50: ...
+class ResNeXt_50(resnet._ResNeXt_50): ...
 
 
-class ResNeXt_101: ...
+class ResNeXt_101(resnet._ResNeXt_101): ...
