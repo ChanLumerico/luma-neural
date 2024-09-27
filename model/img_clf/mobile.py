@@ -250,7 +250,7 @@ class _Mobile_V2(Estimator, NeuralModel, ImageClassifier):
             c = int(round(c * wp))
             for i in range(n):
                 s_ = s if i == 0 else 1
-                self.model += InvRes(in_, c, s_, t, **invres_args)
+                self.model += InvRes(in_, c, 3, s_, t, **invres_args)
                 in_ = c
 
         last_channels = int(1280 * wp)
