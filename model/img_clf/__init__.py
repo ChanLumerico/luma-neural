@@ -2847,7 +2847,123 @@ class EfficientNet_V2_XLarge(efficient._EfficientNet_V2_XLarge):
     """
 
 
-class ResNeXt_50(resnet._ResNeXt_50): ...
+class ResNeXt_50(resnet._ResNeXt_50):
+    """
+    ResNeXt-50 is a 50-layer deep neural network that builds upon ResNet
+    by introducing a "cardinality" dimension, which refers to the number of
+    independent paths within each residual block. This design improves
+    representational power and efficiency, allowing for more flexibility in
+    learning complex patterns, enhancing performance in image recognition
+    tasks while maintaining computational efficiency.
+
+    Specs
+    -----
+    Input/Output Shapes:
+    ```py
+    Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
+    ```
+    Parameter Size:
+    ```txt
+    25,027,904 weights, 35,112 biases -> 25,063,016 params
+    ```
+    Components
+    ----------
+    Blocks Used:
+    ```py
+    ResNetBlock.Bottleneck()  # Override `expansion` to 2
+    ```
+    Arguments
+    ---------
+    `cardinality` : int, default=32
+        The cardinality in terms of aggregated residual
+        transformations.
+    `activation` : callable, default=Activation.ReLU
+        Type of activation function
+    `initializer` : InitStr, default=None
+        Type of weight initializer
+    `out_features` : int, default=1000
+        Number of output features
+    `batch_size` : int, default=100
+        Size of a single mini-batch
+    `n_epochs` : int, default=100
+        Number of epochs for training
+    `valid_size` : float, default=0.1
+        Fractional size of validation set
+    `lambda_` : float, default=0.0
+        L2 regularization strength
+    `early_stopping` : bool, default=False
+        Whether to early-stop the training when the valid score stagnates
+    `patience` : int, default=10
+        Number of epochs to wait until early-stopping
+    `shuffle` : bool, default=True
+        Whethter to shuffle the data at the beginning of every epoch
+
+    References
+    ----------
+    1. Xie, Saining, et al. "Aggregated Residual Transformations
+    for Deep Neural Networks." Proceedings of the IEEE Conference
+    on Computer Vision and Pattern Recognition (CVPR), 2017,
+    pp. 1492-1500.
+
+    """
 
 
-class ResNeXt_101(resnet._ResNeXt_101): ...
+class ResNeXt_101(resnet._ResNeXt_101):
+    """
+    ResNeXt-101 is a 101-layer deep neural network that builds upon ResNet
+    by introducing a "cardinality" dimension, which refers to the number of
+    independent paths within each residual block. This design improves
+    representational power and efficiency, allowing for more flexibility in
+    learning complex patterns, enhancing performance in image recognition
+    tasks while maintaining computational efficiency.
+
+    Specs
+    -----
+    Input/Output Shapes:
+    ```py
+    Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
+    ```
+    Parameter Size:
+    ```txt
+    44,176,704 weights, 69,928 biases -> 44,246,632 params
+    ```
+    Components
+    ----------
+    Blocks Used:
+    ```py
+    ResNetBlock.Bottleneck()  # Override `expansion` to 2
+    ```
+    Arguments
+    ---------
+    `cardinality` : int, default=32
+        The cardinality in terms of aggregated residual
+        transformations.
+    `activation` : callable, default=Activation.ReLU
+        Type of activation function
+    `initializer` : InitStr, default=None
+        Type of weight initializer
+    `out_features` : int, default=1000
+        Number of output features
+    `batch_size` : int, default=100
+        Size of a single mini-batch
+    `n_epochs` : int, default=100
+        Number of epochs for training
+    `valid_size` : float, default=0.1
+        Fractional size of validation set
+    `lambda_` : float, default=0.0
+        L2 regularization strength
+    `early_stopping` : bool, default=False
+        Whether to early-stop the training when the valid score stagnates
+    `patience` : int, default=10
+        Number of epochs to wait until early-stopping
+    `shuffle` : bool, default=True
+        Whethter to shuffle the data at the beginning of every epoch
+
+    References
+    ----------
+    1. Xie, Saining, et al. "Aggregated Residual Transformations
+    for Deep Neural Networks." Proceedings of the IEEE Conference
+    on Computer Vision and Pattern Recognition (CVPR), 2017,
+    pp. 1492-1500.
+
+    """

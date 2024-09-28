@@ -10,7 +10,27 @@ from luma.neural.autoprop import LayerNode, LayerGraph, MergeMode
 from .se import _SEBlock2D
 
 
-class _Basic(LayerGraph):
+class _ExpansionMixin:
+    expansion: ClassVar[int]
+
+    @classmethod
+    def check_expansion(cls) -> None:
+        if not hasattr(cls, "expansion"):
+            raise AttributeError(f"'{cls.__name__}' has no expansion factor!")
+
+    @classmethod
+    def override_expansion(cls, value: int) -> None:
+        cls.check_expansion()
+        cls._original_expansion = cls.expansion
+        cls.expansion = value
+
+    @classmethod
+    def reset_expansion(cls) -> None:
+        cls.check_expansion()
+        cls.expansion = cls._original_expansion
+
+
+class _Basic(LayerGraph, _ExpansionMixin):
     def __init__(
         self,
         in_channels: int,
@@ -106,7 +126,7 @@ class _Basic(LayerGraph):
         return self.conv_.out_shape(in_shape)
 
 
-class _Bottleneck(LayerGraph):
+class _Bottleneck(LayerGraph, _ExpansionMixin):
     def __init__(
         self,
         in_channels: int,
@@ -208,7 +228,7 @@ class _Bottleneck(LayerGraph):
         return self.conv_.out_shape(in_shape)
 
 
-class _PreActBottleneck(LayerGraph):
+class _PreActBottleneck(LayerGraph, _ExpansionMixin):
     def __init__(
         self,
         in_channels: int,
@@ -309,7 +329,7 @@ class _PreActBottleneck(LayerGraph):
         return self.conv_.out_shape(in_shape)
 
 
-class _Bottleneck_SE(LayerGraph):
+class _Bottleneck_SE(LayerGraph, _ExpansionMixin):
     def __init__(
         self,
         in_channels: int,
