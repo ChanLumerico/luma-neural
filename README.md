@@ -334,6 +334,18 @@ Information Processing Systems, 2012.
 | `EfficientNet_V2_Large` | 569 | $(N,3,480,480)$ | 104,084,896 | 303,032 | 104,387,928 | ✅ |
 | `EfficientNet_V2_XLarge` | 813 | $(N,3,480,480)$ | 201,762,976 | 450,227 | 202,213,203 | ✅ |
 
+#### ResNeXt Series
+
+*ResNeXt-50, 101*
+
+>Xie, Saining, et al. "Aggregated Residual Transformations for Deep Neural Networks." Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR), 2017, pp. 1492-1500.
+>
+
+| Class | # of Layers | Input Shape | Weights | Biases | Total Param. | Implemented |
+| --- | --- | --- | --- | --- | --- | --- |
+| `ResNeXt_50` | 102 | $(N,3,224,224)$ | 25,027,904 | 35,112 | 25,063,016 | ✅ |
+| `ResNeXt_101` | 204 | $(N,3,224,224)$ | 44,176,704 | 69,928 | 44,246,632 | ✅ |
+
 *Waiting for future updates…🔮*
 
 ---
