@@ -17,7 +17,7 @@ from .img_clf import *
 
 
 SUB_MODULES: tuple[ModuleType] = (simple, img_clf)
-MODELS: tuple = ()
+MODELS: tuple[str] = ()
 
 for module in SUB_MODULES:
     if hasattr(module, "__all__"):
@@ -62,3 +62,17 @@ def debug_models(submodules: list[str] | None = None) -> None:
     print("=" * 75)
     print(f"Success: {len(all_models) - fail_count}, Failure: {fail_count}")
     print(f"Failed Models: {failed_models}")
+
+
+def get_model(name: str) -> type | None:
+    for model_name in MODELS:
+        alt_name = model_name.lower().replace("_", "-")
+        if name == model_name or name == alt_name:
+            return globals()[model_name]
+
+
+def get_model_instance(name: str, **kwargs) -> object:
+    model = get_model(name)
+    if model is None:
+        raise ValueError(f"'{name}' is an invalid or unsupported model!")
+    return model(**kwargs)
