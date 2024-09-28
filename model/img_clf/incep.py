@@ -420,7 +420,7 @@ class _Inception_V2(Estimator, NeuralModel, ImageClassifier):
 class _Inception_V3(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
-        optimizer: Optimizer,
+        activation: callable = Activation.ReLU,
         initializer: InitUtil.InitStr = None,
         out_features: int = 1000,
         batch_size: int = 128,
@@ -435,7 +435,7 @@ class _Inception_V3(Estimator, NeuralModel, ImageClassifier):
         random_state: int | None = None,
         deep_verbose: bool = False,
     ) -> None:
-        self.optimizer = optimizer
+        self.activation = activation
         self.initializer = initializer
         self.out_features = out_features
         self.lambda_ = lambda_
