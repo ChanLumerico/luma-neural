@@ -477,8 +477,25 @@ class NeuralModel(ABC, NeuralBase):
     def n_layers(self) -> int:
         return self.model.n_layers
 
+    def model_size(self, dtype_bit: int = 64) -> str:
+        units = ["B", "KB", "MB", "GB", "TB", "PB", "EB"]
+
+        total_bits = sum(self.param_size) * dtype_bit
+        total_bytes = total_bits / 8
+
+        unit_idx = 0
+        while total_bytes >= 1024 and unit_idx < len(units) - 1:
+            total_bytes /= 1024
+            unit_idx += 1
+
+        formatted_size = f"{total_bytes:,.2f} {units[unit_idx]}"
+        return formatted_size
+
     def summarize(
-        self, in_shape: tuple[int] | None = None, n_lines: int | None = 20
+        self,
+        in_shape: tuple[int] | None = None,
+        n_lines: int | None = 20,
+        dtype_bit: int = 64,
     ) -> None:
         title = f"Summary of '{str(self)}'"
         print(f"{title:^83}")
@@ -516,6 +533,7 @@ class NeuralModel(ABC, NeuralBase):
             f"Total Parameters: ({w_size:,} weights, {b_size:,} biases)",
             f"-> {w_size + b_size:,} params",
         )
+        print(f"Model Size (FP{dtype_bit}): {self.model_size(dtype_bit)}")
         print("-" * 83)
 
     def __str__(self) -> str:
