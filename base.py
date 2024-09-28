@@ -473,6 +473,10 @@ class NeuralModel(ABC, NeuralBase):
     def param_size(self) -> tuple[int, int]:
         return self.model.param_size
 
+    @property
+    def n_layers(self) -> int:
+        return self.model.n_layers
+
     def summarize(
         self, in_shape: tuple[int] | None = None, n_lines: int | None = 20
     ) -> None:
@@ -506,7 +510,8 @@ class NeuralModel(ABC, NeuralBase):
             in_shape = layer.out_shape(in_shape)
 
         print("=" * 83)
-        print(f"Total Layers/Blocks: {len(self.model)}")
+        print(f"Total Layers/Blocks: {len(self.model):,}")
+        print(f"Total Basic Layers: {self.n_layers:,}")
         print(
             f"Total Parameters: ({w_size:,} weights, {b_size:,} biases)",
             f"-> {w_size + b_size:,} params",

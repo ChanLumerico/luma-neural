@@ -1370,6 +1370,16 @@ class Sequential(Layer):
 
         return w_size, b_size
 
+    @property
+    def n_layers(self) -> int:
+        layer_cnt = 0
+        for _, layer in self.layers:
+            if hasattr(layer, "n_layers"):
+                layer_cnt += layer.n_layers
+            else:
+                layer_cnt += 1
+        return layer_cnt
+
     def out_shape(self, in_shape: Tuple[int]) -> Tuple[int]:
         for _, layer in self.layers:
             in_shape = layer.out_shape(in_shape)
