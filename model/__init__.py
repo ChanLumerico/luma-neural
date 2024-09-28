@@ -38,7 +38,7 @@ def debug_models(submodules: list[str] | None = None) -> None:
             submodule = globals()[module_name]
             all_models.extend(submodule.__all__)
 
-    print(f"Starting debug for {len(all_models)} model(s)...")
+    print(f"Start debugging for {len(all_models)} model(s)...")
     print("=" * 75)
 
     fail_count = 0
