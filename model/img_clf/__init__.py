@@ -42,14 +42,14 @@ __all__ = (
     "ResNet_200",
     "ResNet_269",
     "ResNet_1001",
-    "XceptionNet",
+    "Xception",
     "MobileNet_V1",
     "MobileNet_V2",
     "MobileNet_V3_Small",
     "MobileNet_V3_Large",
     "SE_ResNet_50",
     "SE_ResNet_152",
-    "SE_InceptionRes_V2",
+    "SE_Inception_ResNet_V2",
     "SE_DenseNet_121",
     "SE_DenseNet_169",
     "SE_ResNeXt_50",
@@ -1341,9 +1341,9 @@ class ResNet_1001(resnet._ResNet_1001):
     """
 
 
-class XceptionNet(incep._Xception):
+class Xception(incep._Xception):
     """
-    XceptionNet enhances the Inception architecture by replacing standard
+    Xception enhances the Inception architecture by replacing standard
     convolutions with depthwise separable convolutions, making it more
     efficient and effective at feature extraction. This design reduces
     the number of parameters and computations while maintaining or
@@ -1750,9 +1750,9 @@ class SE_ResNet_152(resnet._SE_ResNet_152):
     """
 
 
-class SE_InceptionRes_V2(incep._SE_InceptionRes_V2):
+class SE_Inception_ResNet_V2(incep._SE_Inception_ResNet_V2):
     """
-    SE-InceptionResNet v2 is a deep neural network that extends the
+    SE-Inception-ResNet v2 is a deep neural network that extends the
     Inception-ResNet v2 architecture by integrating Squeeze-and-Excitation (SE)
     blocks. These SE blocks enhance the network's ability to model channel-wise
     interdependencies, improving the representational power of the network by

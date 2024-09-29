@@ -40,7 +40,7 @@ __all__ = (
     "_Inception_ResNet_V1",
     "_Inception_ResNet_V2",
     "_Xception",
-    "_SE_InceptionRes_V2",
+    "_SE_Inception_ResNet_V2",
 )
 
 
@@ -1121,7 +1121,7 @@ class _Xception(Estimator, NeuralModel, ImageClassifier):
         return super(_Xception, self).score_nn(X, y, metric, argmax)
 
 
-class _SE_InceptionRes_V2(Estimator, NeuralModel, ImageClassifier):
+class _SE_Inception_ResNet_V2(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = Activation.ReLU,
@@ -1267,12 +1267,12 @@ class _SE_InceptionRes_V2(Estimator, NeuralModel, ImageClassifier):
     def fit(self, X: Tensor, y: Matrix) -> Self:
         ls = LabelSmoothing(smoothing=self.smoothing)
         y_ls = ls.fit_transform(y)
-        return super(_SE_InceptionRes_V2, self).fit_nn(X, y_ls)
+        return super(_SE_Inception_ResNet_V2, self).fit_nn(X, y_ls)
 
     @override
     @Tensor.force_shape(input_shape)
     def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_SE_InceptionRes_V2, self).predict_nn(X, argmax)
+        return super(_SE_Inception_ResNet_V2, self).predict_nn(X, argmax)
 
     @override
     @Tensor.force_shape(input_shape)
@@ -1283,4 +1283,4 @@ class _SE_InceptionRes_V2(Estimator, NeuralModel, ImageClassifier):
         metric: Evaluator = Accuracy,
         argmax: bool = True,
     ) -> float:
-        return super(_SE_InceptionRes_V2, self).score_nn(X, y, metric, argmax)
+        return super(_SE_Inception_ResNet_V2, self).score_nn(X, y, metric, argmax)

@@ -199,38 +199,38 @@ Information Processing Systems, 2012.
 | `VGGNet_16` | 37 | $(N,3,224,224)$ | 138,344,128 | 13,416 | 138,357,544 | ✅ |
 | `VGGNet_19` | 43 | $(N,3,224,224)$ | 143,652,544 | 14,696 | 143,667,240 | ✅ |
 
-#### InceptionNet Series
+#### Inception Series
 
-*InceptionNet-v1, v2, v3*
+*Inception-v1, v2, v3*
 
 > Szegedy, Christian, et al. “Going Deeper with Convolutions.” Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR), 2015, pp. 1-9.
 > 
 
 | Class | # of Layers | Input Shape | Weights | Biases | Total Param. | Implemented |
 | --- | --- | --- | --- | --- | --- | --- |
-| `InceptionNet_V1` | 182 | $(N,3,224,224)$ | 6,990,272 | 8,280 | 6,998,552 | ✅ |
-| `InceptionNet_V2` | 242 | $(N,3,299,299)$ | 24,974,688 | 20,136 | 24,994,824 | ✅ |
-| `InceptionNet_V3` | 331 | $(N,3,299,299)$ | 25,012,960 | 20,136 | 25,033,096 | ✅ |
+| `Inception_V1` | 182 | $(N,3,224,224)$ | 6,990,272 | 8,280 | 6,998,552 | ✅ |
+| `Inception_V2` | 242 | $(N,3,299,299)$ | 24,974,688 | 20,136 | 24,994,824 | ✅ |
+| `Inception_V3` | 331 | $(N,3,299,299)$ | 25,012,960 | 20,136 | 25,033,096 | ✅ |
 
-*InceptionNet-v4, InceptionResNet-v1, v2*
+*Inception-v4, Inception-ResNet-v1, v2*
 
 > Szegedy, Christian, et al. “Inception-v4, Inception-ResNet and the Impact of Residual Connections on Learning.” Proceedings of the Thirty-First AAAI Conference on Artificial Intelligence, 2017, pp. 4278-4284.
 > 
 
 | Class | # of Layers | Input Shape | Weights | Biases | Total Param. | Implemented |
 | --- | --- | --- | --- | --- | --- | --- |
-| `InceptionNet_V4` | 504 | $(N,3,299,299)$ | 42,641,952 | 32,584 | 42,674,536 | ✅ |
-| `InceptionResNet_V1` | 410 | $(N,3,299,299)$ | 21,611,648 | 33,720 | 21,645,368 | ✅ |
-| `InceptionResNet_V2` | 431 | $(N,3,299,299)$ | 34,112,608 | 43,562 | 34,156,170 | ✅ |
+| `Inception_V4` | 504 | $(N,3,299,299)$ | 42,641,952 | 32,584 | 42,674,536 | ✅ |
+| `Inception_ResNet_V1` | 410 | $(N,3,299,299)$ | 21,611,648 | 33,720 | 21,645,368 | ✅ |
+| `Inception_ResNet_V2` | 431 | $(N,3,299,299)$ | 34,112,608 | 43,562 | 34,156,170 | ✅ |
 
-*XceptionNet*
+*Xception*
 
 > Chollet, François. “Xception: Deep Learning with Depthwise Separable Convolutions.” Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR), 2017, pp. 1251-1258.
 > 
 
 | Class | # of Layers | Input Shape | Weights | Biases | Total Param. | Implemented |
 | --- | --- | --- | --- | --- | --- | --- |
-| `XceptionNet` | 174 | $(N,3,299,299)$ | 22,113,984 | 50,288 | 22,164,272 | ✅ |
+| `Xception` | 174 | $(N,3,299,299)$ | 22,113,984 | 50,288 | 22,164,272 | ✅ |
 
 #### ResNet Series
 
@@ -291,7 +291,7 @@ Information Processing Systems, 2012.
 | --- | --- | --- | --- | --- | --- | --- |
 | `SE_ResNet_50` | 263 | $(N,3,224,224)$ | 35,615,808 | 46,440 | 35,662,248 | ✅ |
 | `SE_ResNet_152` | 803 | $(N,3,224,224)$ | 86,504,512 | 136,552 | 86,641,064 | ✅ |
-| `SE_InceptionRes_V2` | 569 | $(N,3,299,299)$ | 58,794,080 | 80,762 | 58,874,842 | ✅ |
+| `SE_Inception_ResNet_V2` | 569 | $(N,3,299,299)$ | 58,794,080 | 80,762 | 58,874,842 | ✅ |
 | `SE_DenseNet_121` | 388 | $(N,3,224,224)$ | 9,190,272 | 14,760 | 9,205,032 | ✅ |
 | `SE_DenseNet_169` | 532 | $(N,3,224,224)$ | 16,515,968 | 19,848 | 16,535,816 | ✅ |
 | `SE_ResNeXt_50` | 299 | $(N,3,224,224)$ | 37,135,680 | 53,992 | 37,189,672 | ✅ |
