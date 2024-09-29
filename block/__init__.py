@@ -924,6 +924,9 @@ class ResNetBlock:
         Bottleneck block with squeeze-and-excitation(SE)
         used in `SE-ResNet`.
 
+        If `cardinality` is greater than 1, it is served for
+        `SE_ResNeXt`.
+
         Parameters
         ----------
         `se_reduction` : float, default=4
@@ -931,6 +934,9 @@ class ResNetBlock:
         `downsampling` : LayerLike, optional
             An additional layer to the input signal which reduces
             its grid size to perform a downsampling
+        `cardinality` : int, default=1
+            The cardinality in terms of aggregated residual
+            transformations.
 
         """
 

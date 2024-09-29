@@ -337,6 +337,7 @@ class _Bottleneck_SE(LayerGraph, _ExpansionMixin):
         stride: int = 1,
         downsampling: LayerLike | None = None,
         se_reduction: int = 4,
+        cardinality: int = 1,
         activation: callable = Activation.ReLU,
         optimizer: Optimizer | None = None,
         initializer: InitUtil.InitStr = None,
@@ -349,6 +350,7 @@ class _Bottleneck_SE(LayerGraph, _ExpansionMixin):
         self.out_channels = out_channels
         self.stride = stride
         self.se_reduction = se_reduction
+        self.cardinality = cardinality
         self.downsampling = downsampling
         self.activation = activation
         self.optimizer = optimizer
@@ -392,6 +394,7 @@ class _Bottleneck_SE(LayerGraph, _ExpansionMixin):
                     self.out_channels,
                     3,
                     self.stride,
+                    groups=self.cardinality,
                     **self.basic_args,
                 ),
                 BatchNorm2D(self.out_channels, self.momentum),

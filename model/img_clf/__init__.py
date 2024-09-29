@@ -1921,10 +1921,116 @@ class SE_DenseNet_169(dense._SE_DenseNet_169):
     """
 
 
-class SE_ResNeXt_50: ...
+class SE_ResNeXt_50(resnet._SE_ResNeXt_50):
+    """
+    SE-ResNeXt-50 is a 50-layer deep neural network that builds upon
+    ResNeXt by integrating Squeeze-and-Excitation (SE) blocks alongside
+    the "cardinality" dimension, which refers to the number of independent
+    paths within each residual block. This combination enhances
+    representational power and efficiency by adaptively recalibrating
+    channel-wise feature responses, allowing for greater flexibility in
+    learning complex patterns, thereby improving performance in image
+    recognition tasks while maintaining computational efficiency.
+
+    Specs
+    -----
+    Input/Output Shapes:
+    ```py
+    Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
+    ```
+    Parameter Size:
+    ```txt
+    37,135,680 weights, 53,992 biases -> 37,189,672 params
+    ```
+    Components
+    ----------
+    Blocks Used:
+    ```py
+    ResNetBlock.Bottleneck_SE()  # Override `expansion` to 2
+    ```
+    Arguments
+    ---------
+    `cardinality` : int, default=32
+        The cardinality in terms of aggregated residual
+        transformations.
+    `activation` : callable, default=Activation.ReLU
+        Type of activation function
+    `initializer` : InitStr, default=None
+        Type of weight initializer
+    `out_features` : int, default=1000
+        Number of output features
+    `batch_size` : int, default=100
+        Size of a single mini-batch
+    `n_epochs` : int, default=100
+        Number of epochs for training
+    `valid_size` : float, default=0.1
+        Fractional size of validation set
+    `lambda_` : float, default=0.0
+        L2 regularization strength
+    `early_stopping` : bool, default=False
+        Whether to early-stop the training when the valid score stagnates
+    `patience` : int, default=10
+        Number of epochs to wait until early-stopping
+    `shuffle` : bool, default=True
+        Whethter to shuffle the data at the beginning of every epoch
+
+    """
 
 
-class SE_ResNeXt_101: ...
+class SE_ResNeXt_101(resnet._SE_ResNeXt_101):
+    """
+    SE-ResNeXt-101 is a 101-layer deep neural network that builds upon
+    ResNeXt by integrating Squeeze-and-Excitation (SE) blocks alongside
+    the "cardinality" dimension, which refers to the number of independent
+    paths within each residual block. This combination enhances
+    representational power and efficiency by adaptively recalibrating
+    channel-wise feature responses, allowing for greater flexibility in
+    learning complex patterns, thereby improving performance in image
+    recognition tasks while maintaining computational efficiency.
+
+    Specs
+    -----
+    Input/Output Shapes:
+    ```py
+    Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
+    ```
+    Parameter Size:
+    ```txt
+    65,197,376 weights, 110,568 biases -> 65,307,944 params
+    ```
+    Components
+    ----------
+    Blocks Used:
+    ```py
+    ResNetBlock.Bottleneck_SE()  # Override `expansion` to 2
+    ```
+    Arguments
+    ---------
+    `cardinality` : int, default=32
+        The cardinality in terms of aggregated residual
+        transformations.
+    `activation` : callable, default=Activation.ReLU
+        Type of activation function
+    `initializer` : InitStr, default=None
+        Type of weight initializer
+    `out_features` : int, default=1000
+        Number of output features
+    `batch_size` : int, default=100
+        Size of a single mini-batch
+    `n_epochs` : int, default=100
+        Number of epochs for training
+    `valid_size` : float, default=0.1
+        Fractional size of validation set
+    `lambda_` : float, default=0.0
+        L2 regularization strength
+    `early_stopping` : bool, default=False
+        Whether to early-stop the training when the valid score stagnates
+    `patience` : int, default=10
+        Number of epochs to wait until early-stopping
+    `shuffle` : bool, default=True
+        Whethter to shuffle the data at the beginning of every epoch
+
+    """
 
 
 class DenseNet_121(dense._DenseNet_121):
