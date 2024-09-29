@@ -1371,11 +1371,11 @@ class Sequential(Layer):
         return w_size, b_size
 
     @property
-    def n_layers(self) -> int:
+    def layer_count(self) -> int:
         layer_cnt = 0
         for _, layer in self.layers:
-            if hasattr(layer, "n_layers"):
-                layer_cnt += layer.n_layers
+            if hasattr(layer, "layer_count"):
+                layer_cnt += layer.layer_count
             else:
                 layer_cnt += 1
         return layer_cnt

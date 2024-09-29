@@ -32,8 +32,8 @@ __all__ = (
     "Inception_V2",
     "Inception_V3",
     "Inception_V4",
-    "InceptionRes_V1",
-    "InceptionRes_V2",
+    "Inception_ResNet_V1",
+    "Inception_ResNet_V2",
     "ResNet_18",
     "ResNet_34",
     "ResNet_50",
@@ -52,6 +52,8 @@ __all__ = (
     "SE_InceptionRes_V2",
     "SE_DenseNet_121",
     "SE_DenseNet_169",
+    "SE_ResNeXt_50",
+    "SE_ResNeXt_101",
     "DenseNet_121",
     "DenseNet_169",
     "DenseNet_201",
@@ -789,7 +791,7 @@ class Inception_V4(incep._Inception_V4):
     """
 
 
-class InceptionRes_V1(incep._InceptionRes_V1):
+class Inception_ResNet_V1(incep._Inception_ResNet_V1):
     """
     Inception-ResNet v1 combines Inception modules with residual connections,
     improving computational efficiency and accuracy. This architecture uses
@@ -847,7 +849,7 @@ class InceptionRes_V1(incep._InceptionRes_V1):
     """
 
 
-class InceptionRes_V2(incep._InceptionRes_V2):
+class Inception_ResNet_V2(incep._Inception_ResNet_V2):
     """
     Inception-ResNet v2 enhances v1 with a deeper architecture and
     improved residual blocks for better performance. It features refined
@@ -1917,6 +1919,12 @@ class SE_DenseNet_169(dense._SE_DenseNet_169):
         Whethter to shuffle the data at the beginning of every epoch
 
     """
+
+
+class SE_ResNeXt_50: ...
+
+
+class SE_ResNeXt_101: ...
 
 
 class DenseNet_121(dense._DenseNet_121):

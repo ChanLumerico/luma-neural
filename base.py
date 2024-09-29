@@ -474,8 +474,8 @@ class NeuralModel(ABC, NeuralBase):
         return self.model.param_size
 
     @property
-    def n_layers(self) -> int:
-        return self.model.n_layers
+    def layer_count(self) -> int:
+        return self.model.layer_count
 
     def model_size(self, dtype_bit: int = 64) -> str:
         units = ["B", "KB", "MB", "GB", "TB", "PB", "EB"]
@@ -528,7 +528,7 @@ class NeuralModel(ABC, NeuralBase):
 
         print("=" * 83)
         print(f"Total Layers/Blocks: {len(self.model):,}")
-        print(f"Total Basic Layers: {self.n_layers:,}")
+        print(f"Total Basic Layers: {self.layer_count:,}")
         print(
             f"Total Parameters: ({w_size:,} weights, {b_size:,} biases)",
             f"-> {w_size + b_size:,} params",
