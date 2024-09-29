@@ -45,6 +45,8 @@ __all__ = (
     "Dropout2D",
     "Dropout3D",
     "Flatten",
+    "Reshape",
+    "Transpose",
     "Activation",
     "BatchNorm1D",
     "BatchNorm2D",
@@ -1002,6 +1004,41 @@ class Flatten(linear._Flatten):
 
     def __init__(self) -> None:
         super().__init__()
+
+
+class Reshape(linear._Reshape):
+    """
+    A reshape layer that literally reshapes the input tensor into the
+    target shape.
+
+    Parameters
+    ----------
+    `shape` : tuple of int
+        Target shape to reshape
+
+    """
+
+    def __init__(self, shape: Tuple[int]) -> None:
+        super().__init__(shape)
+
+
+class Transpose(linear._Transpose):
+    """
+    A transpose layer that transposes the input tensor into the order of
+    given axes order.
+
+    If there is no given order, it performs transpose
+    for all axes, reversing the shape of the original tensor.
+
+    Parameters
+    ----------
+    `axes` : tuple of int, optional
+        Axes order to transpose
+
+    """
+
+    def __init__(self, axes: Tuple[int] | None = None):
+        super().__init__(axes)
 
 
 class Activation(act._Activation):

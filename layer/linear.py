@@ -1,14 +1,21 @@
-from typing import Tuple
+from typing import Optional, Tuple
 import numpy as np
 
-from luma.interface.typing import TensorLike
 from luma.core.super import Optimizer
-from luma.interface.typing import Tensor, Matrix
+
+from luma.interface.typing import TensorLike, Tensor, Matrix
 from luma.interface.util import InitUtil
+from luma.interface.exception import NotFittedError
+
 from luma.neural.base import Layer
 
 
-__all__ = ("_Flatten", "_Dense", "_Reshape")
+__all__ = (
+    "_Flatten",
+    "_Reshape",
+    "_Transpose",
+    "_Dense",
+)
 
 
 class _Flatten(Layer):
@@ -27,6 +34,57 @@ class _Flatten(Layer):
     def out_shape(self, in_shape: Tuple[int]) -> Tuple[int]:
         batch_size, *shape = in_shape
         return (batch_size, int(np.prod(shape)))
+
+
+class _Reshape(Layer):
+    def __init__(self, shape: tuple[int]) -> None:
+        self.shape = shape
+        self.input_shape = None
+
+    def forward(self, X: TensorLike, is_train: bool) -> TensorLike:
+        _ = is_train
+        self.input_shape = X.shape
+        return X.reshape(self.shape)
+
+    def backward(self, d_out: TensorLike) -> TensorLike:
+        if np.prod(self.shape) != np.prod(self.input_shape):
+            raise ValueError(
+                "Total elements must remain unchanged during reshape.",
+            )
+        return d_out.reshape(self.input_shape)
+
+    def out_shape(self, in_shape: Tuple[int]) -> Tuple[int]:
+        _ = in_shape
+        return self.shape
+
+
+class _Transpose(Layer):
+    def __init__(self, axes: Optional[tuple[int]] = None):
+        self.axes = axes
+        self.inverse_axes = None
+
+    def forward(self, X: TensorLike, is_train: bool) -> TensorLike:
+        _ = is_train
+        if self.axes is None:
+            self.axes = tuple(reversed(range(X.ndim)))
+        else:
+            if sorted(self.axes) != list(range(X.ndim)):
+                raise ValueError(f"Invalid permutation of axes: {self.axes}")
+
+        self.inverse_axes = np.argsort(self.axes)
+        return X.transpose(self.axes)
+
+    def backward(self, d_out: TensorLike) -> TensorLike:
+        if self.inverse_axes is None:
+            raise NotFittedError("Must perform forward pass before backward!")
+
+        return d_out.transpose(self.inverse_axes)
+
+    def out_shape(self, in_shape: Tuple[int]) -> Tuple[int]:
+        if self.axes is None:
+            return tuple(reversed(in_shape))
+        else:
+            return tuple(in_shape[axis] for axis in self.axes)
 
 
 class _Dense(Layer):
@@ -79,6 +137,3 @@ class _Dense(Layer):
     def out_shape(self, in_shape: Tuple[int]) -> Tuple[int]:
         batch_size, _ = in_shape
         return (batch_size, self.out_features)
-
-
-class _Reshape(Layer): ...
