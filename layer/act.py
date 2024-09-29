@@ -114,21 +114,39 @@ class _Activation:
             return _Activation._out_shape(in_shape)
 
     class Softmax(Layer):
-        def __init__(self) -> None:
+        def __init__(self, dim: int = -1) -> None:
             super().__init__()
+            self.dim = dim
 
         def forward(self, X: Tensor, is_train: bool = False) -> Tensor:
             _ = is_train
-            e_X = np.exp(X - np.max(X, axis=-1, keepdims=True))
-            return e_X / np.sum(e_X, axis=-1, keepdims=True)
+            self.input_ = X
+
+            shifted_X = X - np.max(X, axis=self.dim, keepdims=True)
+            e_X = np.exp(shifted_X)
+
+            self.output_ = e_X / np.sum(e_X, axis=self.dim, keepdims=True)
+            return self.output_
 
         def backward(self, d_out: Tensor) -> Tensor:
             self.dX = np.empty_like(d_out)
-            for i, (y, dy) in enumerate(zip(self.output_, d_out)):
+            it = np.nditer(d_out, flags=["multi_index"], op_flags=["readwrite"])
+
+            while not it.finished:
+                idx = list(it.multi_index)
+                y = self.output_[
+                    tuple(idx[: self.dim] + [slice(None)] + idx[self.dim + 1 :])
+                ]
+
+                dy = d_out[tuple(idx)]
                 y = y.reshape(-1, 1)
                 jacobian_matrix = np.diagflat(y) - np.dot(y, y.T)
 
-                self.dX[i] = np.dot(jacobian_matrix, dy)
+                self.dX[
+                    tuple(idx[: self.dim] + [slice(None)] + idx[self.dim + 1 :])
+                ] = np.dot(jacobian_matrix, dy.reshape(-1, 1)).flatten()
+
+                it.iternext()
 
             return self.dX
 

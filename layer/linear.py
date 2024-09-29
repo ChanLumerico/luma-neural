@@ -8,7 +8,7 @@ from luma.interface.util import InitUtil
 from luma.neural.base import Layer
 
 
-__all__ = ("_Flatten", "_Dense")
+__all__ = ("_Flatten", "_Dense", "_Reshape")
 
 
 class _Flatten(Layer):
@@ -79,3 +79,6 @@ class _Dense(Layer):
     def out_shape(self, in_shape: Tuple[int]) -> Tuple[int]:
         batch_size, _ = in_shape
         return (batch_size, self.out_features)
+
+
+class _Reshape(Layer): ...

@@ -24,6 +24,7 @@ from luma.neural.block import (
     mobile,
     resnet,
     se,
+    sk,
     standard,
     xception,
 )
@@ -40,6 +41,7 @@ __all__ = (
     "SEBlock1D",
     "SEBlock2D",
     "SEBlock3D",
+    "SKBlock",
     "IncepBlock",
     "IncepResBlock",
     "ResNetBlock",
@@ -507,6 +509,9 @@ class SEBlock3D(se._SEBlock3D):
         Transforms 5D-Tensor to 2D-Matrix if set to False.
 
     """
+
+
+class SKBlock: ...
 
 
 @dataclass
