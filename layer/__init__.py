@@ -17,7 +17,7 @@ from luma.interface.typing import TensorLike, LayerLike
 from luma.interface.util import InitUtil, Clone
 from luma.neural.base import Layer
 
-from luma.neural.layer import act, conv, drop, linear, norm, pool
+from luma.neural.layer import act, conv, drop, linear, norm, pool, util
 
 
 __all__ = (
