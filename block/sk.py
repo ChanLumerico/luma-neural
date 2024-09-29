@@ -1,7 +1,7 @@
-from typing import Tuple, override, ClassVar
+from typing import override
 
 from luma.core.super import Optimizer
-from luma.interface.typing import Tensor, TensorLike, LayerLike
+from luma.interface.typing import Tensor
 from luma.interface.util import InitUtil
 
 from luma.neural.layer import *
@@ -47,7 +47,7 @@ class SKBlock(LayerGraph):
 
         for i, f_size in enumerate(self.filter_sizes):
             padding = (f_size - 1) // 2
-            branch = LayerNode(  # (N, C, H, W)
+            branch = LayerNode(
                 Sequential(
                     Conv2D(
                         self.in_channels,
@@ -68,7 +68,7 @@ class SKBlock(LayerGraph):
             )
             self.scale_arr.append(scale)
 
-        self.fc_ = LayerNode(  # (N, C * K, 1, 1)
+        self.fc_ = LayerNode(
             Sequential(
                 GlobalAvgPool2D(),
                 Conv2D(
@@ -89,4 +89,13 @@ class SKBlock(LayerGraph):
             ),
             merge_mode=MergeMode.SUM,
             name="fc_",
+        )
+
+        self.softmax_ = LayerNode(
+            Sequential(
+                Reshape(-1, self.n_branch, self.out_channels),
+                Activation.Softmax(dim=1),
+                Reshape(-1, self.n_branch, self.out_channels, 1, 1),
+            ),
+            name="softmax_",
         )

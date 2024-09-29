@@ -1013,13 +1013,13 @@ class Reshape(linear._Reshape):
 
     Parameters
     ----------
-    `shape` : tuple of int
+    `*shape` : int
         Target shape to reshape
 
     """
 
-    def __init__(self, shape: Tuple[int]) -> None:
-        super().__init__(shape)
+    def __init__(self, *shape: int) -> None:
+        super().__init__(*shape)
 
 
 class Transpose(linear._Transpose):

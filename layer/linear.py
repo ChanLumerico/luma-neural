@@ -37,25 +37,58 @@ class _Flatten(Layer):
 
 
 class _Reshape(Layer):
-    def __init__(self, shape: tuple[int]) -> None:
-        self.shape = shape
+    def __init__(self, *shape: int) -> None:
+        self.target_shape = shape
         self.input_shape = None
 
-    def forward(self, X: TensorLike, is_train: bool) -> TensorLike:
+        if shape.count(-1) > len(shape):
+            raise ValueError("Invalid number of -1s in shape.")
+
+    def _compute_shape(self, in_shape: Tuple[int, ...]) -> Tuple[int, ...]:
+        target_shape = list(self.target_shape)
+        num_neg_ones = target_shape.count(-1)
+
+        if num_neg_ones > len(in_shape):
+            raise ValueError("Too many -1s in target shape.")
+
+        input_ptr = 0
+        for i, dim in enumerate(target_shape):
+            if dim == -1:
+                if input_ptr >= len(in_shape):
+                    raise ValueError("Not enough input axes to replace -1.")
+
+                target_shape[i] = in_shape[input_ptr]
+                input_ptr += 1
+
+        if np.prod(target_shape) != np.prod(in_shape):
+            raise ValueError(
+                f"Cannot reshape array of size {np.prod(in_shape)}"
+                + f" into shape {tuple(target_shape)}"
+            )
+
+        return tuple(target_shape)
+
+    def forward(self, X: TensorLike, is_train: bool = True) -> TensorLike:
         _ = is_train
         self.input_shape = X.shape
-        return X.reshape(self.shape)
+
+        target_shape = self._compute_shape(self.input_shape)
+        return X.reshape(target_shape)
 
     def backward(self, d_out: TensorLike) -> TensorLike:
-        if np.prod(self.shape) != np.prod(self.input_shape):
+        if self.input_shape is None:
+            raise ValueError("Must perform forward pass before backward.")
+
+        if np.prod(d_out.shape) != np.prod(self.input_shape):
             raise ValueError(
-                "Total elements must remain unchanged during reshape.",
+                f"Cannot reshape gradient array of size {np.prod(d_out.shape)} "
+                + f" into shape {self.input_shape}"
             )
+
         return d_out.reshape(self.input_shape)
 
-    def out_shape(self, in_shape: Tuple[int]) -> Tuple[int]:
-        _ = in_shape
-        return self.shape
+    def out_shape(self, in_shape: Tuple[int, ...]) -> Tuple[int, ...]:
+        return self._compute_shape(in_shape)
 
 
 class _Transpose(Layer):
