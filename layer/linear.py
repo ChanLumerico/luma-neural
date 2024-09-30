@@ -38,6 +38,7 @@ class _Flatten(Layer):
 
 class _Reshape(Layer):
     def __init__(self, *shape: int) -> None:
+        super().__init__()
         self.target_shape = shape
         self.input_shape = None
 
@@ -68,7 +69,7 @@ class _Reshape(Layer):
 
         return tuple(target_shape)
 
-    def forward(self, X: TensorLike, is_train: bool = True) -> TensorLike:
+    def forward(self, X: TensorLike, is_train: bool = False) -> TensorLike:
         _ = is_train
         self.input_shape = X.shape
 
@@ -93,10 +94,11 @@ class _Reshape(Layer):
 
 class _Transpose(Layer):
     def __init__(self, axes: Optional[tuple[int]] = None):
+        super().__init__()
         self.axes = axes
         self.inverse_axes = None
 
-    def forward(self, X: TensorLike, is_train: bool) -> TensorLike:
+    def forward(self, X: TensorLike, is_train: bool = False) -> TensorLike:
         _ = is_train
         if self.axes is None:
             self.axes = tuple(reversed(range(X.ndim)))

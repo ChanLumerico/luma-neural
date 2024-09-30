@@ -53,6 +53,7 @@ __all__ = (
     "BatchNorm3D",
     "LocalResponseNorm",
     "LayerNorm",
+    "Slice",
     "Identity",
     "Sequential",
 )
@@ -1228,6 +1229,22 @@ class LayerNorm(norm._LayerNorm):
         epsilon: float = 1e-5,
     ) -> None:
         super().__init__(in_shape, epsilon)
+
+
+class Slice(util._Slice):
+    """
+    This layer slices a given tensor according to the given
+    `NumPy` style slicing string.
+
+    Parameters
+    ----------
+    `slice_str` : str
+        String for slicing the tensor
+
+    """
+
+    def __init__(self, slice_str: str) -> None:
+        super().__init__(slice_str)
 
 
 class Identity(Layer):

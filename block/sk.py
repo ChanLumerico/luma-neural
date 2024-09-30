@@ -35,7 +35,6 @@ class SKBlock(LayerGraph):
         self.momentum = momentum
 
         self.n_branch = len(filter_sizes)
-
         self.basic_args = dict(
             initializer=initializer, lambda_=lambda_, random_state=random_state
         )
@@ -44,6 +43,7 @@ class SKBlock(LayerGraph):
     def init_nodes(self) -> None:
         self.br_arr: list[LayerNode] = []
         self.scale_arr: list[LayerNode] = []
+        self.slice_arr: list[LayerNode] = []
 
         for i, f_size in enumerate(self.filter_sizes):
             padding = (f_size - 1) // 2
@@ -59,14 +59,15 @@ class SKBlock(LayerGraph):
                     BatchNorm2D(self.out_channels, self.momentum),
                     self.activation(),
                 ),
-                name=f"branch_{i + 1}",
+                name=f"branch_{i}",
             )
             self.br_arr.append(branch)
 
-            scale = LayerNode(
-                Identity(), merge_mode=MergeMode.HADAMARD, name=f"scale_{i + 1}"
-            )
+            scale = LayerNode(Identity(), MergeMode.HADAMARD, name=f"scale_{i}")
             self.scale_arr.append(scale)
+
+            slice_ = LayerNode(Slice(f":, {i}, :, :, :"), name=f"slice_{i}")
+            self.slice_arr.append(slice_)
 
         self.fc_ = LayerNode(
             Sequential(
@@ -99,3 +100,4 @@ class SKBlock(LayerGraph):
             ),
             name="softmax_",
         )
+        self.sum_ = LayerNode(Identity(), MergeMode.SUM, name="sum_")
