@@ -7,13 +7,8 @@ from luma.interface.util import InitUtil
 from luma.metric.classification import Accuracy
 
 from luma.neural.base import NeuralModel
-from luma.neural.block import ConvBlock2D, DenseBlock, ConvBlockArgs, DenseBlockArgs
-from luma.neural.layer import (
-    Activation,
-    Dense,
-    Flatten,
-    Sequential,
-)
+from luma.neural import block as nb
+from luma.neural import layer as nl
 
 from ..types import ImageClassifier
 
@@ -29,7 +24,7 @@ __all__ = (
 class _VGGNet_11(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
-        activation: callable = Activation.ReLU,
+        activation: callable = nl.Activation.ReLU,
         initializer: InitUtil.InitStr = None,
         out_features: int = 1000,
         batch_size: int = 128,
@@ -63,7 +58,7 @@ class _VGGNet_11(Estimator, NeuralModel, ImageClassifier):
             deep_verbose,
         )
         super().init_model()
-        self.model = Sequential()
+        self.model = nl.Sequential()
 
         self.feature_sizes_ = [
             [3, 64, 128, 256, 256, *[512] * 4],
@@ -89,7 +84,7 @@ class _VGGNet_11(Estimator, NeuralModel, ImageClassifier):
         self.build_model()
 
     def build_model(self) -> None:
-        conv_3x3_pool_args = ConvBlockArgs(
+        conv_3x3_pool_args = nb.ConvBlockArgs(
             filter_size=3,
             stride=1,
             activation=self.activation,
@@ -102,7 +97,7 @@ class _VGGNet_11(Estimator, NeuralModel, ImageClassifier):
             pool_mode="max",
             random_state=self.random_state,
         )
-        conv_3x3_no_pool_args = ConvBlockArgs(
+        conv_3x3_no_pool_args = nb.ConvBlockArgs(
             filter_size=3,
             stride=1,
             activation=self.activation,
@@ -113,7 +108,7 @@ class _VGGNet_11(Estimator, NeuralModel, ImageClassifier):
             do_pooling=False,
             random_state=self.random_state,
         )
-        dense_args = DenseBlockArgs(
+        dense_args = nb.DenseBlockArgs(
             activation=self.activation,
             lambda_=self.lambda_,
             do_batch_norm=False,
@@ -123,47 +118,47 @@ class _VGGNet_11(Estimator, NeuralModel, ImageClassifier):
 
         self.model += (
             "ConvBlock_1",
-            ConvBlock2D(3, 64, **asdict(conv_3x3_pool_args)),
+            nb.ConvBlock2D(3, 64, **asdict(conv_3x3_pool_args)),
         )
         self.model += (
             "ConvBlock_2",
-            ConvBlock2D(64, 128, **asdict(conv_3x3_pool_args)),
+            nb.ConvBlock2D(64, 128, **asdict(conv_3x3_pool_args)),
         )
         self.model += (
             "ConvBlock_3",
-            ConvBlock2D(128, 256, **asdict(conv_3x3_no_pool_args)),
+            nb.ConvBlock2D(128, 256, **asdict(conv_3x3_no_pool_args)),
         )
         self.model += (
             "ConvBlock_4",
-            ConvBlock2D(256, 256, **asdict(conv_3x3_pool_args)),
+            nb.ConvBlock2D(256, 256, **asdict(conv_3x3_pool_args)),
         )
         self.model += (
             "ConvBlock_5",
-            ConvBlock2D(256, 512, **asdict(conv_3x3_no_pool_args)),
+            nb.ConvBlock2D(256, 512, **asdict(conv_3x3_no_pool_args)),
         )
         self.model += (
             "ConvBlock_6",
-            ConvBlock2D(512, 512, **asdict(conv_3x3_pool_args)),
+            nb.ConvBlock2D(512, 512, **asdict(conv_3x3_pool_args)),
         )
         self.model += (
             "ConvBlock_7",
-            ConvBlock2D(512, 512, **asdict(conv_3x3_no_pool_args)),
+            nb.ConvBlock2D(512, 512, **asdict(conv_3x3_no_pool_args)),
         )
         self.model += (
             "ConvBlock_8",
-            ConvBlock2D(512, 512, **asdict(conv_3x3_pool_args)),
+            nb.ConvBlock2D(512, 512, **asdict(conv_3x3_pool_args)),
         )
 
-        self.model += Flatten()
+        self.model += nl.Flatten()
         self.model += (
             "DenseBlock_1",
-            DenseBlock(512 * 7 * 7, 4096, **asdict(dense_args)),
+            nb.DenseBlock(512 * 7 * 7, 4096, **asdict(dense_args)),
         )
         self.model += (
             "DenseBlock_2",
-            DenseBlock(4096, 4096, **asdict(dense_args)),
+            nb.DenseBlock(4096, 4096, **asdict(dense_args)),
         )
-        self.model += Dense(
+        self.model += nl.Dense(
             4096,
             self.out_features,
             lambda_=self.lambda_,
@@ -196,7 +191,7 @@ class _VGGNet_11(Estimator, NeuralModel, ImageClassifier):
 class _VGGNet_13(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
-        activation: callable = Activation.ReLU,
+        activation: callable = nl.Activation.ReLU,
         initializer: InitUtil.InitStr = None,
         out_features: int = 1000,
         batch_size: int = 128,
@@ -230,7 +225,7 @@ class _VGGNet_13(Estimator, NeuralModel, ImageClassifier):
             deep_verbose,
         )
         super().init_model()
-        self.model = Sequential()
+        self.model = nl.Sequential()
 
         self.feature_sizes_ = [
             [3, 64, 64, 128, 128, 256, 256, *[512] * 4],
@@ -256,7 +251,7 @@ class _VGGNet_13(Estimator, NeuralModel, ImageClassifier):
         self.build_model()
 
     def build_model(self) -> None:
-        conv_3x3_pool_args = ConvBlockArgs(
+        conv_3x3_pool_args = nb.ConvBlockArgs(
             filter_size=3,
             stride=1,
             activation=self.activation,
@@ -269,7 +264,7 @@ class _VGGNet_13(Estimator, NeuralModel, ImageClassifier):
             pool_mode="max",
             random_state=self.random_state,
         )
-        conv_3x3_no_pool_args = ConvBlockArgs(
+        conv_3x3_no_pool_args = nb.ConvBlockArgs(
             filter_size=3,
             stride=1,
             activation=self.activation,
@@ -280,7 +275,7 @@ class _VGGNet_13(Estimator, NeuralModel, ImageClassifier):
             do_pooling=False,
             random_state=self.random_state,
         )
-        dense_args = DenseBlockArgs(
+        dense_args = nb.DenseBlockArgs(
             activation=self.activation,
             lambda_=self.lambda_,
             do_batch_norm=False,
@@ -290,59 +285,59 @@ class _VGGNet_13(Estimator, NeuralModel, ImageClassifier):
 
         self.model += (
             "ConvBlock_1",
-            ConvBlock2D(3, 64, **asdict(conv_3x3_no_pool_args)),
+            nb.ConvBlock2D(3, 64, **asdict(conv_3x3_no_pool_args)),
         )
         self.model += (
             "ConvBlock_2",
-            ConvBlock2D(64, 64, **asdict(conv_3x3_pool_args)),
+            nb.ConvBlock2D(64, 64, **asdict(conv_3x3_pool_args)),
         )
 
         self.model += (
             "ConvBlock_3",
-            ConvBlock2D(64, 128, **asdict(conv_3x3_no_pool_args)),
+            nb.ConvBlock2D(64, 128, **asdict(conv_3x3_no_pool_args)),
         )
         self.model += (
             "ConvBlock_4",
-            ConvBlock2D(128, 128, **asdict(conv_3x3_pool_args)),
+            nb.ConvBlock2D(128, 128, **asdict(conv_3x3_pool_args)),
         )
 
         self.model += (
             "ConvBlock_5",
-            ConvBlock2D(128, 256, **asdict(conv_3x3_no_pool_args)),
+            nb.ConvBlock2D(128, 256, **asdict(conv_3x3_no_pool_args)),
         )
         self.model += (
             "ConvBlock_6",
-            ConvBlock2D(256, 256, **asdict(conv_3x3_pool_args)),
+            nb.ConvBlock2D(256, 256, **asdict(conv_3x3_pool_args)),
         )
 
         self.model += (
             "ConvBlock_7",
-            ConvBlock2D(256, 512, **asdict(conv_3x3_no_pool_args)),
+            nb.ConvBlock2D(256, 512, **asdict(conv_3x3_no_pool_args)),
         )
         self.model += (
             "ConvBlock_8",
-            ConvBlock2D(512, 512, **asdict(conv_3x3_pool_args)),
+            nb.ConvBlock2D(512, 512, **asdict(conv_3x3_pool_args)),
         )
 
         self.model += (
             "ConvBlock_9",
-            ConvBlock2D(512, 512, **asdict(conv_3x3_no_pool_args)),
+            nb.ConvBlock2D(512, 512, **asdict(conv_3x3_no_pool_args)),
         )
         self.model += (
             "ConvBlock_10",
-            ConvBlock2D(512, 512, **asdict(conv_3x3_pool_args)),
+            nb.ConvBlock2D(512, 512, **asdict(conv_3x3_pool_args)),
         )
 
-        self.model += Flatten()
+        self.model += nl.Flatten()
         self.model += (
             "DenseBlock_1",
-            DenseBlock(512 * 7 * 7, 4096, **asdict(dense_args)),
+            nb.DenseBlock(512 * 7 * 7, 4096, **asdict(dense_args)),
         )
         self.model += (
             "DenseBlock_2",
-            DenseBlock(4096, 4096, **asdict(dense_args)),
+            nb.DenseBlock(4096, 4096, **asdict(dense_args)),
         )
-        self.model += Dense(
+        self.model += nl.Dense(
             4096,
             self.out_features,
             lambda_=self.lambda_,
@@ -375,7 +370,7 @@ class _VGGNet_13(Estimator, NeuralModel, ImageClassifier):
 class _VGGNet_16(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
-        activation: callable = Activation.ReLU,
+        activation: callable = nl.Activation.ReLU,
         initializer: InitUtil.InitStr = None,
         out_features: int = 1000,
         batch_size: int = 128,
@@ -409,7 +404,7 @@ class _VGGNet_16(Estimator, NeuralModel, ImageClassifier):
             deep_verbose,
         )
         super().init_model()
-        self.model = Sequential()
+        self.model = nl.Sequential()
 
         self.feature_sizes_ = [
             [3, 64, 64, 128, 128, *[256] * 3, *[512] * 6],
@@ -435,7 +430,7 @@ class _VGGNet_16(Estimator, NeuralModel, ImageClassifier):
         self.build_model()
 
     def build_model(self) -> None:
-        conv_3x3_pool_args = ConvBlockArgs(
+        conv_3x3_pool_args = nb.ConvBlockArgs(
             filter_size=3,
             stride=1,
             activation=self.activation,
@@ -448,7 +443,7 @@ class _VGGNet_16(Estimator, NeuralModel, ImageClassifier):
             pool_mode="max",
             random_state=self.random_state,
         )
-        conv_3x3_no_pool_args = ConvBlockArgs(
+        conv_3x3_no_pool_args = nb.ConvBlockArgs(
             filter_size=3,
             stride=1,
             activation=self.activation,
@@ -459,7 +454,7 @@ class _VGGNet_16(Estimator, NeuralModel, ImageClassifier):
             do_pooling=False,
             random_state=self.random_state,
         )
-        dense_args = DenseBlockArgs(
+        dense_args = nb.DenseBlockArgs(
             activation=self.activation,
             lambda_=self.lambda_,
             do_batch_norm=False,
@@ -469,71 +464,71 @@ class _VGGNet_16(Estimator, NeuralModel, ImageClassifier):
 
         self.model += (
             "ConvBlock_1",
-            ConvBlock2D(3, 64, **asdict(conv_3x3_no_pool_args)),
+            nb.ConvBlock2D(3, 64, **asdict(conv_3x3_no_pool_args)),
         )
         self.model += (
             "ConvBlock_2",
-            ConvBlock2D(64, 64, **asdict(conv_3x3_pool_args)),
+            nb.ConvBlock2D(64, 64, **asdict(conv_3x3_pool_args)),
         )
 
         self.model += (
             "ConvBlock_3",
-            ConvBlock2D(64, 128, **asdict(conv_3x3_no_pool_args)),
+            nb.ConvBlock2D(64, 128, **asdict(conv_3x3_no_pool_args)),
         )
         self.model += (
             "ConvBlock_4",
-            ConvBlock2D(128, 128, **asdict(conv_3x3_pool_args)),
+            nb.ConvBlock2D(128, 128, **asdict(conv_3x3_pool_args)),
         )
 
         self.model += (
             "ConvBlock_5",
-            ConvBlock2D(128, 256, **asdict(conv_3x3_no_pool_args)),
+            nb.ConvBlock2D(128, 256, **asdict(conv_3x3_no_pool_args)),
         )
         self.model += (
             "ConvBlock_6",
-            ConvBlock2D(256, 256, **asdict(conv_3x3_no_pool_args)),
+            nb.ConvBlock2D(256, 256, **asdict(conv_3x3_no_pool_args)),
         )
         self.model += (
             "ConvBlock_7",
-            ConvBlock2D(256, 256, **asdict(conv_3x3_pool_args)),
+            nb.ConvBlock2D(256, 256, **asdict(conv_3x3_pool_args)),
         )
 
         self.model += (
             "ConvBlock_8",
-            ConvBlock2D(256, 512, **asdict(conv_3x3_no_pool_args)),
+            nb.ConvBlock2D(256, 512, **asdict(conv_3x3_no_pool_args)),
         )
         self.model += (
             "ConvBlock_9",
-            ConvBlock2D(512, 512, **asdict(conv_3x3_no_pool_args)),
+            nb.ConvBlock2D(512, 512, **asdict(conv_3x3_no_pool_args)),
         )
         self.model += (
             "ConvBlock_10",
-            ConvBlock2D(512, 512, **asdict(conv_3x3_pool_args)),
+            nb.ConvBlock2D(512, 512, **asdict(conv_3x3_pool_args)),
         )
 
         self.model += (
             "ConvBlock_11",
-            ConvBlock2D(512, 512, **asdict(conv_3x3_no_pool_args)),
+            nb.ConvBlock2D(512, 512, **asdict(conv_3x3_no_pool_args)),
         )
         self.model += (
             "ConvBlock_12",
-            ConvBlock2D(512, 512, **asdict(conv_3x3_no_pool_args)),
+            nb.ConvBlock2D(512, 512, **asdict(conv_3x3_no_pool_args)),
         )
         self.model += (
             "ConvBlock_13",
-            ConvBlock2D(512, 512, **asdict(conv_3x3_pool_args)),
+            nb.ConvBlock2D(512, 512, **asdict(conv_3x3_pool_args)),
         )
 
-        self.model += Flatten()
+        self.model += nl.Flatten()
         self.model += (
             "DenseBlock_1",
-            DenseBlock(512 * 7 * 7, 4096, **asdict(dense_args)),
+            nb.DenseBlock(512 * 7 * 7, 4096, **asdict(dense_args)),
         )
         self.model += (
             "DenseBlock_2",
-            DenseBlock(4096, 4096, **asdict(dense_args)),
+            nb.DenseBlock(4096, 4096, **asdict(dense_args)),
         )
-        self.model += Dense(
+        self.model += nl.Dense(
             4096,
             self.out_features,
             lambda_=self.lambda_,
@@ -566,7 +561,7 @@ class _VGGNet_16(Estimator, NeuralModel, ImageClassifier):
 class _VGGNet_19(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
-        activation: callable = Activation.ReLU,
+        activation: callable = nl.Activation.ReLU,
         initializer: InitUtil.InitStr = None,
         out_features: int = 1000,
         batch_size: int = 128,
@@ -600,7 +595,7 @@ class _VGGNet_19(Estimator, NeuralModel, ImageClassifier):
             deep_verbose,
         )
         super().init_model()
-        self.model = Sequential()
+        self.model = nl.Sequential()
 
         self.feature_sizes_ = [
             [3, 64, 64, 128, 128, *[256] * 4, *[512] * 8],
@@ -626,7 +621,7 @@ class _VGGNet_19(Estimator, NeuralModel, ImageClassifier):
         self.build_model()
 
     def build_model(self) -> None:
-        conv_3x3_pool_args = ConvBlockArgs(
+        conv_3x3_pool_args = nb.ConvBlockArgs(
             filter_size=3,
             stride=1,
             activation=self.activation,
@@ -639,7 +634,7 @@ class _VGGNet_19(Estimator, NeuralModel, ImageClassifier):
             pool_mode="max",
             random_state=self.random_state,
         )
-        conv_3x3_no_pool_args = ConvBlockArgs(
+        conv_3x3_no_pool_args = nb.ConvBlockArgs(
             filter_size=3,
             stride=1,
             activation=self.activation,
@@ -650,7 +645,7 @@ class _VGGNet_19(Estimator, NeuralModel, ImageClassifier):
             do_pooling=False,
             random_state=self.random_state,
         )
-        dense_args = DenseBlockArgs(
+        dense_args = nb.DenseBlockArgs(
             activation=self.activation,
             lambda_=self.lambda_,
             do_batch_norm=False,
@@ -660,83 +655,83 @@ class _VGGNet_19(Estimator, NeuralModel, ImageClassifier):
 
         self.model += (
             "ConvBlock_1",
-            ConvBlock2D(3, 64, **asdict(conv_3x3_no_pool_args)),
+            nb.ConvBlock2D(3, 64, **asdict(conv_3x3_no_pool_args)),
         )
         self.model += (
             "ConvBlock_2",
-            ConvBlock2D(64, 64, **asdict(conv_3x3_pool_args)),
+            nb.ConvBlock2D(64, 64, **asdict(conv_3x3_pool_args)),
         )
 
         self.model += (
             "ConvBlock_3",
-            ConvBlock2D(64, 128, **asdict(conv_3x3_no_pool_args)),
+            nb.ConvBlock2D(64, 128, **asdict(conv_3x3_no_pool_args)),
         )
         self.model += (
             "ConvBlock_4",
-            ConvBlock2D(128, 128, **asdict(conv_3x3_pool_args)),
+            nb.ConvBlock2D(128, 128, **asdict(conv_3x3_pool_args)),
         )
 
         self.model += (
             "ConvBlock_5",
-            ConvBlock2D(128, 256, **asdict(conv_3x3_no_pool_args)),
+            nb.ConvBlock2D(128, 256, **asdict(conv_3x3_no_pool_args)),
         )
         self.model += (
             "ConvBlock_6",
-            ConvBlock2D(256, 256, **asdict(conv_3x3_no_pool_args)),
+            nb.ConvBlock2D(256, 256, **asdict(conv_3x3_no_pool_args)),
         )
         self.model += (
             "ConvBlock_7",
-            ConvBlock2D(256, 256, **asdict(conv_3x3_no_pool_args)),
+            nb.ConvBlock2D(256, 256, **asdict(conv_3x3_no_pool_args)),
         )
         self.model += (
             "ConvBlock_8",
-            ConvBlock2D(256, 256, **asdict(conv_3x3_pool_args)),
+            nb.ConvBlock2D(256, 256, **asdict(conv_3x3_pool_args)),
         )
 
         self.model += (
             "ConvBlock_9",
-            ConvBlock2D(256, 512, **asdict(conv_3x3_no_pool_args)),
+            nb.ConvBlock2D(256, 512, **asdict(conv_3x3_no_pool_args)),
         )
         self.model += (
             "ConvBlock_10",
-            ConvBlock2D(512, 512, **asdict(conv_3x3_no_pool_args)),
+            nb.ConvBlock2D(512, 512, **asdict(conv_3x3_no_pool_args)),
         )
         self.model += (
             "ConvBlock_11",
-            ConvBlock2D(512, 512, **asdict(conv_3x3_no_pool_args)),
+            nb.ConvBlock2D(512, 512, **asdict(conv_3x3_no_pool_args)),
         )
         self.model += (
             "ConvBlock_12",
-            ConvBlock2D(512, 512, **asdict(conv_3x3_pool_args)),
+            nb.ConvBlock2D(512, 512, **asdict(conv_3x3_pool_args)),
         )
 
         self.model += (
             "ConvBlock_13",
-            ConvBlock2D(512, 512, **asdict(conv_3x3_no_pool_args)),
+            nb.ConvBlock2D(512, 512, **asdict(conv_3x3_no_pool_args)),
         )
         self.model += (
             "ConvBlock_14",
-            ConvBlock2D(512, 512, **asdict(conv_3x3_no_pool_args)),
+            nb.ConvBlock2D(512, 512, **asdict(conv_3x3_no_pool_args)),
         )
         self.model += (
             "ConvBlock_15",
-            ConvBlock2D(512, 512, **asdict(conv_3x3_no_pool_args)),
+            nb.ConvBlock2D(512, 512, **asdict(conv_3x3_no_pool_args)),
         )
         self.model += (
             "ConvBlock_16",
-            ConvBlock2D(512, 512, **asdict(conv_3x3_pool_args)),
+            nb.ConvBlock2D(512, 512, **asdict(conv_3x3_pool_args)),
         )
 
-        self.model += Flatten()
+        self.model += nl.Flatten()
         self.model += (
             "DenseBlock_1",
-            DenseBlock(512 * 7 * 7, 4096, **asdict(dense_args)),
+            nb.DenseBlock(512 * 7 * 7, 4096, **asdict(dense_args)),
         )
         self.model += (
             "DenseBlock_2",
-            DenseBlock(4096, 4096, **asdict(dense_args)),
+            nb.DenseBlock(4096, 4096, **asdict(dense_args)),
         )
-        self.model += Dense(
+        self.model += nl.Dense(
             4096,
             self.out_features,
             lambda_=self.lambda_,

@@ -1,4 +1,5 @@
-from typing import Self, override, ClassVar, List
+from dataclasses import asdict
+from typing import Any, Self, override, ClassVar
 
 from luma.core.super import Estimator, Evaluator
 from luma.interface.typing import Matrix, Tensor, Vector
@@ -6,27 +7,20 @@ from luma.interface.util import InitUtil
 from luma.metric.classification import Accuracy
 
 from luma.neural.base import NeuralModel
-from luma.neural import layer as nl
 from luma.neural import block as nb
+from luma.neural import layer as nl
+from luma.neural import functional as F
 
 from ..types import ImageClassifier
 
-
-__all__ = (
-    "_Mobile_V1",
-    "_Mobile_V2",
-    "_Mobile_V3_Small",
-    "_Mobile_V3_Large",
-)
+Bottleneck = nb.ResNetBlock.Bottleneck
+Bottleneck_SE = nb.ResNetBlock.Bottleneck_SE
 
 
-InvRes = nb.MobileNetBlock.InvRes
-InvRes_SE = nb.MobileNetBlock.InvRes_SE
-
-
-class _Mobile_V1(Estimator, NeuralModel, ImageClassifier):
+class _ResNeXt_50(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
+        cardinality: int = 32,
         activation: callable = nl.Activation.ReLU,
         initializer: InitUtil.InitStr = None,
         out_features: int = 1000,
@@ -35,19 +29,18 @@ class _Mobile_V1(Estimator, NeuralModel, ImageClassifier):
         valid_size: float = 0.1,
         lambda_: float = 0.0,
         momentum: float = 0.9,
-        width_param: float = 1.0,
         early_stopping: bool = False,
         patience: int = 10,
         shuffle: bool = True,
         random_state: int | None = None,
         deep_verbose: bool = False,
     ) -> None:
+        self.cardinality = cardinality
         self.activation = activation
         self.initializer = initializer
         self.out_features = out_features
         self.lambda_ = lambda_
         self.momentum = momentum
-        self.width_param = width_param
         self.shuffle = shuffle
         self.random_state = random_state
         self._fitted = False
@@ -66,10 +59,11 @@ class _Mobile_V1(Estimator, NeuralModel, ImageClassifier):
         self.model = nl.Sequential()
 
         self.feature_sizes_ = [
-            [3, 32],
-            [32, 64, 128, 128, 256, 256],
-            [512] * 5,
-            [1024, 1024],
+            [3, 64],
+            [64, 128, 256] * 3,
+            [256, 256, 512] * 4,
+            [512, 512, 1024] * 6,
+            [1024, 1024, 2048] * 3,
         ]
         self.feature_shapes_ = [
             self._get_feature_shapes(sizes) for sizes in self.feature_sizes_
@@ -77,13 +71,15 @@ class _Mobile_V1(Estimator, NeuralModel, ImageClassifier):
 
         self.set_param_ranges(
             {
+                "cardinality": ("0<,+inf", int),
                 "out_features": ("0<,+inf", int),
                 "batch_size": ("0<,+inf", int),
                 "n_epochs": ("0<,+inf", int),
                 "valid_size": ("0<,<1", None),
+                "momentum": ("0,1", None),
+                "dropout_rate": ("0,1", None),
                 "lambda_": ("0,+inf", None),
                 "patience": ("0<,+inf", int),
-                "width_param": ("0<,1", None),
             }
         )
         self.check_param_ranges()
@@ -95,58 +91,62 @@ class _Mobile_V1(Estimator, NeuralModel, ImageClassifier):
             lambda_=self.lambda_,
             random_state=self.random_state,
         )
-        sep_args = dict(**base_args, do_batch_norm=True, momentum=self.momentum)
-        wp = self.width_param
-
-        self.model += nl.Conv2D(3, int(32 * wp), 3, 2, **base_args)
-        self.model += nl.BatchNorm2D(int(32 * wp), self.momentum)
-        self.model += self.activation()
-
-        self.model.extend(
-            nb.SeparableConv2D(int(32 * wp), int(64 * wp), 3, **sep_args),
-            self.activation(),
-            nb.SeparableConv2D(int(64 * wp), int(128 * wp), 3, 2, **sep_args),
-            self.activation(),
-            nb.SeparableConv2D(int(128 * wp), int(128 * wp), 3, **sep_args),
-            self.activation(),
-            nb.SeparableConv2D(int(128 * wp), int(256 * wp), 3, 2, **sep_args),
-            self.activation(),
-            nb.SeparableConv2D(int(256 * wp), int(256 * wp), 3, **sep_args),
-            self.activation(),
-            nb.SeparableConv2D(int(256 * wp), int(512 * wp), 3, 2, **sep_args),
-            self.activation(),
-            deep_add=False,
-        )
-
-        for _ in range(5):
-            self.model.extend(
-                nb.SeparableConv2D(int(512 * wp), int(512 * wp), 3, **sep_args),
-                self.activation(),
-                deep_add=False,
+        res_args = asdict(
+            nb.BaseBlockArgs(
+                activation=self.activation,
+                do_batch_norm=True,
+                momentum=self.momentum,
+                **base_args,
             )
+        )
+        res_args["cardinality"] = self.cardinality
 
         self.model.extend(
-            nb.SeparableConv2D(int(512 * wp), int(1024 * wp), 3, 2, **sep_args),
+            nl.Conv2D(3, 64, 7, 2, 3, **base_args),
+            nl.BatchNorm2D(64, self.momentum),
             self.activation(),
-            nb.SeparableConv2D(int(1024 * wp), int(1024 * wp), 3, 2, 1, **sep_args),
-            self.activation(),
-            deep_add=False,
+            nl.Pool2D(3, 2, "max", "same"),
         )
 
-        self.model += nl.GlobalAvgPool2D()
-        self.model += nl.Flatten()
-        self.model += nl.Dense(int(1024 * wp), self.out_features, **base_args)
+        layer_label = "ResNeXtConv"
+        Bottleneck.override_expansion(value=2)
+        self.layer_2, in_channels = F.make_res_layers(
+            64, 128, Bottleneck, 3, 2, base_args, res_args, 1, layer_label
+        )
+        self.layer_3, in_channels = F.make_res_layers(
+            in_channels, 256, Bottleneck, 4, 3, base_args, res_args, 2, layer_label
+        )
+        self.layer_4, in_channels = F.make_res_layers(
+            in_channels, 512, Bottleneck, 6, 4, base_args, res_args, 2, layer_label
+        )
+        self.layer_5, in_channels = F.make_res_layers(
+            in_channels, 1024, Bottleneck, 3, 5, base_args, res_args, 2, layer_label
+        )
+
+        self.model.extend(
+            self.layer_2,
+            self.layer_3,
+            self.layer_4,
+            self.layer_5,
+            deep_add=True,
+        )
+        self.model.extend(
+            nl.AdaptiveAvgPool2D((1, 1)),
+            nl.Flatten(),
+            nl.Dense(1024 * Bottleneck.expansion, self.out_features, **base_args),
+        )
+        Bottleneck.reset_expansion()
 
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
     @Tensor.force_shape(input_shape)
     def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_Mobile_V1, self).fit_nn(X, y)
+        return super(_ResNeXt_50, self).fit_nn(X, y)
 
     @override
     @Tensor.force_shape(input_shape)
     def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_Mobile_V1, self).predict_nn(X, argmax)
+        return super(_ResNeXt_50, self).predict_nn(X, argmax)
 
     @override
     @Tensor.force_shape(input_shape)
@@ -157,13 +157,14 @@ class _Mobile_V1(Estimator, NeuralModel, ImageClassifier):
         metric: Evaluator = Accuracy,
         argmax: bool = True,
     ) -> float:
-        return super(_Mobile_V1, self).score_nn(X, y, metric, argmax)
+        return super(_ResNeXt_50, self).score_nn(X, y, metric, argmax)
 
 
-class _Mobile_V2(Estimator, NeuralModel, ImageClassifier):
+class _ResNeXt_101(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
-        activation: callable = nl.Activation.ReLU6,
+        cardinality: int = 32,
+        activation: callable = nl.Activation.ReLU,
         initializer: InitUtil.InitStr = None,
         out_features: int = 1000,
         batch_size: int = 128,
@@ -171,19 +172,18 @@ class _Mobile_V2(Estimator, NeuralModel, ImageClassifier):
         valid_size: float = 0.1,
         lambda_: float = 0.0,
         momentum: float = 0.9,
-        width_param: float = 1.0,
         early_stopping: bool = False,
         patience: int = 10,
         shuffle: bool = True,
         random_state: int | None = None,
         deep_verbose: bool = False,
     ) -> None:
+        self.cardinality = cardinality
         self.activation = activation
         self.initializer = initializer
         self.out_features = out_features
         self.lambda_ = lambda_
         self.momentum = momentum
-        self.width_param = width_param
         self.shuffle = shuffle
         self.random_state = random_state
         self._fitted = False
@@ -201,19 +201,25 @@ class _Mobile_V2(Estimator, NeuralModel, ImageClassifier):
         super().init_model()
         self.model = nl.Sequential()
 
-        self.feature_sizes_ = []
+        self.feature_sizes_ = [
+            [3, 64],
+            [64, 128, 256] * 3,
+            [256, 256, 512] * 4,
+            [512, 512, 1024] * 23,
+            [1024, 1024, 2048] * 3,
+        ]
         self.feature_shapes_ = [
             self._get_feature_shapes(sizes) for sizes in self.feature_sizes_
         ]
 
         self.set_param_ranges(
             {
+                "cardinality": ("0<,+inf", int),
                 "out_features": ("0<,+inf", int),
                 "batch_size": ("0<,+inf", int),
                 "n_epochs": ("0<,+inf", int),
                 "valid_size": ("0<,<1", None),
                 "momentum": ("0,1", None),
-                "width_param": ("0<,1", None),
                 "dropout_rate": ("0,1", None),
                 "lambda_": ("0,+inf", None),
                 "patience": ("0<,+inf", int),
@@ -223,70 +229,67 @@ class _Mobile_V2(Estimator, NeuralModel, ImageClassifier):
         self.build_model()
 
     def build_model(self) -> None:
-        inverted_res_config: list[list[int]] = [
-            [1, 16, 1, 1],
-            [6, 24, 2, 2],
-            [6, 32, 3, 2],
-            [6, 64, 4, 2],
-            [6, 96, 3, 1],
-            [6, 160, 3, 2],
-            [6, 320, 1, 1],
-        ]
         base_args = dict(
             initializer=self.initializer,
             lambda_=self.lambda_,
             random_state=self.random_state,
         )
-        invres_args = {**base_args, "activation": self.activation}
-
-        wp = self.width_param
-        self.model.extend(
-            nl.Conv2D(3, int(32 * wp), 3, 2, **base_args),
-            nl.BatchNorm2D(int(32 * wp), self.momentum),
-            self.activation(),
-        )
-        in_ = int(32 * wp)
-        for t, c, n, s in inverted_res_config:
-            c = int(round(c * wp))
-            for i in range(n):
-                s_ = s if i == 0 else 1
-                self.model += InvRes(in_, c, 3, s_, t, **invres_args)
-                in_ = c
-
-        last_channels = int(1280 * wp)
-        self.model.extend(
-            nl.Conv2D(in_, last_channels, 3, 1, **base_args),
-            nl.BatchNorm2D(last_channels, self.momentum),
-            self.activation(),
-        )
-
-        self.model += nl.GlobalAvgPool2D()
-        self.model.extend(
-            nl.Conv2D(
-                last_channels,
-                last_channels,
-                1,
-                padding="valid",
+        res_args = asdict(
+            nb.BaseBlockArgs(
+                activation=self.activation,
+                do_batch_norm=True,
+                momentum=self.momentum,
                 **base_args,
-            ),
-            nl.BatchNorm2D(last_channels, self.momentum),
+            )
+        )
+        res_args["cardinality"] = self.cardinality
+
+        self.model.extend(
+            nl.Conv2D(3, 64, 7, 2, 3, **base_args),
+            nl.BatchNorm2D(64, self.momentum),
             self.activation(),
+            nl.Pool2D(3, 2, "max", "same"),
+        )
+
+        layer_label = "ResNeXtConv"
+        Bottleneck.override_expansion(value=2)
+        self.layer_2, in_channels = F.make_res_layers(
+            64, 128, Bottleneck, 3, 2, base_args, res_args, 1, layer_label
+        )
+        self.layer_3, in_channels = F.make_res_layers(
+            in_channels, 256, Bottleneck, 4, 3, base_args, res_args, 2, layer_label
+        )
+        self.layer_4, in_channels = F.make_res_layers(
+            in_channels, 512, Bottleneck, 23, 4, base_args, res_args, 2, layer_label
+        )
+        self.layer_5, in_channels = F.make_res_layers(
+            in_channels, 1024, Bottleneck, 3, 5, base_args, res_args, 2, layer_label
+        )
+
+        self.model.extend(
+            self.layer_2,
+            self.layer_3,
+            self.layer_4,
+            self.layer_5,
+            deep_add=True,
         )
         self.model.extend(
+            nl.AdaptiveAvgPool2D((1, 1)),
             nl.Flatten(),
-            nl.Dense(last_channels, self.out_features, **base_args),
+            nl.Dense(1024 * Bottleneck.expansion, self.out_features, **base_args),
         )
+        Bottleneck.reset_expansion()
 
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
     @Tensor.force_shape(input_shape)
     def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_Mobile_V2, self).fit_nn(X, y)
+        return super(_ResNeXt_101, self).fit_nn(X, y)
 
     @override
     @Tensor.force_shape(input_shape)
     def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_Mobile_V2, self).predict_nn(X, argmax)
+        return super(_ResNeXt_101, self).predict_nn(X, argmax)
 
     @override
     @Tensor.force_shape(input_shape)
@@ -297,19 +300,20 @@ class _Mobile_V2(Estimator, NeuralModel, ImageClassifier):
         metric: Evaluator = Accuracy,
         argmax: bool = True,
     ) -> float:
-        return super(_Mobile_V2, self).score_nn(X, y, metric, argmax)
+        return super(_ResNeXt_101, self).score_nn(X, y, metric, argmax)
 
 
-class _Mobile_V3_Small(Estimator, NeuralModel, ImageClassifier):
+class _SE_ResNeXt_50(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
+        cardinality: int = 32,
+        activation: callable = nl.Activation.ReLU,
         initializer: InitUtil.InitStr = None,
         out_features: int = 1000,
         batch_size: int = 128,
         n_epochs: int = 100,
         valid_size: float = 0.1,
         lambda_: float = 0.0,
-        dropout_rate: float = 0.2,
         momentum: float = 0.9,
         early_stopping: bool = False,
         patience: int = 10,
@@ -317,10 +321,11 @@ class _Mobile_V3_Small(Estimator, NeuralModel, ImageClassifier):
         random_state: int | None = None,
         deep_verbose: bool = False,
     ) -> None:
+        self.cardinality = cardinality
+        self.activation = activation
         self.initializer = initializer
         self.out_features = out_features
         self.lambda_ = lambda_
-        self.dropout_rate = dropout_rate
         self.momentum = momentum
         self.shuffle = shuffle
         self.random_state = random_state
@@ -339,13 +344,20 @@ class _Mobile_V3_Small(Estimator, NeuralModel, ImageClassifier):
         super().init_model()
         self.model = nl.Sequential()
 
-        self.feature_sizes_ = []
+        self.feature_sizes_ = [
+            [3, 64],
+            [64, 128, 256] * 3,
+            [256, 256, 512] * 4,
+            [512, 512, 1024] * 6,
+            [1024, 1024, 2048] * 3,
+        ]
         self.feature_shapes_ = [
             self._get_feature_shapes(sizes) for sizes in self.feature_sizes_
         ]
 
         self.set_param_ranges(
             {
+                "cardinality": ("0<,+inf", int),
                 "out_features": ("0<,+inf", int),
                 "batch_size": ("0<,+inf", int),
                 "n_epochs": ("0<,+inf", int),
@@ -360,66 +372,67 @@ class _Mobile_V3_Small(Estimator, NeuralModel, ImageClassifier):
         self.build_model()
 
     def build_model(self) -> None:
-        inverted_res_config: List[list] = [
-            [3, 16, 16, True, "RE", 2],
-            [3, 72, 24, False, "RE", 2],
-            [3, 88, 24, False, "RE", 1],
-            [5, 96, 40, True, "HS", 2],
-            [5, 240, 40, True, "HS", 1],
-            [5, 240, 40, True, "HS", 1],
-            [5, 120, 48, True, "HS", 1],
-            [5, 144, 48, True, "HS", 1],
-            [5, 288, 96, True, "HS", 2],
-            [5, 576, 96, True, "HS", 1],
-            [5, 576, 96, True, "HS", 1],
-        ]
         base_args = dict(
             initializer=self.initializer,
             lambda_=self.lambda_,
             random_state=self.random_state,
         )
-
-        self.model.extend(
-            nl.Conv2D(3, 16, 3, 2, **base_args),
-            nl.BatchNorm2D(16, self.momentum),
-            nl.Activation.HardSwish(),
-        )
-        in_ = 16
-        for i, (f, exp, out, b, a, s) in enumerate(inverted_res_config):
-            block = InvRes_SE if b else InvRes
-            act = nl.Activation.HardSwish if a == "HS" else nl.Activation.ReLU
-            self.model += (
-                f"InvRes_{i + 1}",
-                block(in_, out, f, s, exp, activation=act, **base_args),
+        res_args = asdict(
+            nb.BaseBlockArgs(
+                activation=self.activation,
+                do_batch_norm=True,
+                momentum=self.momentum,
+                **base_args,
             )
-            in_ = out
+        )
+        res_args["cardinality"] = self.cardinality
 
         self.model.extend(
-            nl.Conv2D(96, 576, 1, 1, **base_args),
-            nl.BatchNorm2D(576, self.momentum),
-            nl.Activation.HardSwish(),
+            nl.Conv2D(3, 64, 7, 2, 3, **base_args),
+            nl.BatchNorm2D(64, self.momentum),
+            self.activation(),
+            nl.Pool2D(3, 2, "max", "same"),
+        )
+
+        layer_label = "ResNeXtConv"
+        Bottleneck_SE.override_expansion(value=2)
+        self.layer_2, in_channels = F.make_res_layers(
+            64, 128, Bottleneck_SE, 3, 2, base_args, res_args, 1, layer_label
+        )
+        self.layer_3, in_channels = F.make_res_layers(
+            in_channels, 256, Bottleneck_SE, 4, 3, base_args, res_args, 2, layer_label
+        )
+        self.layer_4, in_channels = F.make_res_layers(
+            in_channels, 512, Bottleneck_SE, 6, 4, base_args, res_args, 2, layer_label
+        )
+        self.layer_5, in_channels = F.make_res_layers(
+            in_channels, 1024, Bottleneck_SE, 3, 5, base_args, res_args, 2, layer_label
+        )
+
+        self.model.extend(
+            self.layer_2,
+            self.layer_3,
+            self.layer_4,
+            self.layer_5,
+            deep_add=True,
         )
         self.model.extend(
-            nl.GlobalAvgPool2D(),
-            nl.Conv2D(576, 1024, 1, 1, **base_args),
-            nl.Activation.HardSwish(),
-        )
-        self.model.extend(
+            nl.AdaptiveAvgPool2D((1, 1)),
             nl.Flatten(),
-            nl.Dropout(self.dropout_rate),
-            nl.Dense(1024, self.out_features, **base_args),
+            nl.Dense(1024 * Bottleneck_SE.expansion, self.out_features, **base_args),
         )
+        Bottleneck_SE.reset_expansion()
 
-    input_shape: ClassVar[int] = (-1, 3, 224, 224)
+    input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
     @Tensor.force_shape(input_shape)
     def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_Mobile_V3_Small, self).fit_nn(X, y)
+        return super(_SE_ResNeXt_50, self).fit_nn(X, y)
 
     @override
     @Tensor.force_shape(input_shape)
     def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_Mobile_V3_Small, self).predict_nn(X, argmax)
+        return super(_SE_ResNeXt_50, self).predict_nn(X, argmax)
 
     @override
     @Tensor.force_shape(input_shape)
@@ -430,19 +443,20 @@ class _Mobile_V3_Small(Estimator, NeuralModel, ImageClassifier):
         metric: Evaluator = Accuracy,
         argmax: bool = True,
     ) -> float:
-        return super(_Mobile_V3_Small, self).score_nn(X, y, metric, argmax)
+        return super(_SE_ResNeXt_50, self).score_nn(X, y, metric, argmax)
 
 
-class _Mobile_V3_Large(Estimator, NeuralModel, ImageClassifier):
+class _SE_ResNeXt_101(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
+        cardinality: int = 32,
+        activation: callable = nl.Activation.ReLU,
         initializer: InitUtil.InitStr = None,
         out_features: int = 1000,
         batch_size: int = 128,
         n_epochs: int = 100,
         valid_size: float = 0.1,
         lambda_: float = 0.0,
-        dropout_rate: float = 0.2,
         momentum: float = 0.9,
         early_stopping: bool = False,
         patience: int = 10,
@@ -450,10 +464,11 @@ class _Mobile_V3_Large(Estimator, NeuralModel, ImageClassifier):
         random_state: int | None = None,
         deep_verbose: bool = False,
     ) -> None:
+        self.cardinality = cardinality
+        self.activation = activation
         self.initializer = initializer
         self.out_features = out_features
         self.lambda_ = lambda_
-        self.dropout_rate = dropout_rate
         self.momentum = momentum
         self.shuffle = shuffle
         self.random_state = random_state
@@ -472,13 +487,20 @@ class _Mobile_V3_Large(Estimator, NeuralModel, ImageClassifier):
         super().init_model()
         self.model = nl.Sequential()
 
-        self.feature_sizes_ = []
+        self.feature_sizes_ = [
+            [3, 64],
+            [64, 128, 256] * 3,
+            [256, 256, 512] * 4,
+            [512, 512, 1024] * 23,
+            [1024, 1024, 2048] * 3,
+        ]
         self.feature_shapes_ = [
             self._get_feature_shapes(sizes) for sizes in self.feature_sizes_
         ]
 
         self.set_param_ranges(
             {
+                "cardinality": ("0<,+inf", int),
                 "out_features": ("0<,+inf", int),
                 "batch_size": ("0<,+inf", int),
                 "n_epochs": ("0<,+inf", int),
@@ -493,70 +515,67 @@ class _Mobile_V3_Large(Estimator, NeuralModel, ImageClassifier):
         self.build_model()
 
     def build_model(self) -> None:
-        inverted_res_config: List[list] = [
-            [3, 16, 16, False, "RE", 1],
-            [3, 64, 24, False, "RE", 2],
-            [3, 72, 24, False, "RE", 1],
-            [5, 72, 40, True, "RE", 2],
-            [5, 120, 40, True, "RE", 1],
-            [5, 120, 40, True, "RE", 1],
-            [3, 240, 80, False, "HS", 2],
-            [3, 200, 80, False, "HS", 1],
-            [3, 184, 80, False, "HS", 1],
-            [3, 184, 80, False, "HS", 1],
-            [3, 480, 112, True, "HS", 1],
-            [3, 672, 112, True, "HS", 1],
-            [3, 672, 160, True, "HS", 2],
-            [5, 960, 160, True, "HS", 1],
-            [5, 960, 160, True, "HS", 1],
-        ]
         base_args = dict(
             initializer=self.initializer,
             lambda_=self.lambda_,
             random_state=self.random_state,
         )
-
-        self.model.extend(
-            nl.Conv2D(3, 16, 3, 2, **base_args),
-            nl.BatchNorm2D(16, self.momentum),
-            nl.Activation.HardSwish(),
-        )
-        in_ = 16
-        for i, (f, exp, out, b, a, s) in enumerate(inverted_res_config):
-            block = InvRes_SE if b else InvRes
-            act = nl.Activation.HardSwish if a == "HS" else nl.Activation.ReLU
-            self.model += (
-                f"InvRes_{i + 1}",
-                block(in_, out, f, s, exp, activation=act, **base_args),
+        res_args = asdict(
+            nb.BaseBlockArgs(
+                activation=self.activation,
+                do_batch_norm=True,
+                momentum=self.momentum,
+                **base_args,
             )
-            in_ = out
+        )
+        res_args["cardinality"] = self.cardinality
 
         self.model.extend(
-            nl.Conv2D(160, 960, 1, 1, **base_args),
-            nl.BatchNorm2D(960, self.momentum),
-            nl.Activation.HardSwish(),
+            nl.Conv2D(3, 64, 7, 2, 3, **base_args),
+            nl.BatchNorm2D(64, self.momentum),
+            self.activation(),
+            nl.Pool2D(3, 2, "max", "same"),
+        )
+
+        layer_label = "ResNeXtConv"
+        Bottleneck_SE.override_expansion(value=2)
+        self.layer_2, in_channels = F.make_res_layers(
+            64, 128, Bottleneck_SE, 3, 2, base_args, res_args, 1, layer_label
+        )
+        self.layer_3, in_channels = F.make_res_layers(
+            in_channels, 256, Bottleneck_SE, 4, 3, base_args, res_args, 2, layer_label
+        )
+        self.layer_4, in_channels = F.make_res_layers(
+            in_channels, 512, Bottleneck_SE, 23, 4, base_args, res_args, 2, layer_label
+        )
+        self.layer_5, in_channels = F.make_res_layers(
+            in_channels, 1024, Bottleneck_SE, 3, 5, base_args, res_args, 2, layer_label
+        )
+
+        self.model.extend(
+            self.layer_2,
+            self.layer_3,
+            self.layer_4,
+            self.layer_5,
+            deep_add=True,
         )
         self.model.extend(
-            nl.GlobalAvgPool2D(),
-            nl.Conv2D(960, 1280, 1, 1, **base_args),
-            nl.Activation.HardSwish(),
-        )
-        self.model.extend(
+            nl.AdaptiveAvgPool2D((1, 1)),
             nl.Flatten(),
-            nl.Dropout(self.dropout_rate),
-            nl.Dense(1280, self.out_features, **base_args),
+            nl.Dense(1024 * Bottleneck_SE.expansion, self.out_features, **base_args),
         )
+        Bottleneck_SE.reset_expansion()
 
-    input_shape: ClassVar[int] = (-1, 3, 224, 224)
+    input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
     @Tensor.force_shape(input_shape)
     def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_Mobile_V3_Large, self).fit_nn(X, y)
+        return super(_SE_ResNeXt_101, self).fit_nn(X, y)
 
     @override
     @Tensor.force_shape(input_shape)
     def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_Mobile_V3_Large, self).predict_nn(X, argmax)
+        return super(_SE_ResNeXt_101, self).predict_nn(X, argmax)
 
     @override
     @Tensor.force_shape(input_shape)
@@ -567,4 +586,10 @@ class _Mobile_V3_Large(Estimator, NeuralModel, ImageClassifier):
         metric: Evaluator = Accuracy,
         argmax: bool = True,
     ) -> float:
-        return super(_Mobile_V3_Large, self).score_nn(X, y, metric, argmax)
+        return super(_SE_ResNeXt_101, self).score_nn(X, y, metric, argmax)
+
+
+class _SK_ResNeXt_50(Estimator, NeuralModel, ImageClassifier): ...
+
+
+class _SK_ResNeXt_101(Estimator, NeuralModel, ImageClassifier): ...

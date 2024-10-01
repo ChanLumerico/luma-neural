@@ -5,10 +5,10 @@ from luma.core.super import Optimizer
 from luma.interface.util import InitUtil
 from luma.interface.typing import TensorLike
 
-from luma.neural.layer import *
+from luma.neural import layer as nl
 
 
-class _ConvBlock1D(Sequential):
+class _ConvBlock1D(nl.Sequential):
     def __init__(
         self,
         in_channels: int,
@@ -47,7 +47,7 @@ class _ConvBlock1D(Sequential):
         self.check_param_ranges()
 
         super(_ConvBlock1D, self).__init__(
-            Conv1D(
+            nl.Conv1D(
                 in_channels,
                 out_channels,
                 filter_size,
@@ -58,19 +58,19 @@ class _ConvBlock1D(Sequential):
         )
         if do_batch_norm:
             super(_ConvBlock1D, self).__add__(
-                BatchNorm1D(out_channels, momentum),
+                nl.BatchNorm1D(out_channels, momentum),
             )
         super(_ConvBlock1D, self).__add__(activation())
         if do_pooling:
             super(_ConvBlock1D, self).__add__(
-                Pool1D(pool_filter_size, pool_stride, pool_mode)
+                nl.Pool1D(pool_filter_size, pool_stride, pool_mode)
             )
 
         if optimizer is not None:
             self.set_optimizer(optimizer)
 
 
-class _ConvBlock2D(Sequential):
+class _ConvBlock2D(nl.Sequential):
     def __init__(
         self,
         in_channels: int,
@@ -109,7 +109,7 @@ class _ConvBlock2D(Sequential):
         self.check_param_ranges()
 
         super(_ConvBlock2D, self).__init__(
-            Conv2D(
+            nl.Conv2D(
                 in_channels,
                 out_channels,
                 filter_size,
@@ -120,19 +120,19 @@ class _ConvBlock2D(Sequential):
         )
         if do_batch_norm:
             super(_ConvBlock2D, self).__add__(
-                BatchNorm2D(out_channels, momentum),
+                nl.BatchNorm2D(out_channels, momentum),
             )
         super(_ConvBlock2D, self).__add__(activation())
         if do_pooling:
             super(_ConvBlock2D, self).__add__(
-                Pool2D(pool_filter_size, pool_stride, pool_mode)
+                nl.Pool2D(pool_filter_size, pool_stride, pool_mode)
             )
 
         if optimizer is not None:
             self.set_optimizer(optimizer)
 
 
-class _ConvBlock3D(Sequential):
+class _ConvBlock3D(nl.Sequential):
     def __init__(
         self,
         in_channels: int,
@@ -171,7 +171,7 @@ class _ConvBlock3D(Sequential):
         self.check_param_ranges()
 
         super(_ConvBlock3D, self).__init__(
-            Conv3D(
+            nl.Conv3D(
                 in_channels,
                 out_channels,
                 filter_size,
@@ -182,19 +182,19 @@ class _ConvBlock3D(Sequential):
         )
         if do_batch_norm:
             super(_ConvBlock3D, self).__add__(
-                BatchNorm3D(out_channels, momentum),
+                nl.BatchNorm3D(out_channels, momentum),
             )
         super(_ConvBlock3D, self).__add__(activation())
         if do_pooling:
             super(_ConvBlock3D, self).__add__(
-                Pool3D(pool_filter_size, pool_stride, pool_mode)
+                nl.Pool3D(pool_filter_size, pool_stride, pool_mode)
             )
 
         if optimizer is not None:
             self.set_optimizer(optimizer)
 
 
-class _SeparableConv1D(Sequential):
+class _SeparableConv1D(nl.Sequential):
     def __init__(
         self,
         in_channels: int,
@@ -226,19 +226,19 @@ class _SeparableConv1D(Sequential):
         self.check_param_ranges()
 
         super(_SeparableConv1D, self).__init__(
-            DepthConv1D(in_channels, filter_size, stride, padding, **basic_args),
-            BatchNorm1D(in_channels, momentum) if do_batch_norm else None,
+            nl.DepthConv1D(in_channels, filter_size, stride, padding, **basic_args),
+            nl.BatchNorm1D(in_channels, momentum) if do_batch_norm else None,
         )
         self.extend(
-            Conv1D(in_channels, out_channels, 1, 1, "valid", **basic_args),
-            BatchNorm1D(out_channels, momentum) if do_batch_norm else None,
+            nl.Conv1D(in_channels, out_channels, 1, 1, "valid", **basic_args),
+            nl.BatchNorm1D(out_channels, momentum) if do_batch_norm else None,
         )
 
         if optimizer is not None:
             self.set_optimizer(optimizer)
 
 
-class _SeparableConv2D(Sequential):
+class _SeparableConv2D(nl.Sequential):
     def __init__(
         self,
         in_channels: int,
@@ -270,19 +270,19 @@ class _SeparableConv2D(Sequential):
         self.check_param_ranges()
 
         super(_SeparableConv2D, self).__init__(
-            DepthConv2D(in_channels, filter_size, stride, padding, **basic_args),
-            BatchNorm2D(in_channels, momentum) if do_batch_norm else None,
+            nl.DepthConv2D(in_channels, filter_size, stride, padding, **basic_args),
+            nl.BatchNorm2D(in_channels, momentum) if do_batch_norm else None,
         )
         self.extend(
-            Conv2D(in_channels, out_channels, 1, 1, "valid", **basic_args),
-            BatchNorm2D(out_channels, momentum) if do_batch_norm else None,
+            nl.Conv2D(in_channels, out_channels, 1, 1, "valid", **basic_args),
+            nl.BatchNorm2D(out_channels, momentum) if do_batch_norm else None,
         )
 
         if optimizer is not None:
             self.set_optimizer(optimizer)
 
 
-class _SeparableConv3D(Sequential):
+class _SeparableConv3D(nl.Sequential):
     def __init__(
         self,
         in_channels: int,
@@ -314,19 +314,19 @@ class _SeparableConv3D(Sequential):
         self.check_param_ranges()
 
         super(_SeparableConv3D, self).__init__(
-            DepthConv3D(in_channels, filter_size, stride, padding, **basic_args),
-            BatchNorm3D(in_channels, momentum) if do_batch_norm else None,
+            nl.DepthConv3D(in_channels, filter_size, stride, padding, **basic_args),
+            nl.BatchNorm3D(in_channels, momentum) if do_batch_norm else None,
         )
         self.extend(
-            Conv3D(in_channels, out_channels, 1, 1, "valid", **basic_args),
-            BatchNorm3D(out_channels, momentum) if do_batch_norm else None,
+            nl.Conv3D(in_channels, out_channels, 1, 1, "valid", **basic_args),
+            nl.BatchNorm3D(out_channels, momentum) if do_batch_norm else None,
         )
 
         if optimizer is not None:
             self.set_optimizer(optimizer)
 
 
-class _DenseBlock(Sequential):
+class _DenseBlock(nl.Sequential):
     def __init__(
         self,
         in_features: int,
@@ -356,7 +356,7 @@ class _DenseBlock(Sequential):
         self.check_param_ranges()
 
         super(_DenseBlock, self).__init__(
-            Dense(
+            nl.Dense(
                 in_features,
                 out_features,
                 **basic_args,
@@ -364,7 +364,7 @@ class _DenseBlock(Sequential):
         )
         if do_batch_norm:
             super(_DenseBlock, self).__add__(
-                BatchNorm1D(
+                nl.BatchNorm1D(
                     1,
                     momentum,
                 )
@@ -374,7 +374,7 @@ class _DenseBlock(Sequential):
         )
         if do_dropout:
             super(_DenseBlock, self).__add__(
-                Dropout(
+                nl.Dropout(
                     dropout_rate,
                     random_state,
                 ),
@@ -388,7 +388,7 @@ class _DenseBlock(Sequential):
         self.input_ = X
         out = X
         for _, layer in self.layers:
-            if isinstance(layer, BatchNorm1D):
+            if isinstance(layer, nl.BatchNorm1D):
                 out = layer(out[:, np.newaxis, :], is_train=is_train).squeeze()
                 continue
             out = layer(out, is_train=is_train)
@@ -399,7 +399,7 @@ class _DenseBlock(Sequential):
     @override
     def backward(self, d_out: TensorLike) -> TensorLike:
         for _, layer in reversed(self.layers):
-            if isinstance(layer, BatchNorm1D):
+            if isinstance(layer, nl.BatchNorm1D):
                 d_out = layer.backward(d_out[:, np.newaxis, :]).squeeze()
                 continue
             d_out = layer.backward(d_out)

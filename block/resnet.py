@@ -4,7 +4,7 @@ from luma.core.super import Optimizer
 from luma.interface.typing import Tensor, TensorLike, LayerLike
 from luma.interface.util import InitUtil
 
-from luma.neural.layer import *
+from luma.neural import layer as nl
 from luma.neural.autoprop import LayerNode, LayerGraph, MergeMode
 
 from .se import _SEBlock2D
@@ -37,7 +37,7 @@ class _Basic(LayerGraph, _ExpansionMixin):
         out_channels: int,
         stride: int = 1,
         downsampling: LayerLike | None = None,
-        activation: callable = Activation.ReLU,
+        activation: callable = nl.Activation.ReLU,
         optimizer: Optimizer | None = None,
         initializer: InitUtil.InitStr = None,
         lambda_: float = 0.0,
@@ -78,25 +78,25 @@ class _Basic(LayerGraph, _ExpansionMixin):
     expansion: ClassVar[int] = 1
 
     def init_nodes(self) -> None:
-        self.rt_ = LayerNode(Identity(), name="rt_")
+        self.rt_ = LayerNode(nl.Identity(), name="rt_")
         self.conv_ = LayerNode(
-            Sequential(
-                Conv2D(
+            nl.Sequential(
+                nl.Conv2D(
                     self.in_channels,
                     self.out_channels,
                     3,
                     self.stride,
                     **self.basic_args,
                 ),
-                BatchNorm2D(self.out_channels, self.momentum),
+                nl.BatchNorm2D(self.out_channels, self.momentum),
                 self.activation(),
-                Conv2D(
+                nl.Conv2D(
                     self.out_channels,
                     self.out_channels * type(self).expansion,
                     3,
                     **self.basic_args,
                 ),
-                BatchNorm2D(
+                nl.BatchNorm2D(
                     self.out_channels * type(self).expansion,
                     self.momentum,
                 ),
@@ -104,7 +104,7 @@ class _Basic(LayerGraph, _ExpansionMixin):
             name="conv_",
         )
         self.down_ = LayerNode(
-            self.downsampling if self.downsampling else Identity(),
+            self.downsampling if self.downsampling else nl.Identity(),
             name="down_",
         )
         self.sum_ = LayerNode(
@@ -134,7 +134,7 @@ class _Bottleneck(LayerGraph, _ExpansionMixin):
         stride: int = 1,
         downsampling: LayerLike | None = None,
         cardinality: int = 1,
-        activation: callable = Activation.ReLU,
+        activation: callable = nl.Activation.ReLU,
         optimizer: Optimizer | None = None,
         initializer: InitUtil.InitStr = None,
         lambda_: float = 0.0,
@@ -176,13 +176,13 @@ class _Bottleneck(LayerGraph, _ExpansionMixin):
     expansion: ClassVar[int] = 4
 
     def init_nodes(self) -> None:
-        self.rt_ = LayerNode(Identity(), name="rt_")
+        self.rt_ = LayerNode(nl.Identity(), name="rt_")
         self.conv_ = LayerNode(
-            Sequential(
-                Conv2D(self.in_channels, self.out_channels, 1, **self.basic_args),
-                BatchNorm2D(self.out_channels, self.momentum),
+            nl.Sequential(
+                nl.Conv2D(self.in_channels, self.out_channels, 1, **self.basic_args),
+                nl.BatchNorm2D(self.out_channels, self.momentum),
                 self.activation(),
-                Conv2D(
+                nl.Conv2D(
                     self.out_channels,
                     self.out_channels,
                     3,
@@ -190,15 +190,15 @@ class _Bottleneck(LayerGraph, _ExpansionMixin):
                     groups=self.cardinality,
                     **self.basic_args,
                 ),
-                BatchNorm2D(self.out_channels, self.momentum),
+                nl.BatchNorm2D(self.out_channels, self.momentum),
                 self.activation(),
-                Conv2D(
+                nl.Conv2D(
                     self.out_channels,
                     self.out_channels * type(self).expansion,
                     1,
                     **self.basic_args,
                 ),
-                BatchNorm2D(
+                nl.BatchNorm2D(
                     self.out_channels * type(self).expansion,
                     self.momentum,
                 ),
@@ -206,7 +206,7 @@ class _Bottleneck(LayerGraph, _ExpansionMixin):
             name="conv_",
         )
         self.down_ = LayerNode(
-            self.downsampling if self.downsampling else Identity(),
+            self.downsampling if self.downsampling else nl.Identity(),
             name="down_",
         )
         self.sum_ = LayerNode(
@@ -235,7 +235,7 @@ class _PreActBottleneck(LayerGraph, _ExpansionMixin):
         out_channels: int,
         stride: int = 1,
         downsampling: LayerLike | None = None,
-        activation: callable = Activation.ReLU,
+        activation: callable = nl.Activation.ReLU,
         optimizer: Optimizer | None = None,
         initializer: InitUtil.InitStr = None,
         lambda_: float = 0.0,
@@ -276,29 +276,29 @@ class _PreActBottleneck(LayerGraph, _ExpansionMixin):
     expansion: ClassVar[int] = 4
 
     def init_nodes(self) -> None:
-        self.rt_ = LayerNode(Identity(), name="rt_")
+        self.rt_ = LayerNode(nl.Identity(), name="rt_")
         self.conv_ = LayerNode(
-            Sequential(
-                BatchNorm2D(self.in_channels, self.momentum),
+            nl.Sequential(
+                nl.BatchNorm2D(self.in_channels, self.momentum),
                 self.activation(),
-                Conv2D(
+                nl.Conv2D(
                     self.in_channels,
                     self.out_channels,
                     1,
                     **self.basic_args,
                 ),
-                BatchNorm2D(self.out_channels, self.momentum),
+                nl.BatchNorm2D(self.out_channels, self.momentum),
                 self.activation(),
-                Conv2D(
+                nl.Conv2D(
                     self.out_channels,
                     self.out_channels,
                     3,
                     self.stride,
                     **self.basic_args,
                 ),
-                BatchNorm2D(self.out_channels),
+                nl.BatchNorm2D(self.out_channels),
                 self.activation(),
-                Conv2D(
+                nl.Conv2D(
                     self.out_channels,
                     self.out_channels * type(self).expansion,
                     1,
@@ -307,11 +307,11 @@ class _PreActBottleneck(LayerGraph, _ExpansionMixin):
             )
         )
         self.down_ = LayerNode(
-            self.downsampling if self.downsampling else Identity(),
+            self.downsampling if self.downsampling else nl.Identity(),
             name="down_",
         )
         self.sum_ = LayerNode(
-            Identity(),
+            nl.Identity(),
             MergeMode.SUM,
             name="sum_",
         )
@@ -338,7 +338,7 @@ class _Bottleneck_SE(LayerGraph, _ExpansionMixin):
         downsampling: LayerLike | None = None,
         se_reduction: int = 4,
         cardinality: int = 1,
-        activation: callable = Activation.ReLU,
+        activation: callable = nl.Activation.ReLU,
         optimizer: Optimizer | None = None,
         initializer: InitUtil.InitStr = None,
         lambda_: float = 0.0,
@@ -383,13 +383,13 @@ class _Bottleneck_SE(LayerGraph, _ExpansionMixin):
     expansion: ClassVar[int] = 4
 
     def init_nodes(self) -> None:
-        self.rt_ = LayerNode(Identity(), name="rt_")
+        self.rt_ = LayerNode(nl.Identity(), name="rt_")
         self.conv_ = LayerNode(
-            Sequential(
-                Conv2D(self.in_channels, self.out_channels, 1, **self.basic_args),
-                BatchNorm2D(self.out_channels, self.momentum),
+            nl.Sequential(
+                nl.Conv2D(self.in_channels, self.out_channels, 1, **self.basic_args),
+                nl.BatchNorm2D(self.out_channels, self.momentum),
                 self.activation(),
-                Conv2D(
+                nl.Conv2D(
                     self.out_channels,
                     self.out_channels,
                     3,
@@ -397,15 +397,15 @@ class _Bottleneck_SE(LayerGraph, _ExpansionMixin):
                     groups=self.cardinality,
                     **self.basic_args,
                 ),
-                BatchNorm2D(self.out_channels, self.momentum),
+                nl.BatchNorm2D(self.out_channels, self.momentum),
                 self.activation(),
-                Conv2D(
+                nl.Conv2D(
                     self.out_channels,
                     self.out_channels * type(self).expansion,
                     1,
                     **self.basic_args,
                 ),
-                BatchNorm2D(
+                nl.BatchNorm2D(
                     self.out_channels * type(self).expansion,
                     self.momentum,
                 ),
@@ -421,11 +421,11 @@ class _Bottleneck_SE(LayerGraph, _ExpansionMixin):
             name="se_",
         )
         self.down_ = LayerNode(
-            self.downsampling if self.downsampling else Identity(),
+            self.downsampling if self.downsampling else nl.Identity(),
             name="down_",
         )
         self.scale_ = LayerNode(
-            Identity(),
+            nl.Identity(),
             MergeMode.HADAMARD,
             name="scale_",
         )

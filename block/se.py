@@ -5,15 +5,15 @@ from luma.core.super import Optimizer
 from luma.interface.util import InitUtil
 from luma.interface.typing import TensorLike
 
-from luma.neural.layer import *
+from luma.neural import layer as nl
 
 
-class _SEBlock1D(Sequential):
+class _SEBlock1D(nl.Sequential):
     def __init__(
         self,
         in_channels: int,
         reduction: int = 4,
-        activation: callable = Activation.Sigmoid,
+        activation: callable = nl.Activation.Sigmoid,
         optimizer: Optimizer = None,
         initializer: InitUtil.InitStr = None,
         lambda_: float = 0.0,
@@ -35,11 +35,11 @@ class _SEBlock1D(Sequential):
         self.check_param_ranges()
 
         super(_SEBlock1D, self).__init__(
-            GlobalAvgPool1D(),
-            Flatten(),
-            Dense(in_channels, in_channels // reduction, **basic_args),
-            Activation.ReLU(),
-            Dense(in_channels // reduction, in_channels, **basic_args),
+            nl.GlobalAvgPool1D(),
+            nl.Flatten(),
+            nl.Dense(in_channels, in_channels // reduction, **basic_args),
+            nl.Activation.ReLU(),
+            nl.Dense(in_channels // reduction, in_channels, **basic_args),
             activation(),
         )
 
@@ -68,12 +68,12 @@ class _SEBlock1D(Sequential):
         return in_shape if self.keep_shape else in_shape[:2]
 
 
-class _SEBlock2D(Sequential):
+class _SEBlock2D(nl.Sequential):
     def __init__(
         self,
         in_channels: int,
         reduction: int = 4,
-        activation: callable = Activation.Sigmoid,
+        activation: callable = nl.Activation.Sigmoid,
         optimizer: Optimizer = None,
         initializer: InitUtil.InitStr = None,
         lambda_: float = 0.0,
@@ -95,11 +95,11 @@ class _SEBlock2D(Sequential):
         self.check_param_ranges()
 
         super(_SEBlock2D, self).__init__(
-            GlobalAvgPool2D(),
-            Flatten(),
-            Dense(in_channels, in_channels // reduction, **basic_args),
-            Activation.ReLU(),
-            Dense(in_channels // reduction, in_channels, **basic_args),
+            nl.GlobalAvgPool2D(),
+            nl.Flatten(),
+            nl.Dense(in_channels, in_channels // reduction, **basic_args),
+            nl.Activation.ReLU(),
+            nl.Dense(in_channels // reduction, in_channels, **basic_args),
             activation(),
         )
 
@@ -128,12 +128,12 @@ class _SEBlock2D(Sequential):
         return in_shape if self.keep_shape else in_shape[:2]
 
 
-class _SEBlock3D(Sequential):
+class _SEBlock3D(nl.Sequential):
     def __init__(
         self,
         in_channels: int,
         reduction: int = 4,
-        activation: callable = Activation.Sigmoid,
+        activation: callable = nl.Activation.Sigmoid,
         optimizer: Optimizer = None,
         initializer: InitUtil.InitStr = None,
         lambda_: float = 0.0,
@@ -155,11 +155,11 @@ class _SEBlock3D(Sequential):
         self.check_param_ranges()
 
         super(_SEBlock3D, self).__init__(
-            GlobalAvgPool3D(),
-            Flatten(),
-            Dense(in_channels, in_channels // reduction, **basic_args),
-            Activation.ReLU(),
-            Dense(in_channels // reduction, in_channels, **basic_args),
+            nl.GlobalAvgPool3D(),
+            nl.Flatten(),
+            nl.Dense(in_channels, in_channels // reduction, **basic_args),
+            nl.Activation.ReLU(),
+            nl.Dense(in_channels // reduction, in_channels, **basic_args),
             activation(),
         )
 

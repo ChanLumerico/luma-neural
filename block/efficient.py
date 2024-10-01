@@ -3,7 +3,7 @@ from luma.core.super import Optimizer
 from luma.interface.typing import Tensor, TensorLike
 from luma.interface.util import InitUtil
 
-from luma.neural.layer import *
+from luma.neural import layer as nl
 from luma.neural.autoprop import LayerNode, LayerGraph, MergeMode
 
 from .se import _SEBlock2D
@@ -18,7 +18,7 @@ class _FusedMBConv(LayerGraph):
         stride: int = 1,
         expand: float = 1.0,
         se_reduction: int = 4,
-        activation: Callable = Activation.Swish,
+        activation: Callable = nl.Activation.Swish,
         optimizer: Optimizer | None = None,
         initializer: InitUtil.InitStr = None,
         lambda_: float = 0.0,
@@ -74,11 +74,11 @@ class _FusedMBConv(LayerGraph):
             self.set_optimizer(optimizer)
 
     def init_nodes(self) -> None:
-        self.rt_ = LayerNode(Identity(), name="rt_")
+        self.rt_ = LayerNode(nl.Identity(), name="rt_")
 
         self.conv_ = LayerNode(
-            Sequential(
-                Conv2D(
+            nl.Sequential(
+                nl.Conv2D(
                     self.in_channels,
                     self.out_channels,
                     self.filter_size,
@@ -87,7 +87,7 @@ class _FusedMBConv(LayerGraph):
                     **self.basic_args,
                 ),
                 (
-                    BatchNorm2D(self.out_channels, self.momentum)
+                    nl.BatchNorm2D(self.out_channels, self.momentum)
                     if self.do_batch_norm
                     else None
                 ),
@@ -96,8 +96,8 @@ class _FusedMBConv(LayerGraph):
             name="conv_",
         )
         self.conv_exp = LayerNode(
-            Sequential(
-                Conv2D(
+            nl.Sequential(
+                nl.Conv2D(
                     self.in_channels,
                     self.hid_channels,
                     self.filter_size,
@@ -106,12 +106,12 @@ class _FusedMBConv(LayerGraph):
                     **self.basic_args,
                 ),
                 (
-                    BatchNorm2D(self.hid_channels, self.momentum)
+                    nl.BatchNorm2D(self.hid_channels, self.momentum)
                     if self.do_batch_norm
                     else None
                 ),
                 self.activation(),
-                Conv2D(
+                nl.Conv2D(
                     self.hid_channels,
                     self.out_channels,
                     1,
@@ -119,7 +119,7 @@ class _FusedMBConv(LayerGraph):
                     **self.basic_args,
                 ),
                 (
-                    BatchNorm2D(self.out_channels, self.momentum)
+                    nl.BatchNorm2D(self.out_channels, self.momentum)
                     if self.do_batch_norm
                     else None
                 ),
@@ -138,8 +138,8 @@ class _FusedMBConv(LayerGraph):
             ),
             name="se_block",
         )
-        self.scale_ = LayerNode(Identity(), MergeMode.HADAMARD, name="scale_")
-        self.tm_ = LayerNode(Identity(), MergeMode.SUM, name="tm_")
+        self.scale_ = LayerNode(nl.Identity(), MergeMode.HADAMARD, name="scale_")
+        self.tm_ = LayerNode(nl.Identity(), MergeMode.SUM, name="tm_")
 
     @Tensor.force_dim(4)
     def forward(self, X: TensorLike, is_train: bool = False) -> TensorLike:

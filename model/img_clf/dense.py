@@ -6,21 +6,21 @@ from luma.interface.util import InitUtil
 from luma.metric.classification import Accuracy
 
 from luma.neural.base import NeuralModel
-from luma.neural.block import DenseNetBlock, SEBlock2D
-from luma.neural.layer import *
+from luma.neural import block as nb
+from luma.neural import layer as nl
 from luma.neural import functional as F
 
 from ..types import ImageClassifier
 
-Composite = DenseNetBlock.Composite
-DenseUnit = DenseNetBlock.DenseUnit
-Transition = DenseNetBlock.Transition
+Composite = nb.DenseNetBlock.Composite
+DenseUnit = nb.DenseNetBlock.DenseUnit
+Transition = nb.DenseNetBlock.Transition
 
 
 class _DenseNet_121(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
-        activation: callable = Activation.ReLU,
+        activation: callable = nl.Activation.ReLU,
         initializer: InitUtil.InitStr = None,
         out_features: int = 1000,
         batch_size: int = 128,
@@ -56,7 +56,7 @@ class _DenseNet_121(Estimator, NeuralModel, ImageClassifier):
             deep_verbose,
         )
         super().init_model()
-        self.model: Sequential = Sequential()
+        self.model: nl.Sequential = nl.Sequential()
 
         self.feature_sizes_ = []
         self.feature_shapes_ = [
@@ -86,10 +86,10 @@ class _DenseNet_121(Estimator, NeuralModel, ImageClassifier):
         dense_args = dict(**base_args, momentum=self.momentum)
 
         self.model.extend(
-            Conv2D(3, 64, 7, 2, 3, **base_args),
-            BatchNorm2D(64, self.momentum),
+            nl.Conv2D(3, 64, 7, 2, 3, **base_args),
+            nl.BatchNorm2D(64, self.momentum),
             self.activation(),
-            Pool2D(3, 2, "max", 1),
+            nl.Pool2D(3, 2, "max", 1),
         )
 
         in_channels = 64
@@ -108,13 +108,13 @@ class _DenseNet_121(Estimator, NeuralModel, ImageClassifier):
                 )
                 in_channels //= 2
 
-        self.model += BatchNorm2D(in_channels, self.momentum)
+        self.model += nl.BatchNorm2D(in_channels, self.momentum)
         self.model += self.activation()
 
         self.model.extend(
-            GlobalAvgPool2D(),
-            Flatten(),
-            Dense(in_channels, self.out_features, **base_args),
+            nl.GlobalAvgPool2D(),
+            nl.Flatten(),
+            nl.Dense(in_channels, self.out_features, **base_args),
         )
 
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
@@ -143,7 +143,7 @@ class _DenseNet_121(Estimator, NeuralModel, ImageClassifier):
 class _DenseNet_169(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
-        activation: callable = Activation.ReLU,
+        activation: callable = nl.Activation.ReLU,
         initializer: InitUtil.InitStr = None,
         out_features: int = 1000,
         batch_size: int = 128,
@@ -179,7 +179,7 @@ class _DenseNet_169(Estimator, NeuralModel, ImageClassifier):
             deep_verbose,
         )
         super().init_model()
-        self.model: Sequential = Sequential()
+        self.model: nl.Sequential = nl.Sequential()
 
         self.feature_sizes_ = []
         self.feature_shapes_ = [
@@ -209,10 +209,10 @@ class _DenseNet_169(Estimator, NeuralModel, ImageClassifier):
         dense_args = dict(**base_args, momentum=self.momentum)
 
         self.model.extend(
-            Conv2D(3, 64, 7, 2, 3, **base_args),
-            BatchNorm2D(64, self.momentum),
+            nl.Conv2D(3, 64, 7, 2, 3, **base_args),
+            nl.BatchNorm2D(64, self.momentum),
             self.activation(),
-            Pool2D(3, 2, "max", 1),
+            nl.Pool2D(3, 2, "max", 1),
         )
 
         in_channels = 64
@@ -231,13 +231,13 @@ class _DenseNet_169(Estimator, NeuralModel, ImageClassifier):
                 )
                 in_channels //= 2
 
-        self.model += BatchNorm2D(in_channels, self.momentum)
+        self.model += nl.BatchNorm2D(in_channels, self.momentum)
         self.model += self.activation()
 
         self.model.extend(
-            GlobalAvgPool2D(),
-            Flatten(),
-            Dense(in_channels, self.out_features, **base_args),
+            nl.GlobalAvgPool2D(),
+            nl.Flatten(),
+            nl.Dense(in_channels, self.out_features, **base_args),
         )
 
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
@@ -266,7 +266,7 @@ class _DenseNet_169(Estimator, NeuralModel, ImageClassifier):
 class _DenseNet_201(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
-        activation: callable = Activation.ReLU,
+        activation: callable = nl.Activation.ReLU,
         initializer: InitUtil.InitStr = None,
         out_features: int = 1000,
         batch_size: int = 128,
@@ -302,7 +302,7 @@ class _DenseNet_201(Estimator, NeuralModel, ImageClassifier):
             deep_verbose,
         )
         super().init_model()
-        self.model: Sequential = Sequential()
+        self.model: nl.Sequential = nl.Sequential()
 
         self.feature_sizes_ = []
         self.feature_shapes_ = [
@@ -332,10 +332,10 @@ class _DenseNet_201(Estimator, NeuralModel, ImageClassifier):
         dense_args = dict(**base_args, momentum=self.momentum)
 
         self.model.extend(
-            Conv2D(3, 64, 7, 2, 3, **base_args),
-            BatchNorm2D(64, self.momentum),
+            nl.Conv2D(3, 64, 7, 2, 3, **base_args),
+            nl.BatchNorm2D(64, self.momentum),
             self.activation(),
-            Pool2D(3, 2, "max", 1),
+            nl.Pool2D(3, 2, "max", 1),
         )
 
         in_channels = 64
@@ -354,13 +354,13 @@ class _DenseNet_201(Estimator, NeuralModel, ImageClassifier):
                 )
                 in_channels //= 2
 
-        self.model += BatchNorm2D(in_channels, self.momentum)
+        self.model += nl.BatchNorm2D(in_channels, self.momentum)
         self.model += self.activation()
 
         self.model.extend(
-            GlobalAvgPool2D(),
-            Flatten(),
-            Dense(in_channels, self.out_features, **base_args),
+            nl.GlobalAvgPool2D(),
+            nl.Flatten(),
+            nl.Dense(in_channels, self.out_features, **base_args),
         )
 
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
@@ -389,7 +389,7 @@ class _DenseNet_201(Estimator, NeuralModel, ImageClassifier):
 class _DenseNet_264(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
-        activation: callable = Activation.ReLU,
+        activation: callable = nl.Activation.ReLU,
         initializer: InitUtil.InitStr = None,
         out_features: int = 1000,
         batch_size: int = 128,
@@ -425,7 +425,7 @@ class _DenseNet_264(Estimator, NeuralModel, ImageClassifier):
             deep_verbose,
         )
         super().init_model()
-        self.model: Sequential = Sequential()
+        self.model: nl.Sequential = nl.Sequential()
 
         self.feature_sizes_ = []
         self.feature_shapes_ = [
@@ -455,10 +455,10 @@ class _DenseNet_264(Estimator, NeuralModel, ImageClassifier):
         dense_args = dict(**base_args, momentum=self.momentum)
 
         self.model.extend(
-            Conv2D(3, 64, 7, 2, 3, **base_args),
-            BatchNorm2D(64, self.momentum),
+            nl.Conv2D(3, 64, 7, 2, 3, **base_args),
+            nl.BatchNorm2D(64, self.momentum),
             self.activation(),
-            Pool2D(3, 2, "max", 1),
+            nl.Pool2D(3, 2, "max", 1),
         )
 
         in_channels = 64
@@ -477,13 +477,13 @@ class _DenseNet_264(Estimator, NeuralModel, ImageClassifier):
                 )
                 in_channels //= 2
 
-        self.model += BatchNorm2D(in_channels, self.momentum)
+        self.model += nl.BatchNorm2D(in_channels, self.momentum)
         self.model += self.activation()
 
         self.model.extend(
-            GlobalAvgPool2D(),
-            Flatten(),
-            Dense(in_channels, self.out_features, **base_args),
+            nl.GlobalAvgPool2D(),
+            nl.Flatten(),
+            nl.Dense(in_channels, self.out_features, **base_args),
         )
 
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
@@ -512,7 +512,7 @@ class _DenseNet_264(Estimator, NeuralModel, ImageClassifier):
 class _SE_DenseNet_121(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
-        activation: callable = Activation.ReLU,
+        activation: callable = nl.Activation.ReLU,
         initializer: InitUtil.InitStr = None,
         out_features: int = 1000,
         batch_size: int = 128,
@@ -548,7 +548,7 @@ class _SE_DenseNet_121(Estimator, NeuralModel, ImageClassifier):
             deep_verbose,
         )
         super().init_model()
-        self.model: Sequential = Sequential()
+        self.model: nl.Sequential = nl.Sequential()
 
         self.feature_sizes_ = []
         self.feature_shapes_ = [
@@ -578,10 +578,10 @@ class _SE_DenseNet_121(Estimator, NeuralModel, ImageClassifier):
         dense_args = dict(**base_args, momentum=self.momentum)
 
         self.model.extend(
-            Conv2D(3, 64, 7, 2, 3, **base_args),
-            BatchNorm2D(64, self.momentum),
+            nl.Conv2D(3, 64, 7, 2, 3, **base_args),
+            nl.BatchNorm2D(64, self.momentum),
             self.activation(),
-            Pool2D(3, 2, "max", 1),
+            nl.Pool2D(3, 2, "max", 1),
         )
 
         in_channels = 64
@@ -599,7 +599,7 @@ class _SE_DenseNet_121(Estimator, NeuralModel, ImageClassifier):
                 f"DenseBlock_SE{i + 1}",
                 F.attach_se_block(
                     DenseUnit,
-                    SEBlock2D,
+                    nb.SEBlock2D,
                     dense_se_args,
                     se_args,
                 ),
@@ -613,13 +613,13 @@ class _SE_DenseNet_121(Estimator, NeuralModel, ImageClassifier):
                 )
                 in_channels //= 2
 
-        self.model += BatchNorm2D(in_channels, self.momentum)
+        self.model += nl.BatchNorm2D(in_channels, self.momentum)
         self.model += self.activation()
 
         self.model.extend(
-            GlobalAvgPool2D(),
-            Flatten(),
-            Dense(in_channels, self.out_features, **base_args),
+            nl.GlobalAvgPool2D(),
+            nl.Flatten(),
+            nl.Dense(in_channels, self.out_features, **base_args),
         )
 
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
@@ -648,7 +648,7 @@ class _SE_DenseNet_121(Estimator, NeuralModel, ImageClassifier):
 class _SE_DenseNet_169(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
-        activation: callable = Activation.ReLU,
+        activation: callable = nl.Activation.ReLU,
         initializer: InitUtil.InitStr = None,
         out_features: int = 1000,
         batch_size: int = 128,
@@ -684,7 +684,7 @@ class _SE_DenseNet_169(Estimator, NeuralModel, ImageClassifier):
             deep_verbose,
         )
         super().init_model()
-        self.model: Sequential = Sequential()
+        self.model: nl.Sequential = nl.Sequential()
 
         self.feature_sizes_ = []
         self.feature_shapes_ = [
@@ -714,10 +714,10 @@ class _SE_DenseNet_169(Estimator, NeuralModel, ImageClassifier):
         dense_args = dict(**base_args, momentum=self.momentum)
 
         self.model.extend(
-            Conv2D(3, 64, 7, 2, 3, **base_args),
-            BatchNorm2D(64, self.momentum),
+            nl.Conv2D(3, 64, 7, 2, 3, **base_args),
+            nl.BatchNorm2D(64, self.momentum),
             self.activation(),
-            Pool2D(3, 2, "max", 1),
+            nl.Pool2D(3, 2, "max", 1),
         )
 
         in_channels = 64
@@ -735,7 +735,7 @@ class _SE_DenseNet_169(Estimator, NeuralModel, ImageClassifier):
                 f"DenseBlock_SE{i + 1}",
                 F.attach_se_block(
                     DenseUnit,
-                    SEBlock2D,
+                    nb.SEBlock2D,
                     dense_se_args,
                     se_args,
                 ),
@@ -749,13 +749,13 @@ class _SE_DenseNet_169(Estimator, NeuralModel, ImageClassifier):
                 )
                 in_channels //= 2
 
-        self.model += BatchNorm2D(in_channels, self.momentum)
+        self.model += nl.BatchNorm2D(in_channels, self.momentum)
         self.model += self.activation()
 
         self.model.extend(
-            GlobalAvgPool2D(),
-            Flatten(),
-            Dense(in_channels, self.out_features, **base_args),
+            nl.GlobalAvgPool2D(),
+            nl.Flatten(),
+            nl.Dense(in_channels, self.out_features, **base_args),
         )
 
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)

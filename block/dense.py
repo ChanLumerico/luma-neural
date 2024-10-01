@@ -4,17 +4,17 @@ from luma.core.super import Optimizer
 from luma.interface.typing import Tensor, TensorLike
 from luma.interface.util import InitUtil
 
-from luma.neural.layer import *
+from luma.neural import layer as nl
 from luma.neural.autoprop import LayerNode, LayerGraph, MergeMode
 
 
-class _Composite(Sequential):
+class _Composite(nl.Sequential):
     def __init__(
         self,
         in_channels: int,
         growth_rate: int,
         bn_size: int = 4,
-        activation: callable = Activation.ReLU,
+        activation: callable = nl.Activation.ReLU,
         optimizer: Optimizer = None,
         initializer: InitUtil.InitStr = None,
         momentum: float = 0.9,
@@ -36,12 +36,12 @@ class _Composite(Sequential):
         self.check_param_ranges()
 
         super(_Composite, self).__init__(
-            BatchNorm2D(in_channels, momentum),
+            nl.BatchNorm2D(in_channels, momentum),
             activation(),
-            Conv2D(in_channels, inter_channels, 1, 1, "valid", **basic_args),
-            BatchNorm2D(inter_channels, momentum),
+            nl.Conv2D(in_channels, inter_channels, 1, 1, "valid", **basic_args),
+            nl.BatchNorm2D(inter_channels, momentum),
             activation(),
-            Conv2D(inter_channels, growth_rate, 3, 1, "same", **basic_args),
+            nl.Conv2D(inter_channels, growth_rate, 3, 1, "same", **basic_args),
         )
 
         if optimizer is not None:
@@ -55,7 +55,7 @@ class _DenseUnit(LayerGraph):
         n_layers: int,
         growth_rate: int,
         bn_size: int = 4,
-        activation: callable = Activation.ReLU,
+        activation: callable = nl.Activation.ReLU,
         optimizer: Optimizer | None = None,
         initializer: InitUtil.InitStr = None,
         lambda_: float = 0.0,
@@ -127,13 +127,13 @@ class _DenseUnit(LayerGraph):
         )
 
 
-class _Transition(Sequential):
+class _Transition(nl.Sequential):
     def __init__(
         self,
         in_channels: int,
         out_channels: int,
         compression: float = 1.0,
-        activation: callable = Activation.ReLU,
+        activation: callable = nl.Activation.ReLU,
         optimizer: Optimizer = None,
         initializer: InitUtil.InitStr = None,
         momentum: float = 0.9,
@@ -156,10 +156,10 @@ class _Transition(Sequential):
         self.check_param_ranges()
 
         super(_Transition, self).__init__(
-            BatchNorm2D(in_channels, momentum),
+            nl.BatchNorm2D(in_channels, momentum),
             activation(),
-            Conv2D(in_channels, out_channels, 1, 1, "valid", **basic_args),
-            Pool2D(2, 2, "avg"),
+            nl.Conv2D(in_channels, out_channels, 1, 1, "valid", **basic_args),
+            nl.Pool2D(2, 2, "avg"),
         )
 
         if optimizer is not None:

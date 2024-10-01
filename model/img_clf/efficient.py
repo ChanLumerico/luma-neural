@@ -7,14 +7,14 @@ from luma.metric.classification import Accuracy
 from luma.preprocessing.image import Resize
 
 from luma.neural.base import NeuralModel
-from luma.neural.block import EfficientBlock
-from luma.neural.layer import *
+from luma.neural import block as nb
+from luma.neural import layer as nl
 from luma.neural import functional as F
 
 from ..types import ImageClassifier
 
-MBConv = EfficientBlock.MBConv
-FusedMBConv = EfficientBlock.FusedMBConv
+MBConv = nb.EfficientBlock.MBConv
+FusedMBConv = nb.EfficientBlock.FusedMBConv
 
 b0_config = [
     [16, 1, 1, 1, 3],
@@ -43,7 +43,7 @@ input_sizes = [224, 240, 260, 300, 380, 456, 528, 600]
 class _EfficientNet_B0(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
-        activation: callable = Activation.Swish,
+        activation: callable = nl.Activation.Swish,
         initializer: InitUtil.InitStr = None,
         out_features: int = 1000,
         batch_size: int = 128,
@@ -77,7 +77,7 @@ class _EfficientNet_B0(Estimator, NeuralModel, ImageClassifier):
             deep_verbose,
         )
         super().init_model()
-        self.model: Sequential = Sequential()
+        self.model: nl.Sequential = nl.Sequential()
 
         self.feature_sizes_ = []
         self.feature_shapes_ = [
@@ -111,8 +111,8 @@ class _EfficientNet_B0(Estimator, NeuralModel, ImageClassifier):
         )
 
         self.model.extend(
-            Conv2D(3, 32, 3, 2, **base_args),
-            BatchNorm2D(32, self.momentum),
+            nl.Conv2D(3, 32, 3, 2, **base_args),
+            nl.BatchNorm2D(32, self.momentum),
             self.activation(),
         )
 
@@ -128,14 +128,14 @@ class _EfficientNet_B0(Estimator, NeuralModel, ImageClassifier):
 
         dense_in_features = int(round(1280 * multipliers[0][0]))
         self.model.extend(
-            Conv2D(in_, dense_in_features, 1, 1, "valid", **base_args),
-            BatchNorm2D(dense_in_features, self.momentum),
+            nl.Conv2D(in_, dense_in_features, 1, 1, "valid", **base_args),
+            nl.BatchNorm2D(dense_in_features, self.momentum),
             self.activation(),
         )
         self.model.extend(
-            GlobalAvgPool2D(),
-            Flatten(),
-            Dense(dense_in_features, self.out_features, **base_args),
+            nl.GlobalAvgPool2D(),
+            nl.Flatten(),
+            nl.Dense(dense_in_features, self.out_features, **base_args),
         )
 
     input_shape: ClassVar[tuple] = (-1, 3, input_sizes[0], input_sizes[0])
@@ -164,7 +164,7 @@ class _EfficientNet_B0(Estimator, NeuralModel, ImageClassifier):
 class _EfficientNet_B1(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
-        activation: callable = Activation.Swish,
+        activation: callable = nl.Activation.Swish,
         initializer: InitUtil.InitStr = None,
         out_features: int = 1000,
         batch_size: int = 128,
@@ -198,7 +198,7 @@ class _EfficientNet_B1(Estimator, NeuralModel, ImageClassifier):
             deep_verbose,
         )
         super().init_model()
-        self.model: Sequential = Sequential()
+        self.model: nl.Sequential = nl.Sequential()
 
         self.feature_sizes_ = []
         self.feature_shapes_ = [
@@ -232,8 +232,8 @@ class _EfficientNet_B1(Estimator, NeuralModel, ImageClassifier):
         )
 
         self.model.extend(
-            Conv2D(3, 32, 3, 2, **base_args),
-            BatchNorm2D(32, self.momentum),
+            nl.Conv2D(3, 32, 3, 2, **base_args),
+            nl.BatchNorm2D(32, self.momentum),
             self.activation(),
         )
 
@@ -249,14 +249,14 @@ class _EfficientNet_B1(Estimator, NeuralModel, ImageClassifier):
 
         dense_in_features = int(round(1280 * multipliers[1][0]))
         self.model.extend(
-            Conv2D(in_, dense_in_features, 1, 1, "valid", **base_args),
-            BatchNorm2D(dense_in_features, self.momentum),
+            nl.Conv2D(in_, dense_in_features, 1, 1, "valid", **base_args),
+            nl.BatchNorm2D(dense_in_features, self.momentum),
             self.activation(),
         )
         self.model.extend(
-            GlobalAvgPool2D(),
-            Flatten(),
-            Dense(dense_in_features, self.out_features, **base_args),
+            nl.GlobalAvgPool2D(),
+            nl.Flatten(),
+            nl.Dense(dense_in_features, self.out_features, **base_args),
         )
 
     input_shape: ClassVar[tuple] = (-1, 3, input_sizes[1], input_sizes[1])
@@ -285,7 +285,7 @@ class _EfficientNet_B1(Estimator, NeuralModel, ImageClassifier):
 class _EfficientNet_B2(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
-        activation: callable = Activation.Swish,
+        activation: callable = nl.Activation.Swish,
         initializer: InitUtil.InitStr = None,
         out_features: int = 1000,
         batch_size: int = 128,
@@ -319,7 +319,7 @@ class _EfficientNet_B2(Estimator, NeuralModel, ImageClassifier):
             deep_verbose,
         )
         super().init_model()
-        self.model: Sequential = Sequential()
+        self.model: nl.Sequential = nl.Sequential()
 
         self.feature_sizes_ = []
         self.feature_shapes_ = [
@@ -353,8 +353,8 @@ class _EfficientNet_B2(Estimator, NeuralModel, ImageClassifier):
         )
 
         self.model.extend(
-            Conv2D(3, 32, 3, 2, **base_args),
-            BatchNorm2D(32, self.momentum),
+            nl.Conv2D(3, 32, 3, 2, **base_args),
+            nl.BatchNorm2D(32, self.momentum),
             self.activation(),
         )
 
@@ -370,14 +370,14 @@ class _EfficientNet_B2(Estimator, NeuralModel, ImageClassifier):
 
         dense_in_features = int(round(1280 * multipliers[2][0]))
         self.model.extend(
-            Conv2D(in_, dense_in_features, 1, 1, "valid", **base_args),
-            BatchNorm2D(dense_in_features, self.momentum),
+            nl.Conv2D(in_, dense_in_features, 1, 1, "valid", **base_args),
+            nl.BatchNorm2D(dense_in_features, self.momentum),
             self.activation(),
         )
         self.model.extend(
-            GlobalAvgPool2D(),
-            Flatten(),
-            Dense(dense_in_features, self.out_features, **base_args),
+            nl.GlobalAvgPool2D(),
+            nl.Flatten(),
+            nl.Dense(dense_in_features, self.out_features, **base_args),
         )
 
     input_shape: ClassVar[tuple] = (-1, 3, input_sizes[2], input_sizes[2])
@@ -406,7 +406,7 @@ class _EfficientNet_B2(Estimator, NeuralModel, ImageClassifier):
 class _EfficientNet_B3(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
-        activation: callable = Activation.Swish,
+        activation: callable = nl.Activation.Swish,
         initializer: InitUtil.InitStr = None,
         out_features: int = 1000,
         batch_size: int = 128,
@@ -440,7 +440,7 @@ class _EfficientNet_B3(Estimator, NeuralModel, ImageClassifier):
             deep_verbose,
         )
         super().init_model()
-        self.model: Sequential = Sequential()
+        self.model: nl.Sequential = nl.Sequential()
 
         self.feature_sizes_ = []
         self.feature_shapes_ = [
@@ -474,8 +474,8 @@ class _EfficientNet_B3(Estimator, NeuralModel, ImageClassifier):
         )
 
         self.model.extend(
-            Conv2D(3, 32, 3, 2, **base_args),
-            BatchNorm2D(32, self.momentum),
+            nl.Conv2D(3, 32, 3, 2, **base_args),
+            nl.BatchNorm2D(32, self.momentum),
             self.activation(),
         )
 
@@ -491,14 +491,14 @@ class _EfficientNet_B3(Estimator, NeuralModel, ImageClassifier):
 
         dense_in_features = int(round(1280 * multipliers[3][0]))
         self.model.extend(
-            Conv2D(in_, dense_in_features, 1, 1, "valid", **base_args),
-            BatchNorm2D(dense_in_features, self.momentum),
+            nl.Conv2D(in_, dense_in_features, 1, 1, "valid", **base_args),
+            nl.BatchNorm2D(dense_in_features, self.momentum),
             self.activation(),
         )
         self.model.extend(
-            GlobalAvgPool2D(),
-            Flatten(),
-            Dense(dense_in_features, self.out_features, **base_args),
+            nl.GlobalAvgPool2D(),
+            nl.Flatten(),
+            nl.Dense(dense_in_features, self.out_features, **base_args),
         )
 
     input_shape: ClassVar[tuple] = (-1, 3, input_sizes[3], input_sizes[3])
@@ -527,7 +527,7 @@ class _EfficientNet_B3(Estimator, NeuralModel, ImageClassifier):
 class _EfficientNet_B4(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
-        activation: callable = Activation.Swish,
+        activation: callable = nl.Activation.Swish,
         initializer: InitUtil.InitStr = None,
         out_features: int = 1000,
         batch_size: int = 128,
@@ -561,7 +561,7 @@ class _EfficientNet_B4(Estimator, NeuralModel, ImageClassifier):
             deep_verbose,
         )
         super().init_model()
-        self.model: Sequential = Sequential()
+        self.model: nl.Sequential = nl.Sequential()
 
         self.feature_sizes_ = []
         self.feature_shapes_ = [
@@ -595,8 +595,8 @@ class _EfficientNet_B4(Estimator, NeuralModel, ImageClassifier):
         )
 
         self.model.extend(
-            Conv2D(3, 32, 3, 2, **base_args),
-            BatchNorm2D(32, self.momentum),
+            nl.Conv2D(3, 32, 3, 2, **base_args),
+            nl.BatchNorm2D(32, self.momentum),
             self.activation(),
         )
 
@@ -612,14 +612,14 @@ class _EfficientNet_B4(Estimator, NeuralModel, ImageClassifier):
 
         dense_in_features = int(round(1280 * multipliers[4][0]))
         self.model.extend(
-            Conv2D(in_, dense_in_features, 1, 1, "valid", **base_args),
-            BatchNorm2D(dense_in_features, self.momentum),
+            nl.Conv2D(in_, dense_in_features, 1, 1, "valid", **base_args),
+            nl.BatchNorm2D(dense_in_features, self.momentum),
             self.activation(),
         )
         self.model.extend(
-            GlobalAvgPool2D(),
-            Flatten(),
-            Dense(dense_in_features, self.out_features, **base_args),
+            nl.GlobalAvgPool2D(),
+            nl.Flatten(),
+            nl.Dense(dense_in_features, self.out_features, **base_args),
         )
 
     input_shape: ClassVar[tuple] = (-1, 3, input_sizes[4], input_sizes[4])
@@ -648,7 +648,7 @@ class _EfficientNet_B4(Estimator, NeuralModel, ImageClassifier):
 class _EfficientNet_B5(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
-        activation: callable = Activation.Swish,
+        activation: callable = nl.Activation.Swish,
         initializer: InitUtil.InitStr = None,
         out_features: int = 1000,
         batch_size: int = 128,
@@ -682,7 +682,7 @@ class _EfficientNet_B5(Estimator, NeuralModel, ImageClassifier):
             deep_verbose,
         )
         super().init_model()
-        self.model: Sequential = Sequential()
+        self.model: nl.Sequential = nl.Sequential()
 
         self.feature_sizes_ = []
         self.feature_shapes_ = [
@@ -716,8 +716,8 @@ class _EfficientNet_B5(Estimator, NeuralModel, ImageClassifier):
         )
 
         self.model.extend(
-            Conv2D(3, 32, 3, 2, **base_args),
-            BatchNorm2D(32, self.momentum),
+            nl.Conv2D(3, 32, 3, 2, **base_args),
+            nl.BatchNorm2D(32, self.momentum),
             self.activation(),
         )
 
@@ -733,14 +733,14 @@ class _EfficientNet_B5(Estimator, NeuralModel, ImageClassifier):
 
         dense_in_features = int(round(1280 * multipliers[5][0]))
         self.model.extend(
-            Conv2D(in_, dense_in_features, 1, 1, "valid", **base_args),
-            BatchNorm2D(dense_in_features, self.momentum),
+            nl.Conv2D(in_, dense_in_features, 1, 1, "valid", **base_args),
+            nl.BatchNorm2D(dense_in_features, self.momentum),
             self.activation(),
         )
         self.model.extend(
-            GlobalAvgPool2D(),
-            Flatten(),
-            Dense(dense_in_features, self.out_features, **base_args),
+            nl.GlobalAvgPool2D(),
+            nl.Flatten(),
+            nl.Dense(dense_in_features, self.out_features, **base_args),
         )
 
     input_shape: ClassVar[tuple] = (-1, 3, input_sizes[5], input_sizes[5])
@@ -769,7 +769,7 @@ class _EfficientNet_B5(Estimator, NeuralModel, ImageClassifier):
 class _EfficientNet_B6(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
-        activation: callable = Activation.Swish,
+        activation: callable = nl.Activation.Swish,
         initializer: InitUtil.InitStr = None,
         out_features: int = 1000,
         batch_size: int = 128,
@@ -803,7 +803,7 @@ class _EfficientNet_B6(Estimator, NeuralModel, ImageClassifier):
             deep_verbose,
         )
         super().init_model()
-        self.model: Sequential = Sequential()
+        self.model: nl.Sequential = nl.Sequential()
 
         self.feature_sizes_ = []
         self.feature_shapes_ = [
@@ -837,8 +837,8 @@ class _EfficientNet_B6(Estimator, NeuralModel, ImageClassifier):
         )
 
         self.model.extend(
-            Conv2D(3, 32, 3, 2, **base_args),
-            BatchNorm2D(32, self.momentum),
+            nl.Conv2D(3, 32, 3, 2, **base_args),
+            nl.BatchNorm2D(32, self.momentum),
             self.activation(),
         )
 
@@ -854,14 +854,14 @@ class _EfficientNet_B6(Estimator, NeuralModel, ImageClassifier):
 
         dense_in_features = int(round(1280 * multipliers[6][0]))
         self.model.extend(
-            Conv2D(in_, dense_in_features, 1, 1, "valid", **base_args),
-            BatchNorm2D(dense_in_features, self.momentum),
+            nl.Conv2D(in_, dense_in_features, 1, 1, "valid", **base_args),
+            nl.BatchNorm2D(dense_in_features, self.momentum),
             self.activation(),
         )
         self.model.extend(
-            GlobalAvgPool2D(),
-            Flatten(),
-            Dense(dense_in_features, self.out_features, **base_args),
+            nl.GlobalAvgPool2D(),
+            nl.Flatten(),
+            nl.Dense(dense_in_features, self.out_features, **base_args),
         )
 
     input_shape: ClassVar[tuple] = (-1, 3, input_sizes[6], input_sizes[6])
@@ -890,7 +890,7 @@ class _EfficientNet_B6(Estimator, NeuralModel, ImageClassifier):
 class _EfficientNet_B7(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
-        activation: callable = Activation.Swish,
+        activation: callable = nl.Activation.Swish,
         initializer: InitUtil.InitStr = None,
         out_features: int = 1000,
         batch_size: int = 128,
@@ -924,7 +924,7 @@ class _EfficientNet_B7(Estimator, NeuralModel, ImageClassifier):
             deep_verbose,
         )
         super().init_model()
-        self.model: Sequential = Sequential()
+        self.model: nl.Sequential = nl.Sequential()
 
         self.feature_sizes_ = []
         self.feature_shapes_ = [
@@ -958,8 +958,8 @@ class _EfficientNet_B7(Estimator, NeuralModel, ImageClassifier):
         )
 
         self.model.extend(
-            Conv2D(3, 32, 3, 2, **base_args),
-            BatchNorm2D(32, self.momentum),
+            nl.Conv2D(3, 32, 3, 2, **base_args),
+            nl.BatchNorm2D(32, self.momentum),
             self.activation(),
         )
 
@@ -975,14 +975,14 @@ class _EfficientNet_B7(Estimator, NeuralModel, ImageClassifier):
 
         dense_in_features = int(round(1280 * multipliers[7][0]))
         self.model.extend(
-            Conv2D(in_, dense_in_features, 1, 1, "valid", **base_args),
-            BatchNorm2D(dense_in_features, self.momentum),
+            nl.Conv2D(in_, dense_in_features, 1, 1, "valid", **base_args),
+            nl.BatchNorm2D(dense_in_features, self.momentum),
             self.activation(),
         )
         self.model.extend(
-            GlobalAvgPool2D(),
-            Flatten(),
-            Dense(dense_in_features, self.out_features, **base_args),
+            nl.GlobalAvgPool2D(),
+            nl.Flatten(),
+            nl.Dense(dense_in_features, self.out_features, **base_args),
         )
 
     input_shape: ClassVar[tuple] = (-1, 3, input_sizes[7], input_sizes[7])
@@ -1011,7 +1011,7 @@ class _EfficientNet_B7(Estimator, NeuralModel, ImageClassifier):
 class _EfficientNet_V2_Small(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
-        activation: callable = Activation.Swish,
+        activation: callable = nl.Activation.Swish,
         initializer: InitUtil.InitStr = None,
         out_features: int = 1000,
         batch_size: int = 128,
@@ -1050,7 +1050,7 @@ class _EfficientNet_V2_Small(Estimator, NeuralModel, ImageClassifier):
             deep_verbose,
         )
         super().init_model()
-        self.model: Sequential = Sequential()
+        self.model: nl.Sequential = nl.Sequential()
 
         self.feature_sizes_ = []
         self.feature_shapes_ = [
@@ -1087,8 +1087,8 @@ class _EfficientNet_V2_Small(Estimator, NeuralModel, ImageClassifier):
         ]
 
         self.model.extend(
-            Conv2D(3, 24, 3, 2, **base_args),
-            BatchNorm2D(24, self.momentum),
+            nl.Conv2D(3, 24, 3, 2, **base_args),
+            nl.BatchNorm2D(24, self.momentum),
             self.activation(),
         )
 
@@ -1104,15 +1104,15 @@ class _EfficientNet_V2_Small(Estimator, NeuralModel, ImageClassifier):
                 in_ = out
 
         self.model.extend(
-            Conv2D(in_, 1280, 1, 1, "valid", **base_args),
-            BatchNorm2D(1280, self.momentum),
+            nl.Conv2D(in_, 1280, 1, 1, "valid", **base_args),
+            nl.BatchNorm2D(1280, self.momentum),
             self.activation(),
         )
         self.model.extend(
-            Dropout(self.dropout_rate, self.random_state),
-            GlobalAvgPool2D(),
-            Flatten(),
-            Dense(1280, self.out_features, **base_args),
+            nl.Dropout(self.dropout_rate, self.random_state),
+            nl.GlobalAvgPool2D(),
+            nl.Flatten(),
+            nl.Dense(1280, self.out_features, **base_args),
         )
 
     input_shape: ClassVar[tuple] = (-1, 3, 384, 384)
@@ -1131,7 +1131,7 @@ class _EfficientNet_V2_Small(Estimator, NeuralModel, ImageClassifier):
             X = Resize((new_res, new_res)).fit_transform(X)
 
             drop_layer = self.model.layers[-4]
-            if isinstance(drop_layer, Dropout):
+            if isinstance(drop_layer, nl.Dropout):
                 drop_layer.dropout_rate = new_drop_rate
 
         return super(_EfficientNet_V2_Small, self).train(X, y, epoch)
@@ -1163,7 +1163,7 @@ class _EfficientNet_V2_Small(Estimator, NeuralModel, ImageClassifier):
 class _EfficientNet_V2_Medium(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
-        activation: callable = Activation.Swish,
+        activation: callable = nl.Activation.Swish,
         initializer: InitUtil.InitStr = None,
         out_features: int = 1000,
         batch_size: int = 128,
@@ -1202,7 +1202,7 @@ class _EfficientNet_V2_Medium(Estimator, NeuralModel, ImageClassifier):
             deep_verbose,
         )
         super().init_model()
-        self.model: Sequential = Sequential()
+        self.model: nl.Sequential = nl.Sequential()
 
         self.feature_sizes_ = []
         self.feature_shapes_ = [
@@ -1239,8 +1239,8 @@ class _EfficientNet_V2_Medium(Estimator, NeuralModel, ImageClassifier):
         ]
 
         self.model.extend(
-            Conv2D(3, 24, 3, 2, **base_args),
-            BatchNorm2D(24, self.momentum),
+            nl.Conv2D(3, 24, 3, 2, **base_args),
+            nl.BatchNorm2D(24, self.momentum),
             self.activation(),
         )
 
@@ -1256,15 +1256,15 @@ class _EfficientNet_V2_Medium(Estimator, NeuralModel, ImageClassifier):
                 in_ = out
 
         self.model.extend(
-            Conv2D(in_, 1280, 1, 1, "valid", **base_args),
-            BatchNorm2D(1280, self.momentum),
+            nl.Conv2D(in_, 1280, 1, 1, "valid", **base_args),
+            nl.BatchNorm2D(1280, self.momentum),
             self.activation(),
         )
         self.model.extend(
-            Dropout(self.dropout_rate, self.random_state),
-            GlobalAvgPool2D(),
-            Flatten(),
-            Dense(1280, self.out_features, **base_args),
+            nl.Dropout(self.dropout_rate, self.random_state),
+            nl.GlobalAvgPool2D(),
+            nl.Flatten(),
+            nl.Dense(1280, self.out_features, **base_args),
         )
 
     input_shape: ClassVar[tuple] = (-1, 3, 480, 480)
@@ -1283,7 +1283,7 @@ class _EfficientNet_V2_Medium(Estimator, NeuralModel, ImageClassifier):
             X = Resize((new_res, new_res)).fit_transform(X)
 
             drop_layer = self.model.layers[-4]
-            if isinstance(drop_layer, Dropout):
+            if isinstance(drop_layer, nl.Dropout):
                 drop_layer.dropout_rate = new_drop_rate
 
         return super(_EfficientNet_V2_Medium, self).train(X, y, epoch)
@@ -1315,7 +1315,7 @@ class _EfficientNet_V2_Medium(Estimator, NeuralModel, ImageClassifier):
 class _EfficientNet_V2_Large(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
-        activation: callable = Activation.Swish,
+        activation: callable = nl.Activation.Swish,
         initializer: InitUtil.InitStr = None,
         out_features: int = 1000,
         batch_size: int = 128,
@@ -1354,7 +1354,7 @@ class _EfficientNet_V2_Large(Estimator, NeuralModel, ImageClassifier):
             deep_verbose,
         )
         super().init_model()
-        self.model: Sequential = Sequential()
+        self.model: nl.Sequential = nl.Sequential()
 
         self.feature_sizes_ = []
         self.feature_shapes_ = [
@@ -1391,8 +1391,8 @@ class _EfficientNet_V2_Large(Estimator, NeuralModel, ImageClassifier):
         ]
 
         self.model.extend(
-            Conv2D(3, 32, 3, 2, **base_args),
-            BatchNorm2D(32, self.momentum),
+            nl.Conv2D(3, 32, 3, 2, **base_args),
+            nl.BatchNorm2D(32, self.momentum),
             self.activation(),
         )
 
@@ -1408,15 +1408,15 @@ class _EfficientNet_V2_Large(Estimator, NeuralModel, ImageClassifier):
                 in_ = out
 
         self.model.extend(
-            Conv2D(in_, 1280, 1, 1, "valid", **base_args),
-            BatchNorm2D(1280, self.momentum),
+            nl.Conv2D(in_, 1280, 1, 1, "valid", **base_args),
+            nl.BatchNorm2D(1280, self.momentum),
             self.activation(),
         )
         self.model.extend(
-            Dropout(self.dropout_rate, self.random_state),
-            GlobalAvgPool2D(),
-            Flatten(),
-            Dense(1280, self.out_features, **base_args),
+            nl.Dropout(self.dropout_rate, self.random_state),
+            nl.GlobalAvgPool2D(),
+            nl.Flatten(),
+            nl.Dense(1280, self.out_features, **base_args),
         )
 
     input_shape: ClassVar[tuple] = (-1, 3, 480, 480)
@@ -1435,7 +1435,7 @@ class _EfficientNet_V2_Large(Estimator, NeuralModel, ImageClassifier):
             X = Resize((new_res, new_res)).fit_transform(X)
 
             drop_layer = self.model.layers[-4]
-            if isinstance(drop_layer, Dropout):
+            if isinstance(drop_layer, nl.Dropout):
                 drop_layer.dropout_rate = new_drop_rate
 
         return super(_EfficientNet_V2_Large, self).train(X, y, epoch)
@@ -1467,7 +1467,7 @@ class _EfficientNet_V2_Large(Estimator, NeuralModel, ImageClassifier):
 class _EfficientNet_V2_XLarge(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
-        activation: callable = Activation.Swish,
+        activation: callable = nl.Activation.Swish,
         initializer: InitUtil.InitStr = None,
         out_features: int = 21843,
         batch_size: int = 128,
@@ -1506,7 +1506,7 @@ class _EfficientNet_V2_XLarge(Estimator, NeuralModel, ImageClassifier):
             deep_verbose,
         )
         super().init_model()
-        self.model: Sequential = Sequential()
+        self.model: nl.Sequential = nl.Sequential()
 
         self.feature_sizes_ = []
         self.feature_shapes_ = [
@@ -1543,8 +1543,8 @@ class _EfficientNet_V2_XLarge(Estimator, NeuralModel, ImageClassifier):
         ]
 
         self.model.extend(
-            Conv2D(3, 32, 3, 2, **base_args),
-            BatchNorm2D(32, self.momentum),
+            nl.Conv2D(3, 32, 3, 2, **base_args),
+            nl.BatchNorm2D(32, self.momentum),
             self.activation(),
         )
 
@@ -1560,15 +1560,15 @@ class _EfficientNet_V2_XLarge(Estimator, NeuralModel, ImageClassifier):
                 in_ = out
 
         self.model.extend(
-            Conv2D(in_, 1280, 1, 1, "valid", **base_args),
-            BatchNorm2D(1280, self.momentum),
+            nl.Conv2D(in_, 1280, 1, 1, "valid", **base_args),
+            nl.BatchNorm2D(1280, self.momentum),
             self.activation(),
         )
         self.model.extend(
-            Dropout(self.dropout_rate, self.random_state),
-            GlobalAvgPool2D(),
-            Flatten(),
-            Dense(1280, self.out_features, **base_args),
+            nl.Dropout(self.dropout_rate, self.random_state),
+            nl.GlobalAvgPool2D(),
+            nl.Flatten(),
+            nl.Dense(1280, self.out_features, **base_args),
         )
 
     input_shape: ClassVar[tuple] = (-1, 3, 480, 480)
@@ -1587,7 +1587,7 @@ class _EfficientNet_V2_XLarge(Estimator, NeuralModel, ImageClassifier):
             X = Resize((new_res, new_res)).fit_transform(X)
 
             drop_layer = self.model.layers[-4]
-            if isinstance(drop_layer, Dropout):
+            if isinstance(drop_layer, nl.Dropout):
                 drop_layer.dropout_rate = new_drop_rate
 
         return super(_EfficientNet_V2_XLarge, self).train(X, y, epoch)

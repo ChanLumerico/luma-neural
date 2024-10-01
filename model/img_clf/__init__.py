@@ -15,7 +15,17 @@ such as convolutional neural networks (CNNs), residual networks,
 and Inception mechanisms, ensuring flexibility for various use cases.
 """
 
-from . import alex, dense, efficient, incep, lenet, mobile, resnet, vgg
+from . import (
+    alex,
+    dense,
+    efficient,
+    incep,
+    lenet,
+    mobile,
+    resnet,
+    resnext,
+    vgg,
+)
 
 
 __all__ = (
@@ -1925,7 +1935,7 @@ class SE_DenseNet_169(dense._SE_DenseNet_169):
     """
 
 
-class SE_ResNeXt_50(resnet._SE_ResNeXt_50):
+class SE_ResNeXt_50(resnext._SE_ResNeXt_50):
     """
     SE-ResNeXt-50 is a 50-layer deep neural network that builds upon
     ResNeXt by integrating Squeeze-and-Excitation (SE) blocks alongside
@@ -1981,7 +1991,7 @@ class SE_ResNeXt_50(resnet._SE_ResNeXt_50):
     """
 
 
-class SE_ResNeXt_101(resnet._SE_ResNeXt_101):
+class SE_ResNeXt_101(resnext._SE_ResNeXt_101):
     """
     SE-ResNeXt-101 is a 101-layer deep neural network that builds upon
     ResNeXt by integrating Squeeze-and-Excitation (SE) blocks alongside
@@ -2965,7 +2975,7 @@ class EfficientNet_V2_XLarge(efficient._EfficientNet_V2_XLarge):
     """
 
 
-class ResNeXt_50(resnet._ResNeXt_50):
+class ResNeXt_50(resnext._ResNeXt_50):
     """
     ResNeXt-50 is a 50-layer deep neural network that builds upon ResNet
     by introducing a "cardinality" dimension, which refers to the number of
@@ -3026,7 +3036,7 @@ class ResNeXt_50(resnet._ResNeXt_50):
     """
 
 
-class ResNeXt_101(resnet._ResNeXt_101):
+class ResNeXt_101(resnext._ResNeXt_101):
     """
     ResNeXt-101 is a 101-layer deep neural network that builds upon ResNet
     by introducing a "cardinality" dimension, which refers to the number of
@@ -3093,7 +3103,7 @@ class SK_ResNet_50(resnet._SK_ResNet_50): ...
 class SK_ResNet_101(resnet._SK_ResNet_101): ...
 
 
-class SK_ResNeXt_50(resnet._SK_ResNeXt_50): ...
+class SK_ResNeXt_50(resnext._SK_ResNeXt_50): ...
 
 
-class SK_ResNeXt_101(resnet._SK_ResNeXt_101): ...
+class SK_ResNeXt_101(resnext._SK_ResNeXt_101): ...

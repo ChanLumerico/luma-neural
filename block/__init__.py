@@ -517,9 +517,9 @@ class SKBlock1D(sk._SKBlock1D):
     """
     Selective Kernel(SK) block for 1-dimensional data.
 
-    The SK Block dynamically selects between different convolutional kernel 
-    sizes to capture multi-scale features. It processes input through multiple 
-    kernels, fuses the results, and uses attention to adaptively focus on the 
+    The SK Block dynamically selects between different convolutional kernel
+    sizes to capture multi-scale features. It processes input through multiple
+    kernels, fuses the results, and uses attention to adaptively focus on the
     most relevant features.
 
     Parameters
@@ -548,9 +548,9 @@ class SKBlock2D(sk._SKBlock2D):
     """
     Selective Kernel(SK) block for 2-dimensional data.
 
-    The SK Block dynamically selects between different convolutional kernel 
-    sizes to capture multi-scale features. It processes input through multiple 
-    kernels, fuses the results, and uses attention to adaptively focus on the 
+    The SK Block dynamically selects between different convolutional kernel
+    sizes to capture multi-scale features. It processes input through multiple
+    kernels, fuses the results, and uses attention to adaptively focus on the
     most relevant features.
 
     Parameters
@@ -579,9 +579,9 @@ class SKBlock3D(sk._SKBlock3D):
     """
     Selective Kernel(SK) block for 3-dimensional data.
 
-    The SK Block dynamically selects between different convolutional kernel 
-    sizes to capture multi-scale features. It processes input through multiple 
-    kernels, fuses the results, and uses attention to adaptively focus on the 
+    The SK Block dynamically selects between different convolutional kernel
+    sizes to capture multi-scale features. It processes input through multiple
+    kernels, fuses the results, and uses attention to adaptively focus on the
     most relevant features.
 
     Parameters

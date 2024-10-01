@@ -1,7 +1,7 @@
 from typing import Any, Self, override, ClassVar
 from dataclasses import asdict
 
-from luma.core.super import Estimator, Evaluator, Optimizer
+from luma.core.super import Estimator, Evaluator
 from luma.interface.typing import Matrix, Tensor, Vector
 from luma.interface.util import InitUtil
 from luma.metric.classification import Accuracy
@@ -9,25 +9,8 @@ from luma.preprocessing.encoder import LabelSmoothing
 
 from luma.neural.base import NeuralModel
 from luma.neural import functional as F
-from luma.neural.block import (
-    BaseBlockArgs,
-    IncepBlock,
-    IncepResBlock,
-    XceptionBlock,
-    SeparableConv2D,
-    SEBlock2D,
-)
-from luma.neural.layer import (
-    Conv2D,
-    Pool2D,
-    GlobalAvgPool2D,
-    BatchNorm2D,
-    Activation,
-    Dropout,
-    Dense,
-    Flatten,
-    Sequential,
-)
+from luma.neural import block as nb
+from luma.neural import layer as nl
 
 from ..types import ImageClassifier
 
@@ -47,7 +30,7 @@ __all__ = (
 class _Inception_V1(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
-        activation: callable = Activation.ReLU,
+        activation: callable = nl.Activation.ReLU,
         initializer: InitUtil.InitStr = None,
         out_features: int = 1000,
         batch_size: int = 128,
@@ -81,7 +64,7 @@ class _Inception_V1(Estimator, NeuralModel, ImageClassifier):
             deep_verbose,
         )
         super().init_model()
-        self.model = Sequential()
+        self.model = nl.Sequential()
 
         self.feature_sizes_ = [
             [3, 64, 64, 192],
@@ -113,80 +96,86 @@ class _Inception_V1(Estimator, NeuralModel, ImageClassifier):
             lambda_=self.lambda_,
             random_state=self.random_state,
         )
-        incep_args = BaseBlockArgs(
+        incep_args = nb.BaseBlockArgs(
             activation=self.activation,
             do_batch_norm=False,
             **base_args,
         )
 
         self.model.extend(
-            Conv2D(3, 64, 7, 2, 3, **base_args),
+            nl.Conv2D(3, 64, 7, 2, 3, **base_args),
             self.activation(),
-            Pool2D(3, 2, "max", "same"),
+            nl.Pool2D(3, 2, "max", "same"),
         )
 
         self.model.extend(
-            Conv2D(64, 64, 1, 1, "valid", **base_args),
+            nl.Conv2D(64, 64, 1, 1, "valid", **base_args),
             self.activation(),
-            Conv2D(64, 192, 3, 1, "valid", **base_args),
+            nl.Conv2D(64, 192, 3, 1, "valid", **base_args),
             self.activation(),
-            Pool2D(3, 2, "max", "same"),
+            nl.Pool2D(3, 2, "max", "same"),
         )
 
         self.model.extend(
             (
                 "Inception_3a",
-                IncepBlock.V1(192, 64, 96, 128, 16, 32, 32, **asdict(incep_args)),
+                nb.IncepBlock.V1(192, 64, 96, 128, 16, 32, 32, **asdict(incep_args)),
             ),
             (
                 "Inception_3b",
-                IncepBlock.V1(256, 128, 128, 192, 32, 96, 64, **asdict(incep_args)),
+                nb.IncepBlock.V1(256, 128, 128, 192, 32, 96, 64, **asdict(incep_args)),
             ),
-            Pool2D(3, 2, "max", "same"),
+            nl.Pool2D(3, 2, "max", "same"),
             deep_add=False,
         )
 
         self.model.extend(
             (
                 "Inception_4a",
-                IncepBlock.V1(480, 192, 96, 208, 16, 48, 64, **asdict(incep_args)),
+                nb.IncepBlock.V1(480, 192, 96, 208, 16, 48, 64, **asdict(incep_args)),
             ),
             (
                 "Inception_4b",
-                IncepBlock.V1(512, 160, 112, 224, 24, 64, 64, **asdict(incep_args)),
+                nb.IncepBlock.V1(512, 160, 112, 224, 24, 64, 64, **asdict(incep_args)),
             ),
             (
                 "Inception_4c",
-                IncepBlock.V1(512, 128, 128, 256, 24, 64, 64, **asdict(incep_args)),
+                nb.IncepBlock.V1(512, 128, 128, 256, 24, 64, 64, **asdict(incep_args)),
             ),
             (
                 "Inception_4d",
-                IncepBlock.V1(512, 112, 144, 288, 32, 64, 64, **asdict(incep_args)),
+                nb.IncepBlock.V1(512, 112, 144, 288, 32, 64, 64, **asdict(incep_args)),
             ),
             (
                 "Inception_4e",
-                IncepBlock.V1(528, 256, 160, 320, 32, 128, 128, **asdict(incep_args)),
+                nb.IncepBlock.V1(
+                    528, 256, 160, 320, 32, 128, 128, **asdict(incep_args)
+                ),
             ),
-            Pool2D(3, 2, "max", "same"),
+            nl.Pool2D(3, 2, "max", "same"),
             deep_add=False,
         )
 
         self.model.extend(
             (
                 "Inception_5a",
-                IncepBlock.V1(832, 256, 160, 320, 32, 128, 128, **asdict(incep_args)),
+                nb.IncepBlock.V1(
+                    832, 256, 160, 320, 32, 128, 128, **asdict(incep_args)
+                ),
             ),
             (
                 "Inception_5b",
-                IncepBlock.V1(832, 384, 192, 384, 48, 128, 128, **asdict(incep_args)),
+                nb.IncepBlock.V1(
+                    832, 384, 192, 384, 48, 128, 128, **asdict(incep_args)
+                ),
             ),
-            GlobalAvgPool2D(),
-            Dropout(self.dropout_rate, self.random_state),
+            nl.GlobalAvgPool2D(),
+            nl.Dropout(self.dropout_rate, self.random_state),
             deep_add=False,
         )
 
-        self.model += Flatten()
-        self.model += Dense(1024, self.out_features, **base_args)
+        self.model += nl.Flatten()
+        self.model += nl.Dense(1024, self.out_features, **base_args)
 
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
@@ -214,7 +203,7 @@ class _Inception_V1(Estimator, NeuralModel, ImageClassifier):
 class _Inception_V2(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
-        activation: callable = Activation.ReLU,
+        activation: callable = nl.Activation.ReLU,
         initializer: InitUtil.InitStr = None,
         out_features: int = 1000,
         batch_size: int = 128,
@@ -248,7 +237,7 @@ class _Inception_V2(Estimator, NeuralModel, ImageClassifier):
             deep_verbose,
         )
         super().init_model()
-        self.model = Sequential()
+        self.model = nl.Sequential()
 
         self.feature_sizes_ = [
             [3, 32, 32, 64, 64, 80, 192, 288],
@@ -281,33 +270,35 @@ class _Inception_V2(Estimator, NeuralModel, ImageClassifier):
             lambda_=self.lambda_,
             random_state=self.random_state,
         )
-        incep_args = BaseBlockArgs(
+        incep_args = nb.BaseBlockArgs(
             activation=self.activation,
             do_batch_norm=False,
             **base_args,
         )
 
         self.model.extend(
-            Conv2D(3, 32, 3, 2, "valid", **base_args),
+            nl.Conv2D(3, 32, 3, 2, "valid", **base_args),
             self.activation(),
-            Conv2D(32, 32, 3, 1, "valid", **base_args),
+            nl.Conv2D(32, 32, 3, 1, "valid", **base_args),
             self.activation(),
-            Conv2D(32, 64, 3, 1, "same", **base_args),
+            nl.Conv2D(32, 64, 3, 1, "same", **base_args),
             self.activation(),
-            Pool2D(3, 2, "max", "valid"),
+            nl.Pool2D(3, 2, "max", "valid"),
         )
 
         self.model.extend(
-            Conv2D(64, 80, 3, 1, "valid", **base_args),
+            nl.Conv2D(64, 80, 3, 1, "valid", **base_args),
             self.activation(),
-            Conv2D(80, 192, 3, 2, "valid", **base_args),
+            nl.Conv2D(80, 192, 3, 2, "valid", **base_args),
             self.activation(),
-            Conv2D(192, 288, 3, 1, "same", **base_args),
+            nl.Conv2D(192, 288, 3, 1, "same", **base_args),
             self.activation(),
         )
 
         inception_3xA = [
-            IncepBlock.V2_TypeA(288, 64, 48, 64, 64, (96, 96), 64, **asdict(incep_args))
+            nb.IncepBlock.V2_TypeA(
+                288, 64, 48, 64, 64, (96, 96), 64, **asdict(incep_args)
+            )
             for _ in range(3)
         ]
         self.model.extend(
@@ -322,24 +313,26 @@ class _Inception_V2(Estimator, NeuralModel, ImageClassifier):
         self.model.add(
             (
                 "Inception_Rx1",
-                IncepBlock.V2_Redux(288, 64, 384, 64, (96, 96), **asdict(incep_args)),
+                nb.IncepBlock.V2_Redux(
+                    288, 64, 384, 64, (96, 96), **asdict(incep_args)
+                ),
             )
         )
 
         inception_5xB = [
-            IncepBlock.V2_TypeB(
+            nb.IncepBlock.V2_TypeB(
                 768, 192, 128, 192, 128, (128, 192), 192, **asdict(incep_args)
             ),
-            IncepBlock.V2_TypeB(
+            nb.IncepBlock.V2_TypeB(
                 768, 192, 160, 192, 160, (160, 192), 192, **asdict(incep_args)
             ),
-            IncepBlock.V2_TypeB(
+            nb.IncepBlock.V2_TypeB(
                 768, 192, 160, 192, 160, (160, 192), 192, **asdict(incep_args)
             ),
-            IncepBlock.V2_TypeB(
+            nb.IncepBlock.V2_TypeB(
                 768, 192, 160, 192, 160, (160, 192), 192, **asdict(incep_args)
             ),
-            IncepBlock.V2_TypeB(
+            nb.IncepBlock.V2_TypeB(
                 768, 192, 192, 192, 192, (192, 192), 192, **asdict(incep_args)
             ),
         ]
@@ -362,7 +355,7 @@ class _Inception_V2(Estimator, NeuralModel, ImageClassifier):
         self.model.add(
             (
                 "Inception_Rx2",
-                IncepBlock.V2_Redux(
+                nb.IncepBlock.V2_Redux(
                     768, 192, 320, 192, (192, 192), **asdict(incep_args)
                 ),
             ),
@@ -370,8 +363,8 @@ class _Inception_V2(Estimator, NeuralModel, ImageClassifier):
 
         inception_C_args = [320, 384, (384, 384), 448, 384, (384, 384), 192]
         inception_2xC = [
-            IncepBlock.V2_TypeC(1280, *inception_C_args, **asdict(incep_args)),
-            IncepBlock.V2_TypeC(2048, *inception_C_args, **asdict(incep_args)),
+            nb.IncepBlock.V2_TypeC(1280, *inception_C_args, **asdict(incep_args)),
+            nb.IncepBlock.V2_TypeC(2048, *inception_C_args, **asdict(incep_args)),
         ]
         self.model.extend(
             *[
@@ -387,11 +380,11 @@ class _Inception_V2(Estimator, NeuralModel, ImageClassifier):
             deep_add=False,
         )
 
-        self.model.add(GlobalAvgPool2D())
-        self.model.add(Flatten())
+        self.model.add(nl.GlobalAvgPool2D())
+        self.model.add(nl.Flatten())
         self.model.extend(
-            Dropout(self.dropout_rate, self.random_state),
-            Dense(2048, self.out_features, **base_args),
+            nl.Dropout(self.dropout_rate, self.random_state),
+            nl.Dense(2048, self.out_features, **base_args),
         )
 
     input_shape: ClassVar[tuple] = (-1, 3, 299, 299)
@@ -420,7 +413,7 @@ class _Inception_V2(Estimator, NeuralModel, ImageClassifier):
 class _Inception_V3(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
-        activation: callable = Activation.ReLU,
+        activation: callable = nl.Activation.ReLU,
         initializer: InitUtil.InitStr = None,
         out_features: int = 1000,
         batch_size: int = 128,
@@ -456,7 +449,7 @@ class _Inception_V3(Estimator, NeuralModel, ImageClassifier):
             deep_verbose,
         )
         super().init_model()
-        self.model = Sequential()
+        self.model = nl.Sequential()
 
         self.feature_sizes_ = [
             [3, 32, 32, 64, 64, 80, 192, 288],
@@ -490,39 +483,41 @@ class _Inception_V3(Estimator, NeuralModel, ImageClassifier):
             lambda_=self.lambda_,
             random_state=self.random_state,
         )
-        incep_args = BaseBlockArgs(
+        incep_args = nb.BaseBlockArgs(
             activation=self.activation,
             do_batch_norm=True,
             **base_args,
         )
 
         self.model.extend(
-            Conv2D(3, 32, 3, 2, "valid", **base_args),
-            BatchNorm2D(32),
+            nl.Conv2D(3, 32, 3, 2, "valid", **base_args),
+            nl.BatchNorm2D(32),
             self.activation(),
-            Conv2D(32, 32, 3, 1, "valid", **base_args),
-            BatchNorm2D(32),
+            nl.Conv2D(32, 32, 3, 1, "valid", **base_args),
+            nl.BatchNorm2D(32),
             self.activation(),
-            Conv2D(32, 64, 3, 1, "same", **base_args),
-            BatchNorm2D(64),
+            nl.Conv2D(32, 64, 3, 1, "same", **base_args),
+            nl.BatchNorm2D(64),
             self.activation(),
-            Pool2D(3, 2, "max", "valid"),
+            nl.Pool2D(3, 2, "max", "valid"),
         )
 
         self.model.extend(
-            Conv2D(64, 80, 3, 1, "valid", **base_args),
-            BatchNorm2D(80),
+            nl.Conv2D(64, 80, 3, 1, "valid", **base_args),
+            nl.BatchNorm2D(80),
             self.activation(),
-            Conv2D(80, 192, 3, 2, "valid", **base_args),
-            BatchNorm2D(192),
+            nl.Conv2D(80, 192, 3, 2, "valid", **base_args),
+            nl.BatchNorm2D(192),
             self.activation(),
-            Conv2D(192, 288, 3, 1, "same", **base_args),
-            BatchNorm2D(288),
+            nl.Conv2D(192, 288, 3, 1, "same", **base_args),
+            nl.BatchNorm2D(288),
             self.activation(),
         )
 
         inception_3xA = [
-            IncepBlock.V2_TypeA(288, 64, 48, 64, 64, (96, 96), 64, **asdict(incep_args))
+            nb.IncepBlock.V2_TypeA(
+                288, 64, 48, 64, 64, (96, 96), 64, **asdict(incep_args)
+            )
             for _ in range(3)
         ]
         self.model.extend(
@@ -537,24 +532,26 @@ class _Inception_V3(Estimator, NeuralModel, ImageClassifier):
         self.model.add(
             (
                 "Inception_Rx1",
-                IncepBlock.V2_Redux(288, 64, 384, 64, (96, 96), **asdict(incep_args)),
+                nb.IncepBlock.V2_Redux(
+                    288, 64, 384, 64, (96, 96), **asdict(incep_args)
+                ),
             )
         )
 
         inception_5xB = [
-            IncepBlock.V2_TypeB(
+            nb.IncepBlock.V2_TypeB(
                 768, 192, 128, 192, 128, (128, 192), 192, **asdict(incep_args)
             ),
-            IncepBlock.V2_TypeB(
+            nb.IncepBlock.V2_TypeB(
                 768, 192, 160, 192, 160, (160, 192), 192, **asdict(incep_args)
             ),
-            IncepBlock.V2_TypeB(
+            nb.IncepBlock.V2_TypeB(
                 768, 192, 160, 192, 160, (160, 192), 192, **asdict(incep_args)
             ),
-            IncepBlock.V2_TypeB(
+            nb.IncepBlock.V2_TypeB(
                 768, 192, 160, 192, 160, (160, 192), 192, **asdict(incep_args)
             ),
-            IncepBlock.V2_TypeB(
+            nb.IncepBlock.V2_TypeB(
                 768, 192, 192, 192, 192, (192, 192), 192, **asdict(incep_args)
             ),
         ]
@@ -577,7 +574,7 @@ class _Inception_V3(Estimator, NeuralModel, ImageClassifier):
         self.model.add(
             (
                 "Inception_Rx2",
-                IncepBlock.V2_Redux(
+                nb.IncepBlock.V2_Redux(
                     768, 192, 320, 192, (192, 192), **asdict(incep_args)
                 ),
             ),
@@ -585,8 +582,8 @@ class _Inception_V3(Estimator, NeuralModel, ImageClassifier):
 
         inception_C_args = [320, 384, (384, 384), 448, 384, (384, 384), 192]
         inception_2xC = [
-            IncepBlock.V2_TypeC(1280, *inception_C_args, **asdict(incep_args)),
-            IncepBlock.V2_TypeC(2048, *inception_C_args, **asdict(incep_args)),
+            nb.IncepBlock.V2_TypeC(1280, *inception_C_args, **asdict(incep_args)),
+            nb.IncepBlock.V2_TypeC(2048, *inception_C_args, **asdict(incep_args)),
         ]
         self.model.extend(
             *[
@@ -602,11 +599,11 @@ class _Inception_V3(Estimator, NeuralModel, ImageClassifier):
             deep_add=False,
         )
 
-        self.model.add(GlobalAvgPool2D())
-        self.model.add(Flatten())
+        self.model.add(nl.GlobalAvgPool2D())
+        self.model.add(nl.Flatten())
         self.model.extend(
-            Dropout(self.dropout_rate, self.random_state),
-            Dense(2048, self.out_features, **base_args),
+            nl.Dropout(self.dropout_rate, self.random_state),
+            nl.Dense(2048, self.out_features, **base_args),
         )
 
     input_shape: ClassVar[tuple] = (-1, 3, 299, 299)
@@ -637,7 +634,7 @@ class _Inception_V3(Estimator, NeuralModel, ImageClassifier):
 class _Inception_V4(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
-        activation: callable = Activation.ReLU,
+        activation: callable = nl.Activation.ReLU,
         initializer: InitUtil.InitStr = None,
         out_features: int = 1000,
         batch_size: int = 128,
@@ -673,7 +670,7 @@ class _Inception_V4(Estimator, NeuralModel, ImageClassifier):
             deep_verbose,
         )
         super().init_model()
-        self.model = Sequential()
+        self.model = nl.Sequential()
 
         self.feature_sizes_ = []
         self.feature_shapes_ = [
@@ -696,7 +693,7 @@ class _Inception_V4(Estimator, NeuralModel, ImageClassifier):
         self.build_model()
 
     def build_model(self) -> None:
-        incep_args = BaseBlockArgs(
+        incep_args = nb.BaseBlockArgs(
             activation=self.activation,
             initializer=self.initializer,
             lambda_=self.lambda_,
@@ -704,35 +701,37 @@ class _Inception_V4(Estimator, NeuralModel, ImageClassifier):
         )
 
         self.model.add(
-            ("Stem", IncepBlock.V4_Stem(**asdict(incep_args))),
+            ("Stem", nb.IncepBlock.V4_Stem(**asdict(incep_args))),
         )
         for i in range(1, 5):
             self.model.add(
-                (f"Inception_A{i}", IncepBlock.V4_TypeA(**asdict(incep_args))),
+                (f"Inception_A{i}", nb.IncepBlock.V4_TypeA(**asdict(incep_args))),
             )
         self.model.add(
             (
                 "Inception_RA",
-                IncepBlock.V4_ReduxA(384, (192, 224, 256, 384), **asdict(incep_args)),
+                nb.IncepBlock.V4_ReduxA(
+                    384, (192, 224, 256, 384), **asdict(incep_args)
+                ),
             )
         )
         for i in range(1, 8):
             self.model.add(
-                (f"Inception_B{i}", IncepBlock.V4_TypeB(**asdict(incep_args))),
+                (f"Inception_B{i}", nb.IncepBlock.V4_TypeB(**asdict(incep_args))),
             )
         self.model.add(
-            ("Inception_RB", IncepBlock.V4_ReduxB(**asdict(incep_args))),
+            ("Inception_RB", nb.IncepBlock.V4_ReduxB(**asdict(incep_args))),
         )
         for i in range(1, 4):
             self.model.add(
-                (f"Inception_C{i}", IncepBlock.V4_TypeC(**asdict(incep_args))),
+                (f"Inception_C{i}", nb.IncepBlock.V4_TypeC(**asdict(incep_args))),
             )
 
         self.model.extend(
-            GlobalAvgPool2D(),
-            Flatten(),
-            Dropout(self.dropout_rate, self.random_state),
-            Dense(1536, self.out_features),
+            nl.GlobalAvgPool2D(),
+            nl.Flatten(),
+            nl.Dropout(self.dropout_rate, self.random_state),
+            nl.Dense(1536, self.out_features),
         )
 
     input_shape: ClassVar[tuple] = (-1, 3, 299, 299)
@@ -763,7 +762,7 @@ class _Inception_V4(Estimator, NeuralModel, ImageClassifier):
 class _Inception_ResNet_V1(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
-        activation: callable = Activation.ReLU,
+        activation: callable = nl.Activation.ReLU,
         initializer: InitUtil.InitStr = None,
         out_features: int = 1000,
         batch_size: int = 128,
@@ -799,7 +798,7 @@ class _Inception_ResNet_V1(Estimator, NeuralModel, ImageClassifier):
             deep_verbose,
         )
         super().init_model()
-        self.model = Sequential()
+        self.model = nl.Sequential()
 
         self.feature_sizes_ = []
         self.feature_shapes_ = [
@@ -822,7 +821,7 @@ class _Inception_ResNet_V1(Estimator, NeuralModel, ImageClassifier):
         self.build_model()
 
     def build_model(self) -> None:
-        incep_args = BaseBlockArgs(
+        incep_args = nb.BaseBlockArgs(
             activation=self.activation,
             initializer=self.initializer,
             lambda_=self.lambda_,
@@ -830,34 +829,36 @@ class _Inception_ResNet_V1(Estimator, NeuralModel, ImageClassifier):
         )
 
         self.model.add(
-            ("Stem", IncepResBlock.V1_Stem(**asdict(incep_args))),
+            ("Stem", nb.IncepResBlock.V1_Stem(**asdict(incep_args))),
         )
         for i in range(1, 6):
             self.model.add(
-                (f"IncepRes_A{i}", IncepResBlock.V1_TypeA(**asdict(incep_args)))
+                (f"IncepRes_A{i}", nb.IncepResBlock.V1_TypeA(**asdict(incep_args)))
             )
         self.model.add(
             (
                 "IncepRes_RA",
-                IncepBlock.V4_ReduxA(256, (192, 192, 256, 384), **asdict(incep_args)),
+                nb.IncepBlock.V4_ReduxA(
+                    256, (192, 192, 256, 384), **asdict(incep_args)
+                ),
             )
         )
         for i in range(1, 11):
             self.model.add(
-                (f"IncepRes_B{i}", IncepResBlock.V1_TypeB(**asdict(incep_args)))
+                (f"IncepRes_B{i}", nb.IncepResBlock.V1_TypeB(**asdict(incep_args)))
             )
-        self.model.add(("IncepRes_RB", IncepResBlock.V1_Redux(**asdict(incep_args))))
+        self.model.add(("IncepRes_RB", nb.IncepResBlock.V1_Redux(**asdict(incep_args))))
 
         for i in range(1, 6):
             self.model.add(
-                (f"IncepRes_C{i}", IncepResBlock.V1_TypeC(**asdict(incep_args)))
+                (f"IncepRes_C{i}", nb.IncepResBlock.V1_TypeC(**asdict(incep_args)))
             )
 
         self.model.extend(
-            GlobalAvgPool2D(),
-            Flatten(),
-            Dropout(self.dropout_rate, self.random_state),
-            Dense(1792, self.out_features),
+            nl.GlobalAvgPool2D(),
+            nl.Flatten(),
+            nl.Dropout(self.dropout_rate, self.random_state),
+            nl.Dense(1792, self.out_features),
         )
 
     input_shape: ClassVar[tuple] = (-1, 3, 299, 299)
@@ -888,7 +889,7 @@ class _Inception_ResNet_V1(Estimator, NeuralModel, ImageClassifier):
 class _Inception_ResNet_V2(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
-        activation: callable = Activation.ReLU,
+        activation: callable = nl.Activation.ReLU,
         initializer: InitUtil.InitStr = None,
         out_features: int = 1000,
         batch_size: int = 128,
@@ -924,7 +925,7 @@ class _Inception_ResNet_V2(Estimator, NeuralModel, ImageClassifier):
             deep_verbose,
         )
         super().init_model()
-        self.model = Sequential()
+        self.model = nl.Sequential()
 
         self.feature_sizes_ = []
         self.feature_shapes_ = [
@@ -947,7 +948,7 @@ class _Inception_ResNet_V2(Estimator, NeuralModel, ImageClassifier):
         self.build_model()
 
     def build_model(self) -> None:
-        incep_args = BaseBlockArgs(
+        incep_args = nb.BaseBlockArgs(
             activation=self.activation,
             initializer=self.initializer,
             lambda_=self.lambda_,
@@ -955,37 +956,39 @@ class _Inception_ResNet_V2(Estimator, NeuralModel, ImageClassifier):
         )
 
         self.model.add(
-            ("Stem", IncepBlock.V4_Stem(**asdict(incep_args))),
+            ("Stem", nb.IncepBlock.V4_Stem(**asdict(incep_args))),
         )
         for i in range(1, 6):
             self.model.add(
-                (f"IncepRes_A{i}", IncepResBlock.V2_TypeA(**asdict(incep_args))),
+                (f"IncepRes_A{i}", nb.IncepResBlock.V2_TypeA(**asdict(incep_args))),
             )
         self.model.add(
             (
                 "IncepRes_RA",
-                IncepBlock.V4_ReduxA(384, (256, 256, 384, 384), **asdict(incep_args)),
+                nb.IncepBlock.V4_ReduxA(
+                    384, (256, 256, 384, 384), **asdict(incep_args)
+                ),
             ),
         )
 
         for i in range(1, 11):
             self.model.add(
-                (f"IncepRes_B{i}", IncepResBlock.V2_TypeB(**asdict(incep_args))),
+                (f"IncepRes_B{i}", nb.IncepResBlock.V2_TypeB(**asdict(incep_args))),
             )
         self.model.add(
-            ("IncepRes_RB", IncepResBlock.V2_Redux(**asdict(incep_args))),
+            ("IncepRes_RB", nb.IncepResBlock.V2_Redux(**asdict(incep_args))),
         )
 
         for i in range(1, 6):
             self.model.add(
-                (f"IncepRes_C{i}", IncepResBlock.V2_TypeC(**asdict(incep_args))),
+                (f"IncepRes_C{i}", nb.IncepResBlock.V2_TypeC(**asdict(incep_args))),
             )
 
         self.model.extend(
-            GlobalAvgPool2D(),
-            Flatten(),
-            Dropout(self.dropout_rate, self.random_state),
-            Dense(2272, self.out_features),
+            nl.GlobalAvgPool2D(),
+            nl.Flatten(),
+            nl.Dropout(self.dropout_rate, self.random_state),
+            nl.Dense(2272, self.out_features),
         )
 
     input_shape: ClassVar[tuple] = (-1, 3, 299, 299)
@@ -1016,7 +1019,7 @@ class _Inception_ResNet_V2(Estimator, NeuralModel, ImageClassifier):
 class _Xception(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
-        activation: callable = Activation.ReLU,
+        activation: callable = nl.Activation.ReLU,
         initializer: InitUtil.InitStr = None,
         out_features: int = 1000,
         batch_size: int = 128,
@@ -1050,7 +1053,7 @@ class _Xception(Estimator, NeuralModel, ImageClassifier):
             deep_verbose,
         )
         super().init_model()
-        self.model = Sequential()
+        self.model = nl.Sequential()
 
         self.feature_sizes_ = []
         self.feature_shapes_ = [
@@ -1077,26 +1080,26 @@ class _Xception(Estimator, NeuralModel, ImageClassifier):
             random_state=self.random_state,
         )
 
-        self.model.add(("EntryFlow", XceptionBlock.Entry(**base_args)))
+        self.model.add(("EntryFlow", nb.XceptionBlock.Entry(**base_args)))
         for i in range(1, 9):
             self.model.add(
-                (f"MiddleFlow_{i}", XceptionBlock.Middle(**base_args)),
+                (f"MiddleFlow_{i}", nb.XceptionBlock.Middle(**base_args)),
             )
 
         self.model.extend(
-            ("ExitFlow", XceptionBlock.Exit(**base_args)),
-            SeparableConv2D(1024, 1536, 3, **base_args),
-            BatchNorm2D(1536, self.momentum),
+            ("ExitFlow", nb.XceptionBlock.Exit(**base_args)),
+            nb.SeparableConv2D(1024, 1536, 3, **base_args),
+            nl.BatchNorm2D(1536, self.momentum),
             self.activation(),
-            SeparableConv2D(1536, 2048, 3, **base_args),
-            BatchNorm2D(2048, self.momentum),
+            nb.SeparableConv2D(1536, 2048, 3, **base_args),
+            nl.BatchNorm2D(2048, self.momentum),
             self.activation(),
-            GlobalAvgPool2D(),
+            nl.GlobalAvgPool2D(),
             deep_add=False,
         )
 
-        self.model += Flatten()
-        self.model += Dense(2048, self.out_features, **base_args)
+        self.model += nl.Flatten()
+        self.model += nl.Dense(2048, self.out_features, **base_args)
 
     input_shape: ClassVar[tuple] = (-1, 3, 299, 299)
 
@@ -1124,7 +1127,7 @@ class _Xception(Estimator, NeuralModel, ImageClassifier):
 class _SE_Inception_ResNet_V2(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
-        activation: callable = Activation.ReLU,
+        activation: callable = nl.Activation.ReLU,
         initializer: InitUtil.InitStr = None,
         out_features: int = 1000,
         batch_size: int = 128,
@@ -1160,7 +1163,7 @@ class _SE_Inception_ResNet_V2(Estimator, NeuralModel, ImageClassifier):
             deep_verbose,
         )
         super().init_model()
-        self.model = Sequential()
+        self.model = nl.Sequential()
 
         self.feature_sizes_ = []
         self.feature_shapes_ = [
@@ -1183,7 +1186,7 @@ class _SE_Inception_ResNet_V2(Estimator, NeuralModel, ImageClassifier):
         self.build_model()
 
     def build_model(self) -> None:
-        incep_args = BaseBlockArgs(
+        incep_args = nb.BaseBlockArgs(
             activation=self.activation,
             initializer=self.initializer,
             lambda_=self.lambda_,
@@ -1193,8 +1196,8 @@ class _SE_Inception_ResNet_V2(Estimator, NeuralModel, ImageClassifier):
         self.model += (
             "Stem_SE",
             F.attach_se_block(
-                IncepBlock.V4_Stem,
-                SEBlock2D,
+                nb.IncepBlock.V4_Stem,
+                nb.SEBlock2D,
                 asdict(incep_args),
                 {"in_channels": 384},
             ),
@@ -1203,8 +1206,8 @@ class _SE_Inception_ResNet_V2(Estimator, NeuralModel, ImageClassifier):
             self.model += (
                 f"IncepRes_A_SE{i}",
                 F.attach_se_block(
-                    IncepResBlock.V2_TypeA,
-                    SEBlock2D,
+                    nb.IncepResBlock.V2_TypeA,
+                    nb.SEBlock2D,
                     asdict(incep_args),
                     {"in_channels": 384},
                 ),
@@ -1212,8 +1215,8 @@ class _SE_Inception_ResNet_V2(Estimator, NeuralModel, ImageClassifier):
         self.model += (
             "IncepRes_RA_SE",
             F.attach_se_block(
-                IncepBlock.V4_ReduxA,
-                SEBlock2D,
+                nb.IncepBlock.V4_ReduxA,
+                nb.SEBlock2D,
                 {
                     "in_channels": 384,
                     "out_channels_arr": (256, 256, 384, 384),
@@ -1227,8 +1230,8 @@ class _SE_Inception_ResNet_V2(Estimator, NeuralModel, ImageClassifier):
             self.model += (
                 f"IncepRes_B_SE{i}",
                 F.attach_se_block(
-                    IncepResBlock.V2_TypeB,
-                    SEBlock2D,
+                    nb.IncepResBlock.V2_TypeB,
+                    nb.SEBlock2D,
                     asdict(incep_args),
                     {"in_channels": 1280},
                 ),
@@ -1236,8 +1239,8 @@ class _SE_Inception_ResNet_V2(Estimator, NeuralModel, ImageClassifier):
         self.model += (
             "IncepRes_RB_SE",
             F.attach_se_block(
-                IncepResBlock.V2_Redux,
-                SEBlock2D,
+                nb.IncepResBlock.V2_Redux,
+                nb.SEBlock2D,
                 asdict(incep_args),
                 {"in_channels": 2272},
             ),
@@ -1247,18 +1250,18 @@ class _SE_Inception_ResNet_V2(Estimator, NeuralModel, ImageClassifier):
             self.model += (
                 f"IncepRes_C_SE{i}",
                 F.attach_se_block(
-                    IncepResBlock.V2_TypeC,
-                    SEBlock2D,
+                    nb.IncepResBlock.V2_TypeC,
+                    nb.SEBlock2D,
                     asdict(incep_args),
                     {"in_channels": 2272},
                 ),
             )
 
         self.model.extend(
-            GlobalAvgPool2D(),
-            Flatten(),
-            Dropout(self.dropout_rate, self.random_state),
-            Dense(2272, self.out_features),
+            nl.GlobalAvgPool2D(),
+            nl.Flatten(),
+            nl.Dropout(self.dropout_rate, self.random_state),
+            nl.Dense(2272, self.out_features),
         )
 
     input_shape: ClassVar[tuple] = (-1, 3, 299, 299)

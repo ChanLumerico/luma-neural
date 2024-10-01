@@ -7,14 +7,8 @@ from luma.interface.util import InitUtil
 from luma.metric.classification import Accuracy
 
 from luma.neural.base import NeuralModel
-from luma.neural.block import ConvBlock2D, DenseBlock, ConvBlockArgs, DenseBlockArgs
-from luma.neural.layer import (
-    Activation,
-    Dense,
-    Flatten,
-    LocalResponseNorm,
-    Sequential,
-)
+from luma.neural import block as nb
+from luma.neural import layer as nl
 
 from ..types import ImageClassifier
 
@@ -25,7 +19,7 @@ __all__ = ("_AlexNet", "_ZFNet")
 class _AlexNet(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
-        activation: callable = Activation.ReLU,
+        activation: callable = nl.Activation.ReLU,
         initializer: InitUtil.InitStr = None,
         out_features: int = 1000,
         batch_size: int = 128,
@@ -59,7 +53,7 @@ class _AlexNet(Estimator, NeuralModel, ImageClassifier):
             deep_verbose,
         )
         super().init_model()
-        self.model = Sequential()
+        self.model = nl.Sequential()
 
         self.feature_sizes_ = [
             [3, 96, 256, 384, 384, 256],
@@ -85,7 +79,7 @@ class _AlexNet(Estimator, NeuralModel, ImageClassifier):
         self.build_model()
 
     def build_model(self) -> None:
-        conv_3x3_no_pool_arg = ConvBlockArgs(
+        conv_3x3_no_pool_arg = nb.ConvBlockArgs(
             filter_size=3,
             stride=1,
             activation=self.activation,
@@ -96,7 +90,7 @@ class _AlexNet(Estimator, NeuralModel, ImageClassifier):
             do_pooling=False,
             random_state=self.random_state,
         )
-        dense_args = DenseBlockArgs(
+        dense_args = nb.DenseBlockArgs(
             activation=self.activation,
             lambda_=self.lambda_,
             do_batch_norm=False,
@@ -106,7 +100,7 @@ class _AlexNet(Estimator, NeuralModel, ImageClassifier):
 
         self.model += (
             "ConvBlock_1",
-            ConvBlock2D(
+            nb.ConvBlock2D(
                 3,
                 96,
                 filter_size=11,
@@ -124,12 +118,12 @@ class _AlexNet(Estimator, NeuralModel, ImageClassifier):
         )
         self.model += (
             "LRN_1",
-            LocalResponseNorm(depth=5),
+            nl.LocalResponseNorm(depth=5),
         )
 
         self.model += (
             "ConvBlock_2",
-            ConvBlock2D(
+            nb.ConvBlock2D(
                 96,
                 256,
                 filter_size=5,
@@ -147,30 +141,30 @@ class _AlexNet(Estimator, NeuralModel, ImageClassifier):
         )
         self.model += (
             "LRN_2",
-            LocalResponseNorm(depth=5),
+            nl.LocalResponseNorm(depth=5),
         )
 
         self.model += (
             "ConvBlock_3",
-            ConvBlock2D(256, 384, **asdict(conv_3x3_no_pool_arg)),
+            nb.ConvBlock2D(256, 384, **asdict(conv_3x3_no_pool_arg)),
         )
         self.model += (
             "LRN_3",
-            LocalResponseNorm(depth=5),
+            nl.LocalResponseNorm(depth=5),
         )
 
         self.model += (
             "ConvBlock_4",
-            ConvBlock2D(384, 384, **asdict(conv_3x3_no_pool_arg)),
+            nb.ConvBlock2D(384, 384, **asdict(conv_3x3_no_pool_arg)),
         )
         self.model += (
             "LRN_4",
-            LocalResponseNorm(depth=5),
+            nl.LocalResponseNorm(depth=5),
         )
 
         self.model += (
             "ConvBlock_5",
-            ConvBlock2D(
+            nb.ConvBlock2D(
                 384,
                 256,
                 filter_size=3,
@@ -188,19 +182,19 @@ class _AlexNet(Estimator, NeuralModel, ImageClassifier):
         )
         self.model += (
             "LRN_5",
-            LocalResponseNorm(depth=5),
+            nl.LocalResponseNorm(depth=5),
         )
 
-        self.model += Flatten()
+        self.model += nl.Flatten()
         self.model += (
             "DenseBlock_1",
-            DenseBlock(256 * 6 * 6, 4096, **asdict(dense_args)),
+            nb.DenseBlock(256 * 6 * 6, 4096, **asdict(dense_args)),
         )
         self.model += (
             "DenseBlock_2",
-            DenseBlock(4096, 4096, **asdict(dense_args)),
+            nb.DenseBlock(4096, 4096, **asdict(dense_args)),
         )
-        self.model += Dense(
+        self.model += nl.Dense(
             4096,
             self.out_features,
             lambda_=self.lambda_,
@@ -233,7 +227,7 @@ class _AlexNet(Estimator, NeuralModel, ImageClassifier):
 class _ZFNet(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
-        activation: callable = Activation.ReLU,
+        activation: callable = nl.Activation.ReLU,
         initializer: InitUtil.InitStr = None,
         out_features: int = 1000,
         batch_size: int = 128,
@@ -267,7 +261,7 @@ class _ZFNet(Estimator, NeuralModel, ImageClassifier):
             deep_verbose,
         )
         super().init_model()
-        self.model = Sequential()
+        self.model = nl.Sequential()
 
         self.feature_sizes_ = [
             [3, 96, 256, 384, 384, 256],
@@ -293,7 +287,7 @@ class _ZFNet(Estimator, NeuralModel, ImageClassifier):
         self.build_model()
 
     def build_model(self) -> None:
-        conv_3x3_no_pool_arg = ConvBlockArgs(
+        conv_3x3_no_pool_arg = nb.ConvBlockArgs(
             filter_size=3,
             stride=1,
             activation=self.activation,
@@ -304,7 +298,7 @@ class _ZFNet(Estimator, NeuralModel, ImageClassifier):
             do_pooling=False,
             random_state=self.random_state,
         )
-        dense_args = DenseBlockArgs(
+        dense_args = nb.DenseBlockArgs(
             activation=self.activation,
             lambda_=self.lambda_,
             do_batch_norm=False,
@@ -314,7 +308,7 @@ class _ZFNet(Estimator, NeuralModel, ImageClassifier):
 
         self.model += (
             "ConvBlock_1",
-            ConvBlock2D(
+            nb.ConvBlock2D(
                 3,
                 96,
                 filter_size=7,
@@ -332,12 +326,12 @@ class _ZFNet(Estimator, NeuralModel, ImageClassifier):
         )
         self.model += (
             "LRN_1",
-            LocalResponseNorm(depth=5),
+            nl.LocalResponseNorm(depth=5),
         )
 
         self.model += (
             "ConvBlock_2",
-            ConvBlock2D(
+            nb.ConvBlock2D(
                 96,
                 256,
                 filter_size=5,
@@ -355,30 +349,30 @@ class _ZFNet(Estimator, NeuralModel, ImageClassifier):
         )
         self.model += (
             "LRN_2",
-            LocalResponseNorm(depth=5),
+            nl.LocalResponseNorm(depth=5),
         )
 
         self.model += (
             "ConvBlock_3",
-            ConvBlock2D(256, 384, **asdict(conv_3x3_no_pool_arg)),
+            nb.ConvBlock2D(256, 384, **asdict(conv_3x3_no_pool_arg)),
         )
         self.model += (
             "LRN_3",
-            LocalResponseNorm(depth=5),
+            nl.LocalResponseNorm(depth=5),
         )
 
         self.model += (
             "ConvBlock_4",
-            ConvBlock2D(384, 384, **asdict(conv_3x3_no_pool_arg)),
+            nb.ConvBlock2D(384, 384, **asdict(conv_3x3_no_pool_arg)),
         )
         self.model += (
             "LRN_4",
-            LocalResponseNorm(depth=5),
+            nl.LocalResponseNorm(depth=5),
         )
 
         self.model += (
             "ConvBlock_5",
-            ConvBlock2D(
+            nb.ConvBlock2D(
                 384,
                 256,
                 filter_size=3,
@@ -396,19 +390,19 @@ class _ZFNet(Estimator, NeuralModel, ImageClassifier):
         )
         self.model += (
             "LRN_5",
-            LocalResponseNorm(depth=5),
+            nl.LocalResponseNorm(depth=5),
         )
 
-        self.model += Flatten()
+        self.model += nl.Flatten()
         self.model += (
             "DenseBlock_1",
-            DenseBlock(256 * 6 * 6, 4096, **asdict(dense_args)),
+            nb.DenseBlock(256 * 6 * 6, 4096, **asdict(dense_args)),
         )
         self.model += (
             "DenseBlock_2",
-            DenseBlock(4096, 4096, **asdict(dense_args)),
+            nb.DenseBlock(4096, 4096, **asdict(dense_args)),
         )
-        self.model += Dense(
+        self.model += nl.Dense(
             4096,
             self.out_features,
             lambda_=self.lambda_,

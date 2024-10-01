@@ -4,7 +4,7 @@ from luma.core.super import Optimizer
 from luma.interface.typing import Tensor
 from luma.interface.util import InitUtil
 
-from luma.neural.layer import *
+from luma.neural import layer as nl
 from luma.neural.autoprop import LayerNode, LayerGraph, MergeMode
 
 
@@ -15,7 +15,7 @@ class _SKBlock1D(LayerGraph):
         out_channels: int,
         filter_sizes: list[int] = [3, 5],
         reduction: int = 16,
-        activation: callable = Activation.ReLU,
+        activation: callable = nl.Activation.ReLU,
         optimizer: Optimizer | None = None,
         initializer: InitUtil.InitStr = None,
         lambda_: float = 0.0,
@@ -53,35 +53,35 @@ class _SKBlock1D(LayerGraph):
         self.scale_arr: list[LayerNode] = []
         self.slice_arr: list[LayerNode] = []
 
-        self.rt_ = LayerNode(Identity(), name="rt_")
+        self.rt_ = LayerNode(nl.Identity(), name="rt_")
 
         for i, f_size in enumerate(self.filter_sizes):
             branch = LayerNode(
-                Sequential(
-                    Conv1D(
+                nl.Sequential(
+                    nl.Conv1D(
                         self.in_channels,
                         self.out_channels,
                         filter_size=f_size,
                         padding="same",
                         **self.basic_args,
                     ),
-                    BatchNorm1D(self.out_channels, self.momentum),
+                    nl.BatchNorm1D(self.out_channels, self.momentum),
                     self.activation(),
                 ),
                 name=f"branch_{i}",
             )
             self.br_arr.append(branch)
 
-            scale = LayerNode(Identity(), MergeMode.HADAMARD, name=f"scale_{i}")
+            scale = LayerNode(nl.Identity(), MergeMode.HADAMARD, name=f"scale_{i}")
             self.scale_arr.append(scale)
 
-            slice_ = LayerNode(Slice(f":, {i}, :, :"), name=f"slice_{i}")
+            slice_ = LayerNode(nl.Slice(f":, {i}, :, :"), name=f"slice_{i}")
             self.slice_arr.append(slice_)
 
         self.fc_ = LayerNode(
-            Sequential(
-                GlobalAvgPool1D(),
-                Conv1D(
+            nl.Sequential(
+                nl.GlobalAvgPool1D(),
+                nl.Conv1D(
                     self.out_channels,
                     self.out_channels // self.reduction,
                     filter_size=1,
@@ -89,7 +89,7 @@ class _SKBlock1D(LayerGraph):
                     **self.basic_args,
                 ),
                 self.activation(),
-                Conv1D(
+                nl.Conv1D(
                     self.out_channels // self.reduction,
                     self.out_channels * self.n_branch,
                     filter_size=1,
@@ -102,14 +102,14 @@ class _SKBlock1D(LayerGraph):
         )
 
         self.softmax_ = LayerNode(
-            Sequential(
-                Reshape(-1, self.n_branch, self.out_channels),
-                Activation.Softmax(dim=1),
-                Reshape(-1, self.n_branch, self.out_channels, 1),
+            nl.Sequential(
+                nl.Reshape(-1, self.n_branch, self.out_channels),
+                nl.Activation.Softmax(dim=1),
+                nl.Reshape(-1, self.n_branch, self.out_channels, 1),
             ),
             name="softmax_",
         )
-        self.sum_ = LayerNode(Identity(), MergeMode.SUM, name="sum_")
+        self.sum_ = LayerNode(nl.Identity(), MergeMode.SUM, name="sum_")
 
     def _build_graph(self) -> Dict[LayerNode, List[LayerNode]]:
         graph = {}
@@ -148,7 +148,7 @@ class _SKBlock2D(LayerGraph):
         out_channels: int,
         filter_sizes: list[int] = [3, 5],
         reduction: int = 16,
-        activation: callable = Activation.ReLU,
+        activation: callable = nl.Activation.ReLU,
         optimizer: Optimizer | None = None,
         initializer: InitUtil.InitStr = None,
         lambda_: float = 0.0,
@@ -186,35 +186,35 @@ class _SKBlock2D(LayerGraph):
         self.scale_arr: list[LayerNode] = []
         self.slice_arr: list[LayerNode] = []
 
-        self.rt_ = LayerNode(Identity(), name="rt_")
+        self.rt_ = LayerNode(nl.Identity(), name="rt_")
 
         for i, f_size in enumerate(self.filter_sizes):
             branch = LayerNode(
-                Sequential(
-                    Conv2D(
+                nl.Sequential(
+                    nl.Conv2D(
                         self.in_channels,
                         self.out_channels,
                         filter_size=f_size,
                         padding="same",
                         **self.basic_args,
                     ),
-                    BatchNorm2D(self.out_channels, self.momentum),
+                    nl.BatchNorm2D(self.out_channels, self.momentum),
                     self.activation(),
                 ),
                 name=f"branch_{i}",
             )
             self.br_arr.append(branch)
 
-            scale = LayerNode(Identity(), MergeMode.HADAMARD, name=f"scale_{i}")
+            scale = LayerNode(nl.Identity(), MergeMode.HADAMARD, name=f"scale_{i}")
             self.scale_arr.append(scale)
 
-            slice_ = LayerNode(Slice(f":, {i}, :, :, :"), name=f"slice_{i}")
+            slice_ = LayerNode(nl.Slice(f":, {i}, :, :, :"), name=f"slice_{i}")
             self.slice_arr.append(slice_)
 
         self.fc_ = LayerNode(
-            Sequential(
-                GlobalAvgPool2D(),
-                Conv2D(
+            nl.Sequential(
+                nl.GlobalAvgPool2D(),
+                nl.Conv2D(
                     self.out_channels,
                     self.out_channels // self.reduction,
                     filter_size=1,
@@ -222,7 +222,7 @@ class _SKBlock2D(LayerGraph):
                     **self.basic_args,
                 ),
                 self.activation(),
-                Conv2D(
+                nl.Conv2D(
                     self.out_channels // self.reduction,
                     self.out_channels * self.n_branch,
                     filter_size=1,
@@ -235,14 +235,14 @@ class _SKBlock2D(LayerGraph):
         )
 
         self.softmax_ = LayerNode(
-            Sequential(
-                Reshape(-1, self.n_branch, self.out_channels),
-                Activation.Softmax(dim=1),
-                Reshape(-1, self.n_branch, self.out_channels, 1, 1),
+            nl.Sequential(
+                nl.Reshape(-1, self.n_branch, self.out_channels),
+                nl.Activation.Softmax(dim=1),
+                nl.Reshape(-1, self.n_branch, self.out_channels, 1, 1),
             ),
             name="softmax_",
         )
-        self.sum_ = LayerNode(Identity(), MergeMode.SUM, name="sum_")
+        self.sum_ = LayerNode(nl.Identity(), MergeMode.SUM, name="sum_")
 
     def _build_graph(self) -> Dict[LayerNode, List[LayerNode]]:
         graph = {}
@@ -281,7 +281,7 @@ class _SKBlock3D(LayerGraph):
         out_channels: int,
         filter_sizes: list[int] = [3, 5],
         reduction: int = 16,
-        activation: callable = Activation.ReLU,
+        activation: callable = nl.Activation.ReLU,
         optimizer: Optimizer | None = None,
         initializer: InitUtil.InitStr = None,
         lambda_: float = 0.0,
@@ -319,35 +319,35 @@ class _SKBlock3D(LayerGraph):
         self.scale_arr: list[LayerNode] = []
         self.slice_arr: list[LayerNode] = []
 
-        self.rt_ = LayerNode(Identity(), name="rt_")
+        self.rt_ = LayerNode(nl.Identity(), name="rt_")
 
         for i, f_size in enumerate(self.filter_sizes):
             branch = LayerNode(
-                Sequential(
-                    Conv3D(
+                nl.Sequential(
+                    nl.Conv3D(
                         self.in_channels,
                         self.out_channels,
                         filter_size=f_size,
                         padding="same",
                         **self.basic_args,
                     ),
-                    BatchNorm3D(self.out_channels, self.momentum),
+                    nl.BatchNorm3D(self.out_channels, self.momentum),
                     self.activation(),
                 ),
                 name=f"branch_{i}",
             )
             self.br_arr.append(branch)
 
-            scale = LayerNode(Identity(), MergeMode.HADAMARD, name=f"scale_{i}")
+            scale = LayerNode(nl.Identity(), MergeMode.HADAMARD, name=f"scale_{i}")
             self.scale_arr.append(scale)
 
-            slice_ = LayerNode(Slice(f":, {i}, :, :, :, :"), name=f"slice_{i}")
+            slice_ = LayerNode(nl.Slice(f":, {i}, :, :, :, :"), name=f"slice_{i}")
             self.slice_arr.append(slice_)
 
         self.fc_ = LayerNode(
-            Sequential(
-                GlobalAvgPool3D(),
-                Conv3D(
+            nl.Sequential(
+                nl.GlobalAvgPool3D(),
+                nl.Conv3D(
                     self.out_channels,
                     self.out_channels // self.reduction,
                     filter_size=1,
@@ -355,7 +355,7 @@ class _SKBlock3D(LayerGraph):
                     **self.basic_args,
                 ),
                 self.activation(),
-                Conv3D(
+                nl.Conv3D(
                     self.out_channels // self.reduction,
                     self.out_channels * self.n_branch,
                     filter_size=1,
@@ -368,14 +368,14 @@ class _SKBlock3D(LayerGraph):
         )
 
         self.softmax_ = LayerNode(
-            Sequential(
-                Reshape(-1, self.n_branch, self.out_channels),
-                Activation.Softmax(dim=1),
-                Reshape(-1, self.n_branch, self.out_channels, 1, 1, 1),
+            nl.Sequential(
+                nl.Reshape(-1, self.n_branch, self.out_channels),
+                nl.Activation.Softmax(dim=1),
+                nl.Reshape(-1, self.n_branch, self.out_channels, 1, 1, 1),
             ),
             name="softmax_",
         )
-        self.sum_ = LayerNode(Identity(), MergeMode.SUM, name="sum_")
+        self.sum_ = LayerNode(nl.Identity(), MergeMode.SUM, name="sum_")
 
     def _build_graph(self) -> Dict[LayerNode, List[LayerNode]]:
         graph = {}

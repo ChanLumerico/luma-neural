@@ -4,14 +4,14 @@ from luma.core.super import Optimizer
 from luma.interface.typing import Tensor, TensorLike
 from luma.interface.util import InitUtil
 
-from luma.neural.layer import *
+from luma.neural import layer as nl
 from luma.neural.autoprop import LayerNode, LayerGraph, MergeMode
 
 
-class _IncepRes_V1_Stem(Sequential):
+class _IncepRes_V1_Stem(nl.Sequential):
     def __init__(
         self,
-        activation: callable = Activation.ReLU,
+        activation: callable = nl.Activation.ReLU,
         optimizer: Optimizer = None,
         initializer: InitUtil.InitStr = None,
         lambda_: float = 0.0,
@@ -33,26 +33,26 @@ class _IncepRes_V1_Stem(Sequential):
         self.check_param_ranges()
 
         super(_IncepRes_V1_Stem, self).__init__(
-            Conv2D(3, 32, 3, 2, "valid", **basic_args),
-            BatchNorm2D(32, momentum),
+            nl.Conv2D(3, 32, 3, 2, "valid", **basic_args),
+            nl.BatchNorm2D(32, momentum),
             activation(),
-            Conv2D(32, 32, 3, 1, "valid", **basic_args),
-            BatchNorm2D(32, momentum),
+            nl.Conv2D(32, 32, 3, 1, "valid", **basic_args),
+            nl.BatchNorm2D(32, momentum),
             activation(),
-            Conv2D(32, 64, 3, 1, "same", **basic_args),
-            BatchNorm2D(64, momentum),
+            nl.Conv2D(32, 64, 3, 1, "same", **basic_args),
+            nl.BatchNorm2D(64, momentum),
             activation(),
-            Pool2D(3, 2, "max", "valid"),
+            nl.Pool2D(3, 2, "max", "valid"),
         )
         self.extend(
-            Conv2D(64, 80, 1, 1, "same", **basic_args),
-            BatchNorm2D(80, momentum),
+            nl.Conv2D(64, 80, 1, 1, "same", **basic_args),
+            nl.BatchNorm2D(80, momentum),
             activation(),
-            Conv2D(80, 192, 3, 1, "valid", **basic_args),
-            BatchNorm2D(192, momentum),
+            nl.Conv2D(80, 192, 3, 1, "valid", **basic_args),
+            nl.BatchNorm2D(192, momentum),
             activation(),
-            Conv2D(192, 256, 3, 2, "valid", **basic_args),
-            BatchNorm2D(256, momentum),
+            nl.Conv2D(192, 256, 3, 2, "valid", **basic_args),
+            nl.BatchNorm2D(256, momentum),
             activation(),
         )
 
@@ -76,7 +76,7 @@ class _IncepRes_V1_Stem(Sequential):
 class _IncepRes_V1_TypeA(LayerGraph):
     def __init__(
         self,
-        activation: callable = Activation.ReLU,
+        activation: callable = nl.Activation.ReLU,
         optimizer: Optimizer | None = None,
         initializer: InitUtil.InitStr = None,
         lambda_: float = 0.0,
@@ -113,51 +113,51 @@ class _IncepRes_V1_TypeA(LayerGraph):
             self.set_optimizer(optimizer)
 
     def init_nodes(self) -> None:
-        self.rt_ = LayerNode(Identity(), name="rt_")
+        self.rt_ = LayerNode(nl.Identity(), name="rt_")
         self.res_sum = LayerNode(
-            Sequential(Identity(), self.activation()),
+            nl.Sequential(nl.Identity(), self.activation()),
             MergeMode.SUM,
             name="res_sum",
         )
 
         self.br_a = LayerNode(
-            Sequential(
-                Conv2D(256, 32, 1, 1, "same", **self.basic_args),
-                BatchNorm2D(32, self.momentum),
+            nl.Sequential(
+                nl.Conv2D(256, 32, 1, 1, "same", **self.basic_args),
+                nl.BatchNorm2D(32, self.momentum),
                 self.activation(),
             ),
             name="br_a",
         )
         self.br_b = LayerNode(
-            Sequential(
-                Conv2D(256, 32, 1, 1, "same", **self.basic_args),
-                BatchNorm2D(32, self.momentum),
+            nl.Sequential(
+                nl.Conv2D(256, 32, 1, 1, "same", **self.basic_args),
+                nl.BatchNorm2D(32, self.momentum),
                 self.activation(),
-                Conv2D(32, 32, 3, 1, "same", **self.basic_args),
-                BatchNorm2D(32, self.momentum),
+                nl.Conv2D(32, 32, 3, 1, "same", **self.basic_args),
+                nl.BatchNorm2D(32, self.momentum),
                 self.activation(),
             ),
             name="br_b",
         )
         self.br_c = LayerNode(
-            Sequential(
-                Conv2D(256, 32, 1, 1, "same", **self.basic_args),
-                BatchNorm2D(32, self.momentum),
+            nl.Sequential(
+                nl.Conv2D(256, 32, 1, 1, "same", **self.basic_args),
+                nl.BatchNorm2D(32, self.momentum),
                 self.activation(),
-                Conv2D(32, 32, 3, 1, "same", **self.basic_args),
-                BatchNorm2D(32, self.momentum),
+                nl.Conv2D(32, 32, 3, 1, "same", **self.basic_args),
+                nl.BatchNorm2D(32, self.momentum),
                 self.activation(),
-                Conv2D(32, 32, 3, 1, "same", **self.basic_args),
-                BatchNorm2D(32, self.momentum),
+                nl.Conv2D(32, 32, 3, 1, "same", **self.basic_args),
+                nl.BatchNorm2D(32, self.momentum),
                 self.activation(),
             ),
             name="br_c",
         )
 
         self.br_cat = LayerNode(
-            Sequential(
-                Conv2D(96, 256, 1, 1, "same", **self.basic_args),
-                BatchNorm2D(256, self.momentum),
+            nl.Sequential(
+                nl.Conv2D(96, 256, 1, 1, "same", **self.basic_args),
+                nl.BatchNorm2D(256, self.momentum),
             ),
             MergeMode.CHCAT,
             name="br_cat",
@@ -180,7 +180,7 @@ class _IncepRes_V1_TypeA(LayerGraph):
 class _IncepRes_V1_TypeB(LayerGraph):
     def __init__(
         self,
-        activation: callable = Activation.ReLU,
+        activation: callable = nl.Activation.ReLU,
         optimizer: Optimizer | None = None,
         initializer: InitUtil.InitStr = None,
         lambda_: float = 0.0,
@@ -216,40 +216,40 @@ class _IncepRes_V1_TypeB(LayerGraph):
             self.set_optimizer(optimizer)
 
     def init_nodes(self) -> None:
-        self.rt_ = LayerNode(Identity(), name="rt_")
+        self.rt_ = LayerNode(nl.Identity(), name="rt_")
         self.res_sum = LayerNode(
-            Sequential(Identity(), self.activation()),
+            nl.Sequential(nl.Identity(), self.activation()),
             MergeMode.SUM,
             name="res_sum",
         )
 
         self.br_a = LayerNode(
-            Sequential(
-                Conv2D(896, 128, 1, 1, "same", **self.basic_args),
-                BatchNorm2D(128, self.momentum),
+            nl.Sequential(
+                nl.Conv2D(896, 128, 1, 1, "same", **self.basic_args),
+                nl.BatchNorm2D(128, self.momentum),
                 self.activation(),
             ),
             name="br_a",
         )
         self.br_b = LayerNode(
-            Sequential(
-                Conv2D(896, 128, 1, 1, "same", **self.basic_args),
-                BatchNorm2D(128, self.momentum),
+            nl.Sequential(
+                nl.Conv2D(896, 128, 1, 1, "same", **self.basic_args),
+                nl.BatchNorm2D(128, self.momentum),
                 self.activation(),
-                Conv2D(128, 128, (1, 7), 1, "same", **self.basic_args),
-                BatchNorm2D(128),
+                nl.Conv2D(128, 128, (1, 7), 1, "same", **self.basic_args),
+                nl.BatchNorm2D(128),
                 self.activation(),
-                Conv2D(128, 128, (7, 1), 1, "same", **self.basic_args),
-                BatchNorm2D(128, self.momentum),
+                nl.Conv2D(128, 128, (7, 1), 1, "same", **self.basic_args),
+                nl.BatchNorm2D(128, self.momentum),
                 self.activation(),
             ),
             name="br_b",
         )
 
         self.br_cat = LayerNode(
-            Sequential(
-                Conv2D(128, 896, 1, 1, "same", **self.basic_args),
-                BatchNorm2D(896, self.momentum),
+            nl.Sequential(
+                nl.Conv2D(128, 896, 1, 1, "same", **self.basic_args),
+                nl.BatchNorm2D(896, self.momentum),
             ),
             MergeMode.CHCAT,
             name="br_cat",
@@ -272,7 +272,7 @@ class _IncepRes_V1_TypeB(LayerGraph):
 class _IncepRes_V1_TypeC(LayerGraph):
     def __init__(
         self,
-        activation: callable = Activation.ReLU,
+        activation: callable = nl.Activation.ReLU,
         optimizer: Optimizer | None = None,
         initializer: InitUtil.InitStr = None,
         lambda_: float = 0.0,
@@ -308,40 +308,40 @@ class _IncepRes_V1_TypeC(LayerGraph):
             self.set_optimizer(optimizer)
 
     def init_nodes(self) -> None:
-        self.rt_ = LayerNode(Identity(), name="rt_")
+        self.rt_ = LayerNode(nl.Identity(), name="rt_")
         self.res_sum = LayerNode(
-            Sequential(Identity(), self.activation()),
+            nl.Sequential(nl.Identity(), self.activation()),
             MergeMode.SUM,
             name="res_sum",
         )
 
         self.br_a = LayerNode(
-            Sequential(
-                Conv2D(1792, 192, 1, 1, "same", **self.basic_args),
-                BatchNorm2D(192, self.momentum),
+            nl.Sequential(
+                nl.Conv2D(1792, 192, 1, 1, "same", **self.basic_args),
+                nl.BatchNorm2D(192, self.momentum),
                 self.activation(),
             ),
             name="br_a",
         )
         self.br_b = LayerNode(
-            Sequential(
-                Conv2D(1792, 192, 1, 1, "same", **self.basic_args),
-                BatchNorm2D(192),
+            nl.Sequential(
+                nl.Conv2D(1792, 192, 1, 1, "same", **self.basic_args),
+                nl.BatchNorm2D(192),
                 self.activation(),
-                Conv2D(192, 192, (1, 3), 1, "same", **self.basic_args),
-                BatchNorm2D(192),
+                nl.Conv2D(192, 192, (1, 3), 1, "same", **self.basic_args),
+                nl.BatchNorm2D(192),
                 self.activation(),
-                Conv2D(192, 192, (3, 1), 1, "same", **self.basic_args),
-                BatchNorm2D(192, self.momentum),
+                nl.Conv2D(192, 192, (3, 1), 1, "same", **self.basic_args),
+                nl.BatchNorm2D(192, self.momentum),
                 self.activation(),
             ),
             name="br_b",
         )
 
         self.br_cat = LayerNode(
-            Sequential(
-                Conv2D(384, 1792, 1, 1, "same", **self.basic_args),
-                BatchNorm2D(192, self.momentum),
+            nl.Sequential(
+                nl.Conv2D(384, 1792, 1, 1, "same", **self.basic_args),
+                nl.BatchNorm2D(192, self.momentum),
             ),
             MergeMode.CHCAT,
             name="br_cat",
@@ -364,7 +364,7 @@ class _IncepRes_V1_TypeC(LayerGraph):
 class _IncepRes_V1_Redux(LayerGraph):
     def __init__(
         self,
-        activation: callable = Activation.ReLU,
+        activation: callable = nl.Activation.ReLU,
         optimizer: Optimizer | None = None,
         initializer: InitUtil.InitStr = None,
         lambda_: float = 0.0,
@@ -401,47 +401,47 @@ class _IncepRes_V1_Redux(LayerGraph):
             self.set_optimizer(optimizer)
 
     def init_nodes(self) -> None:
-        self.rt_ = LayerNode(Identity(), name="rt_")
+        self.rt_ = LayerNode(nl.Identity(), name="rt_")
 
-        self.br_a = LayerNode(Pool2D(3, 2, "max", "valid"), name="br_a")
+        self.br_a = LayerNode(nl.Pool2D(3, 2, "max", "valid"), name="br_a")
         self.br_b = LayerNode(
-            Sequential(
-                Conv2D(896, 256, 1, 1, "same", **self.basic_args),
-                BatchNorm2D(256, self.momentum),
+            nl.Sequential(
+                nl.Conv2D(896, 256, 1, 1, "same", **self.basic_args),
+                nl.BatchNorm2D(256, self.momentum),
                 self.activation(),
-                Conv2D(256, 384, 3, 2, "valid", **self.basic_args),
-                BatchNorm2D(384, self.momentum),
+                nl.Conv2D(256, 384, 3, 2, "valid", **self.basic_args),
+                nl.BatchNorm2D(384, self.momentum),
                 self.activation(),
             ),
             name="br_b",
         )
         self.br_c = LayerNode(
-            Sequential(
-                Conv2D(896, 256, 1, 1, "same", **self.basic_args),
-                BatchNorm2D(256),
+            nl.Sequential(
+                nl.Conv2D(896, 256, 1, 1, "same", **self.basic_args),
+                nl.BatchNorm2D(256),
                 self.activation(),
-                Conv2D(256, 256, 3, 2, "valid", **self.basic_args),
-                BatchNorm2D(256, self.momentum),
+                nl.Conv2D(256, 256, 3, 2, "valid", **self.basic_args),
+                nl.BatchNorm2D(256, self.momentum),
                 self.activation(),
             ),
             name="br_c",
         )
         self.br_d = LayerNode(
-            Sequential(
-                Conv2D(896, 256, 1, 1, "same", **self.basic_args),
-                BatchNorm2D(256, self.momentum),
+            nl.Sequential(
+                nl.Conv2D(896, 256, 1, 1, "same", **self.basic_args),
+                nl.BatchNorm2D(256, self.momentum),
                 self.activation(),
-                Conv2D(256, 256, 3, 1, "same", **self.basic_args),
-                BatchNorm2D(256, self.momentum),
+                nl.Conv2D(256, 256, 3, 1, "same", **self.basic_args),
+                nl.BatchNorm2D(256, self.momentum),
                 self.activation(),
-                Conv2D(256, 256, 3, 2, "valid", **self.basic_args),
-                BatchNorm2D(256, self.momentum),
+                nl.Conv2D(256, 256, 3, 2, "valid", **self.basic_args),
+                nl.BatchNorm2D(256, self.momentum),
                 self.activation(),
             ),
             name="br_d",
         )
 
-        self.cat_ = LayerNode(Identity(), MergeMode.CHCAT, name="cat_")
+        self.cat_ = LayerNode(nl.Identity(), MergeMode.CHCAT, name="cat_")
 
     @Tensor.force_shape((-1, 896, 17, 17))
     def forward(self, X: TensorLike, is_train: bool = False) -> TensorLike:
@@ -460,7 +460,7 @@ class _IncepRes_V1_Redux(LayerGraph):
 class _IncepRes_V2_TypeA(LayerGraph):
     def __init__(
         self,
-        activation: callable = Activation.ReLU,
+        activation: callable = nl.Activation.ReLU,
         optimizer: Optimizer | None = None,
         initializer: InitUtil.InitStr = None,
         lambda_: float = 0.0,
@@ -497,51 +497,51 @@ class _IncepRes_V2_TypeA(LayerGraph):
             self.set_optimizer(optimizer)
 
     def init_nodes(self) -> None:
-        self.rt_ = LayerNode(Identity(), name="rt_")
+        self.rt_ = LayerNode(nl.Identity(), name="rt_")
         self.res_sum = LayerNode(
-            Sequential(Identity(), self.activation()),
+            nl.Sequential(nl.Identity(), self.activation()),
             MergeMode.SUM,
             name="res_sum",
         )
 
         self.br_a = LayerNode(
-            Sequential(
-                Conv2D(384, 32, 1, 1, "same", **self.basic_args),
-                BatchNorm2D(32, self.momentum),
+            nl.Sequential(
+                nl.Conv2D(384, 32, 1, 1, "same", **self.basic_args),
+                nl.BatchNorm2D(32, self.momentum),
                 self.activation(),
             ),
             name="br_a",
         )
         self.br_b = LayerNode(
-            Sequential(
-                Conv2D(384, 32, 1, 1, "same", **self.basic_args),
-                BatchNorm2D(32, self.momentum),
+            nl.Sequential(
+                nl.Conv2D(384, 32, 1, 1, "same", **self.basic_args),
+                nl.BatchNorm2D(32, self.momentum),
                 self.activation(),
-                Conv2D(32, 32, 3, 1, "same", **self.basic_args),
-                BatchNorm2D(32, self.momentum),
+                nl.Conv2D(32, 32, 3, 1, "same", **self.basic_args),
+                nl.BatchNorm2D(32, self.momentum),
                 self.activation(),
             ),
             name="br_b",
         )
         self.br_c = LayerNode(
-            Sequential(
-                Conv2D(384, 32, 1, 1, "same", **self.basic_args),
-                BatchNorm2D(32, self.momentum),
+            nl.Sequential(
+                nl.Conv2D(384, 32, 1, 1, "same", **self.basic_args),
+                nl.BatchNorm2D(32, self.momentum),
                 self.activation(),
-                Conv2D(32, 48, 3, 1, "same", **self.basic_args),
-                BatchNorm2D(48, self.momentum),
+                nl.Conv2D(32, 48, 3, 1, "same", **self.basic_args),
+                nl.BatchNorm2D(48, self.momentum),
                 self.activation(),
-                Conv2D(48, 64, 3, 1, "same", **self.basic_args),
-                BatchNorm2D(48, self.momentum),
+                nl.Conv2D(48, 64, 3, 1, "same", **self.basic_args),
+                nl.BatchNorm2D(48, self.momentum),
                 self.activation(),
             ),
             name="br_c",
         )
 
         self.br_cat = LayerNode(
-            Sequential(
-                Conv2D(128, 384, 1, 1, "same", **self.basic_args),
-                BatchNorm2D(384, self.momentum),
+            nl.Sequential(
+                nl.Conv2D(128, 384, 1, 1, "same", **self.basic_args),
+                nl.BatchNorm2D(384, self.momentum),
             ),
             MergeMode.CHCAT,
             name="br_cat",
@@ -564,7 +564,7 @@ class _IncepRes_V2_TypeA(LayerGraph):
 class _IncepRes_V2_TypeB(LayerGraph):
     def __init__(
         self,
-        activation: callable = Activation.ReLU,
+        activation: callable = nl.Activation.ReLU,
         optimizer: Optimizer | None = None,
         initializer: InitUtil.InitStr = None,
         lambda_: float = 0.0,
@@ -600,40 +600,40 @@ class _IncepRes_V2_TypeB(LayerGraph):
             self.set_optimizer(optimizer)
 
     def init_nodes(self) -> None:
-        self.rt_ = LayerNode(Identity(), name="rt_")
+        self.rt_ = LayerNode(nl.Identity(), name="rt_")
         self.res_sum = LayerNode(
-            Sequential(Identity(), self.activation()),
+            nl.Sequential(nl.Identity(), self.activation()),
             MergeMode.SUM,
             name="res_sum",
         )
 
         self.br_a = LayerNode(
-            Sequential(
-                Conv2D(1280, 192, 1, 1, "same", **self.basic_args),
-                BatchNorm2D(192, self.momentum),
+            nl.Sequential(
+                nl.Conv2D(1280, 192, 1, 1, "same", **self.basic_args),
+                nl.BatchNorm2D(192, self.momentum),
                 self.activation(),
             ),
             name="br_a",
         )
         self.br_b = LayerNode(
-            Sequential(
-                Conv2D(1280, 128, 1, 1, "same", **self.basic_args),
-                BatchNorm2D(128, self.momentum),
+            nl.Sequential(
+                nl.Conv2D(1280, 128, 1, 1, "same", **self.basic_args),
+                nl.BatchNorm2D(128, self.momentum),
                 self.activation(),
-                Conv2D(128, 160, (1, 7), 1, "same", **self.basic_args),
-                BatchNorm2D(160, self.momentum),
+                nl.Conv2D(128, 160, (1, 7), 1, "same", **self.basic_args),
+                nl.BatchNorm2D(160, self.momentum),
                 self.activation(),
-                Conv2D(160, 192, (7, 1), 1, "same", **self.basic_args),
-                BatchNorm2D(192, self.momentum),
+                nl.Conv2D(160, 192, (7, 1), 1, "same", **self.basic_args),
+                nl.BatchNorm2D(192, self.momentum),
                 self.activation(),
             ),
             name="br_b",
         )
 
         self.br_cat = LayerNode(
-            Sequential(
-                Conv2D(384, 1280, 1, 1, "same", **self.basic_args),
-                BatchNorm2D(1280, self.momentum),
+            nl.Sequential(
+                nl.Conv2D(384, 1280, 1, 1, "same", **self.basic_args),
+                nl.BatchNorm2D(1280, self.momentum),
             ),
             MergeMode.CHCAT,
             name="br_cat",
@@ -656,7 +656,7 @@ class _IncepRes_V2_TypeB(LayerGraph):
 class _IncepRes_V2_TypeC(LayerGraph):
     def __init__(
         self,
-        activation: callable = Activation.ReLU,
+        activation: callable = nl.Activation.ReLU,
         optimizer: Optimizer | None = None,
         initializer: InitUtil.InitStr = None,
         lambda_: float = 0.0,
@@ -692,40 +692,40 @@ class _IncepRes_V2_TypeC(LayerGraph):
             self.set_optimizer(optimizer)
 
     def init_nodes(self) -> None:
-        self.rt_ = LayerNode(Identity(), name="rt_")
+        self.rt_ = LayerNode(nl.Identity(), name="rt_")
         self.res_sum = LayerNode(
-            Sequential(Identity(), self.activation()),
+            nl.Sequential(nl.Identity(), self.activation()),
             MergeMode.SUM,
             name="res_sum",
         )
 
         self.br_a = LayerNode(
-            Sequential(
-                Conv2D(2272, 192, 1, 1, "same", **self.basic_args),
-                BatchNorm2D(192, self.momentum),
+            nl.Sequential(
+                nl.Conv2D(2272, 192, 1, 1, "same", **self.basic_args),
+                nl.BatchNorm2D(192, self.momentum),
                 self.activation(),
             ),
             name="br_a",
         )
         self.br_b = LayerNode(
-            Sequential(
-                Conv2D(2272, 192, 1, 1, "same", **self.basic_args),
-                BatchNorm2D(192, self.momentum),
+            nl.Sequential(
+                nl.Conv2D(2272, 192, 1, 1, "same", **self.basic_args),
+                nl.BatchNorm2D(192, self.momentum),
                 self.activation(),
-                Conv2D(192, 234, (1, 3), 1, "same", **self.basic_args),
-                BatchNorm2D(224, self.momentum),
+                nl.Conv2D(192, 234, (1, 3), 1, "same", **self.basic_args),
+                nl.BatchNorm2D(224, self.momentum),
                 self.activation(),
-                Conv2D(224, 256, (3, 1), 1, "same", **self.basic_args),
-                BatchNorm2D(256, self.momentum),
+                nl.Conv2D(224, 256, (3, 1), 1, "same", **self.basic_args),
+                nl.BatchNorm2D(256, self.momentum),
                 self.activation(),
             ),
             name="br_b",
         )
 
         self.br_cat = LayerNode(
-            Sequential(
-                Conv2D(448, 2272, 1, 1, "same", **self.basic_args),
-                BatchNorm2D(2272, self.momentum),
+            nl.Sequential(
+                nl.Conv2D(448, 2272, 1, 1, "same", **self.basic_args),
+                nl.BatchNorm2D(2272, self.momentum),
             ),
             MergeMode.CHCAT,
             name="br_cat",
@@ -748,7 +748,7 @@ class _IncepRes_V2_TypeC(LayerGraph):
 class _IncepRes_V2_Redux(LayerGraph):
     def __init__(
         self,
-        activation: callable = Activation.ReLU,
+        activation: callable = nl.Activation.ReLU,
         optimizer: Optimizer | None = None,
         initializer: InitUtil.InitStr = None,
         lambda_: float = 0.0,
@@ -785,47 +785,47 @@ class _IncepRes_V2_Redux(LayerGraph):
             self.set_optimizer(optimizer)
 
     def init_nodes(self) -> None:
-        self.rt_ = LayerNode(Identity(), name="rt_")
+        self.rt_ = LayerNode(nl.Identity(), name="rt_")
 
-        self.br_a = LayerNode(Pool2D(3, 2, "max", "valid"), name="br_a")
+        self.br_a = LayerNode(nl.Pool2D(3, 2, "max", "valid"), name="br_a")
         self.br_b = LayerNode(
-            Sequential(
-                Conv2D(1280, 256, 1, 1, "same", **self.basic_args),
-                BatchNorm2D(256, self.momentum),
+            nl.Sequential(
+                nl.Conv2D(1280, 256, 1, 1, "same", **self.basic_args),
+                nl.BatchNorm2D(256, self.momentum),
                 self.activation(),
-                Conv2D(256, 384, 3, 2, "valid", **self.basic_args),
-                BatchNorm2D(384, self.momentum),
+                nl.Conv2D(256, 384, 3, 2, "valid", **self.basic_args),
+                nl.BatchNorm2D(384, self.momentum),
                 self.activation(),
             ),
             name="br_b",
         )
         self.br_c = LayerNode(
-            Sequential(
-                Conv2D(1280, 256, 1, 1, "same", **self.basic_args),
-                BatchNorm2D(256, self.momentum),
+            nl.Sequential(
+                nl.Conv2D(1280, 256, 1, 1, "same", **self.basic_args),
+                nl.BatchNorm2D(256, self.momentum),
                 self.activation(),
-                Conv2D(256, 288, 3, 2, "valid", **self.basic_args),
-                BatchNorm2D(288, self.momentum),
+                nl.Conv2D(256, 288, 3, 2, "valid", **self.basic_args),
+                nl.BatchNorm2D(288, self.momentum),
                 self.activation(),
             ),
             name="br_c",
         )
         self.br_d = LayerNode(
-            Sequential(
-                Conv2D(1280, 256, 1, 1, "same", **self.basic_args),
-                BatchNorm2D(256, self.momentum),
+            nl.Sequential(
+                nl.Conv2D(1280, 256, 1, 1, "same", **self.basic_args),
+                nl.BatchNorm2D(256, self.momentum),
                 self.activation(),
-                Conv2D(256, 288, 3, 1, "same", **self.basic_args),
-                BatchNorm2D(288, self.momentum),
+                nl.Conv2D(256, 288, 3, 1, "same", **self.basic_args),
+                nl.BatchNorm2D(288, self.momentum),
                 self.activation(),
-                Conv2D(288, 320, 3, 2, "valid", **self.basic_args),
-                BatchNorm2D(320, self.momentum),
+                nl.Conv2D(288, 320, 3, 2, "valid", **self.basic_args),
+                nl.BatchNorm2D(320, self.momentum),
                 self.activation(),
             ),
             name="br_d",
         )
 
-        self.cat_ = LayerNode(Identity(), MergeMode.CHCAT, name="cat_")
+        self.cat_ = LayerNode(nl.Identity(), MergeMode.CHCAT, name="cat_")
 
     @Tensor.force_shape((-1, 1280, 17, 17))
     def forward(self, X: TensorLike, is_train: bool = False) -> TensorLike:

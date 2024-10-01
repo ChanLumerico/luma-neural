@@ -6,8 +6,8 @@ from luma.interface.util import InitUtil
 from luma.metric.classification import Accuracy
 
 from luma.neural.base import NeuralModel
-from luma.neural.block import ConvBlock2D, DenseBlock
-from luma.neural.layer import Activation, Dense, Flatten, Sequential
+from luma.neural import block as nb
+from luma.neural import layer as nl
 
 from ..types import ImageClassifier
 
@@ -18,7 +18,7 @@ __all__ = ("_LeNet_1", "_LeNet_4", "_LeNet_5")
 class _LeNet_1(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
-        activation: callable = Activation.Tanh,
+        activation: callable = nl.Activation.Tanh,
         initializer: InitUtil.InitStr = None,
         out_features: int = 10,
         batch_size: int = 100,
@@ -50,7 +50,7 @@ class _LeNet_1(Estimator, NeuralModel, ImageClassifier):
             deep_verbose,
         )
         super().init_model()
-        self.model = Sequential()
+        self.model = nl.Sequential()
 
         self.feature_sizes_ = [
             [1, 4, 8],
@@ -76,7 +76,7 @@ class _LeNet_1(Estimator, NeuralModel, ImageClassifier):
         self.build_model()
 
     def build_model(self) -> None:
-        self.model += ConvBlock2D(
+        self.model += nb.ConvBlock2D(
             1,
             4,
             filter_size=5,
@@ -91,7 +91,7 @@ class _LeNet_1(Estimator, NeuralModel, ImageClassifier):
             pool_mode="avg",
             random_state=self.random_state,
         )
-        self.model += ConvBlock2D(
+        self.model += nb.ConvBlock2D(
             4,
             8,
             filter_size=5,
@@ -107,8 +107,8 @@ class _LeNet_1(Estimator, NeuralModel, ImageClassifier):
             random_state=self.random_state,
         )
 
-        self.model += Flatten()
-        self.model += Dense(
+        self.model += nl.Flatten()
+        self.model += nl.Dense(
             8 * 4 * 4,
             self.out_features,
             lambda_=self.lambda_,
@@ -141,7 +141,7 @@ class _LeNet_1(Estimator, NeuralModel, ImageClassifier):
 class _LeNet_4(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
-        activation: callable = Activation.Tanh,
+        activation: callable = nl.Activation.Tanh,
         initializer: InitUtil.InitStr = None,
         out_features: int = 10,
         batch_size: int = 100,
@@ -175,7 +175,7 @@ class _LeNet_4(Estimator, NeuralModel, ImageClassifier):
             deep_verbose,
         )
         super().init_model()
-        self.model = Sequential()
+        self.model = nl.Sequential()
 
         self.feature_sizes_ = [
             [1, 4, 16],
@@ -201,7 +201,7 @@ class _LeNet_4(Estimator, NeuralModel, ImageClassifier):
         self.build_model()
 
     def build_model(self) -> None:
-        self.model += ConvBlock2D(
+        self.model += nb.ConvBlock2D(
             1,
             4,
             filter_size=5,
@@ -216,7 +216,7 @@ class _LeNet_4(Estimator, NeuralModel, ImageClassifier):
             pool_mode="avg",
             random_state=self.random_state,
         )
-        self.model += ConvBlock2D(
+        self.model += nb.ConvBlock2D(
             4,
             16,
             filter_size=5,
@@ -232,8 +232,8 @@ class _LeNet_4(Estimator, NeuralModel, ImageClassifier):
             random_state=self.random_state,
         )
 
-        self.model += Flatten()
-        self.model += DenseBlock(
+        self.model += nl.Flatten()
+        self.model += nb.DenseBlock(
             16 * 5 * 5,
             120,
             activation=self.activation,
@@ -242,7 +242,7 @@ class _LeNet_4(Estimator, NeuralModel, ImageClassifier):
             do_dropout=False,
             random_state=self.random_state,
         )
-        self.model += Dense(
+        self.model += nl.Dense(
             120,
             self.out_features,
             lambda_=self.lambda_,
@@ -275,7 +275,7 @@ class _LeNet_4(Estimator, NeuralModel, ImageClassifier):
 class _LeNet_5(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
-        activation: callable = Activation.Tanh,
+        activation: callable = nl.Activation.Tanh,
         initializer: InitUtil.InitStr = None,
         out_features: int = 10,
         batch_size: int = 100,
@@ -309,7 +309,7 @@ class _LeNet_5(Estimator, NeuralModel, ImageClassifier):
             deep_verbose,
         )
         super().init_model()
-        self.model = Sequential()
+        self.model = nl.Sequential()
 
         self.feature_sizes_ = [
             [1, 6, 16],
@@ -336,7 +336,7 @@ class _LeNet_5(Estimator, NeuralModel, ImageClassifier):
         self.build_model()
 
     def build_model(self) -> None:
-        self.model += ConvBlock2D(
+        self.model += nb.ConvBlock2D(
             1,
             6,
             filter_size=5,
@@ -351,7 +351,7 @@ class _LeNet_5(Estimator, NeuralModel, ImageClassifier):
             pool_mode="avg",
             random_state=self.random_state,
         )
-        self.model += ConvBlock2D(
+        self.model += nb.ConvBlock2D(
             6,
             16,
             filter_size=5,
@@ -367,8 +367,8 @@ class _LeNet_5(Estimator, NeuralModel, ImageClassifier):
             random_state=self.random_state,
         )
 
-        self.model += Flatten()
-        self.model += DenseBlock(
+        self.model += nl.Flatten()
+        self.model += nb.DenseBlock(
             16 * 5 * 5,
             120,
             activation=self.activation,
@@ -377,7 +377,7 @@ class _LeNet_5(Estimator, NeuralModel, ImageClassifier):
             do_dropout=False,
             random_state=self.random_state,
         )
-        self.model += DenseBlock(
+        self.model += nb.DenseBlock(
             120,
             84,
             activation=self.activation,
@@ -386,7 +386,7 @@ class _LeNet_5(Estimator, NeuralModel, ImageClassifier):
             do_dropout=False,
             random_state=self.random_state,
         )
-        self.model += Dense(
+        self.model += nl.Dense(
             84,
             self.out_features,
             lambda_=self.lambda_,

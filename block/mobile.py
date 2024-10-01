@@ -4,7 +4,7 @@ from luma.core.super import Optimizer
 from luma.interface.typing import Tensor, TensorLike
 from luma.interface.util import InitUtil
 
-from luma.neural.layer import *
+from luma.neural import layer as nl
 from luma.neural.autoprop import LayerNode, LayerGraph, MergeMode
 
 from .se import _SEBlock2D
@@ -18,7 +18,7 @@ class _InvRes(LayerGraph):
         filter_size: Tuple[int, int] | int = 3,
         stride: int = 1,
         expand: int = 1,
-        activation: callable = Activation.ReLU6,
+        activation: callable = nl.Activation.ReLU6,
         optimizer: Optimizer | None = None,
         initializer: InitUtil.InitStr = None,
         lambda_: float = 0.0,
@@ -69,10 +69,10 @@ class _InvRes(LayerGraph):
             self.set_optimizer(optimizer)
 
     def init_nodes(self) -> None:
-        self.rt_ = LayerNode(Identity(), name="rt_")
+        self.rt_ = LayerNode(nl.Identity(), name="rt_")
         self.pw_ = LayerNode(
-            Sequential(
-                Conv2D(
+            nl.Sequential(
+                nl.Conv2D(
                     self.in_channels,
                     self.hid_channels,
                     1,
@@ -80,7 +80,7 @@ class _InvRes(LayerGraph):
                     **self.basic_args,
                 ),
                 (
-                    BatchNorm2D(self.hid_channels, self.momentum)
+                    nl.BatchNorm2D(self.hid_channels, self.momentum)
                     if self.do_batch_norm
                     else None
                 ),
@@ -89,8 +89,8 @@ class _InvRes(LayerGraph):
             name="pw_",
         )
         self.dw_ = LayerNode(
-            Sequential(
-                DepthConv2D(
+            nl.Sequential(
+                nl.DepthConv2D(
                     self.hid_channels,
                     self.filter_size,
                     self.stride,
@@ -98,12 +98,12 @@ class _InvRes(LayerGraph):
                     **self.basic_args,
                 ),
                 (
-                    BatchNorm2D(self.hid_channels, self.momentum)
+                    nl.BatchNorm2D(self.hid_channels, self.momentum)
                     if self.do_batch_norm
                     else None
                 ),
                 self.activation(),
-                Conv2D(
+                nl.Conv2D(
                     self.hid_channels,
                     self.out_channels,
                     1,
@@ -113,7 +113,7 @@ class _InvRes(LayerGraph):
             ),
             name="dw_",
         )
-        self.tm_ = LayerNode(Identity(), MergeMode.SUM, name="tm_")
+        self.tm_ = LayerNode(nl.Identity(), MergeMode.SUM, name="tm_")
 
     @Tensor.force_dim(4)
     def forward(self, X: TensorLike, is_train: bool = False) -> TensorLike:
@@ -143,7 +143,7 @@ class _InvRes_SE(LayerGraph):
         stride: int = 1,
         expand: int = 1,
         se_reduction: int = 4,
-        activation: callable = Activation.HardSwish,
+        activation: callable = nl.Activation.HardSwish,
         optimizer: Optimizer | None = None,
         initializer: InitUtil.InitStr = None,
         lambda_: float = 0.0,
@@ -197,10 +197,10 @@ class _InvRes_SE(LayerGraph):
             self.set_optimizer(optimizer)
 
     def init_nodes(self) -> None:
-        self.rt_ = LayerNode(Identity(), name="rt_")
+        self.rt_ = LayerNode(nl.Identity(), name="rt_")
         self.pw_ = LayerNode(
-            Sequential(
-                Conv2D(
+            nl.Sequential(
+                nl.Conv2D(
                     self.in_channels,
                     self.hid_channels,
                     1,
@@ -208,7 +208,7 @@ class _InvRes_SE(LayerGraph):
                     **self.basic_args,
                 ),
                 (
-                    BatchNorm2D(self.hid_channels, self.momentum)
+                    nl.BatchNorm2D(self.hid_channels, self.momentum)
                     if self.do_batch_norm
                     else None
                 ),
@@ -217,8 +217,8 @@ class _InvRes_SE(LayerGraph):
             name="pw_",
         )
         self.dw_pw_lin = LayerNode(
-            Sequential(
-                DepthConv2D(
+            nl.Sequential(
+                nl.DepthConv2D(
                     self.hid_channels,
                     self.filter_size,
                     self.stride,
@@ -226,12 +226,12 @@ class _InvRes_SE(LayerGraph):
                     **self.basic_args,
                 ),
                 (
-                    BatchNorm2D(self.hid_channels, self.momentum)
+                    nl.BatchNorm2D(self.hid_channels, self.momentum)
                     if self.do_batch_norm
                     else None
                 ),
                 self.activation(),
-                Conv2D(
+                nl.Conv2D(
                     self.hid_channels,
                     self.out_channels,
                     1,
@@ -251,8 +251,8 @@ class _InvRes_SE(LayerGraph):
             ),
             name="se_block",
         )
-        self.scale_ = LayerNode(Identity(), MergeMode.HADAMARD, name="scale_")
-        self.tm_ = LayerNode(Identity(), MergeMode.SUM, name="tm_")
+        self.scale_ = LayerNode(nl.Identity(), MergeMode.HADAMARD, name="scale_")
+        self.tm_ = LayerNode(nl.Identity(), MergeMode.SUM, name="tm_")
 
     @Tensor.force_dim(4)
     def forward(self, X: TensorLike, is_train: bool = False) -> TensorLike:
