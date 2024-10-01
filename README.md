@@ -50,6 +50,8 @@ Deep learning models and neural network utilities of Luma
 | Class | Input Shape | Output Shape |
 | --- | --- | --- |
 | `Flatten` | $(N, *)$ | $(N, -1)$ |
+| `Reshape` | $(*_{in})$ | $(*_{out})$ |
+| `Transpose` | $(*_{in})$ | $(*_{\mathcal{P}(in)})$ |
 | `Dense` | $(N,L_{in})$ | $(N,L_{out})$ |
 | `Identity` | $(*)$ | $(*)$ |
 
@@ -62,6 +64,12 @@ Deep learning models and neural network utilities of Luma
 | `BatchNorm3D` | $(N,C,D,H,W)$ | $(N,C,D,H,W)$ |
 | `LocalResponseNorm` | $(N,C,*)$ | $(N,C,*)$ |
 | `LayerNorm` | $(N,*)$ | $(N,*)$ |
+
+### Utility
+
+| Class | Input Shape | Output Shape |
+| --- | --- | --- |
+| `Slice` | $(*)$ | $(*_{sliced})$ |
 
 ---
 
@@ -127,7 +135,7 @@ Deep learning models and neural network utilities of Luma
 | `XceptionBlock.Middle` | 14 | $(N,728,19,19)$ | $(N,728,19,19)$ |
 | `XceptionBlock.Exit` | 11 | $(N,728,19,19)$ | $(N,1024,9,9)$ |
 
-### SE Blocks
+### SE(Squeeze & Excitation) Blocks
 
 | Class | # of Layers | Input Shape | Output Shape |
 | --- | --- | --- | --- |
@@ -156,6 +164,14 @@ Deep learning models and neural network utilities of Luma
 | --- | --- | --- | --- |
 | `EfficientBlock.MBConv` | 14~17 | $(N,C_{in},H_{in},W_{in})$ | $(N,C_{out},H_{out},W_{out})$ |
 | `EfficientBlock.FusedMBConv` | 12~15 | $(N,C_{in},H_{in},W_{in})$ | $(N,C_{out},H_{out},W_{out})$ |
+
+### SK(Selective Kernel) Blocks
+
+| Class | # of Layers | Input Shape | Output Shape |
+| --- | --- | --- | --- |
+| `SKBlock1D` | $5k+8$ | $(N,C_{in},W)$ | $(N,C_{out},W)$ |
+| `SKBlock2D` | $5k+8$ | $(N,C_{in},H,W)$ | $(N,C_{out},H,W)$ |
+| `SKBlock3D` | $5k+8$ | $(N,C_{in},D,H,W)$ | $(N,C_{out},D,H,W)$ |
 
 ---
 
