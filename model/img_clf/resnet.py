@@ -1959,3 +1959,15 @@ class _SE_ResNeXt_101(Estimator, NeuralModel, ImageClassifier):
         argmax: bool = True,
     ) -> float:
         return super(_SE_ResNeXt_101, self).score_nn(X, y, metric, argmax)
+
+
+class _SK_ResNet_50(Estimator, NeuralModel, ImageClassifier): ...
+
+
+class _SK_ResNet_101(Estimator, NeuralModel, ImageClassifier): ...
+
+
+class _SK_ResNeXt_50(Estimator, NeuralModel, ImageClassifier): ...
+
+
+class _SK_ResNeXt_101(Estimator, NeuralModel, ImageClassifier): ...

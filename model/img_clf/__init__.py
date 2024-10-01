@@ -72,6 +72,10 @@ __all__ = (
     "EfficientNet_V2_XLarge",
     "ResNeXt_50",
     "ResNeXt_101",
+    "SK_ResNet_50",
+    "SK_ResNet_101",
+    "SK_ResNeXt_50",
+    "SK_ResNeXt_101",
 )
 
 
@@ -3081,3 +3085,15 @@ class ResNeXt_101(resnet._ResNeXt_101):
     pp. 1492-1500.
 
     """
+
+
+class SK_ResNet_50(resnet._SK_ResNet_50): ...
+
+
+class SK_ResNet_101(resnet._SK_ResNet_101): ...
+
+
+class SK_ResNeXt_50(resnet._SK_ResNeXt_50): ...
+
+
+class SK_ResNeXt_101(resnet._SK_ResNeXt_101): ...
