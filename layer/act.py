@@ -128,26 +128,10 @@ class _Activation:
             self.output_ = e_X / np.sum(e_X, axis=self.dim, keepdims=True)
             return self.output_
 
-        def backward(self, d_out: Tensor) -> Tensor:
-            self.dX = np.empty_like(d_out)
-            it = np.nditer(d_out, flags=["multi_index"], op_flags=["readwrite"])
+        def backward(self, d_out: np.ndarray) -> np.ndarray:
+            sum_d_out_y = np.sum(d_out * self.output_, axis=self.dim, keepdims=True)
 
-            while not it.finished:
-                idx = list(it.multi_index)
-                y = self.output_[
-                    tuple(idx[: self.dim] + [slice(None)] + idx[self.dim + 1 :])
-                ]
-
-                dy = d_out[tuple(idx)]
-                y = y.reshape(-1, 1)
-                jacobian_matrix = np.diagflat(y) - np.dot(y, y.T)
-
-                self.dX[
-                    tuple(idx[: self.dim] + [slice(None)] + idx[self.dim + 1 :])
-                ] = np.dot(jacobian_matrix, dy.reshape(-1, 1)).flatten()
-
-                it.iternext()
-
+            self.dX = self.output_ * (d_out - sum_d_out_y)
             return self.dX
 
         def out_shape(self, in_shape: Tuple[int]) -> Tuple[int]:
