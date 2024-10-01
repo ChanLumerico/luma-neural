@@ -513,13 +513,97 @@ class SEBlock3D(se._SEBlock3D):
     """
 
 
-class SKBlock1D(sk._SKBlock1D): ...
+class SKBlock1D(sk._SKBlock1D):
+    """
+    Selective Kernel(SK) block for 1-dimensional data.
+
+    The SK Block dynamically selects between different convolutional kernel 
+    sizes to capture multi-scale features. It processes input through multiple 
+    kernels, fuses the results, and uses attention to adaptively focus on the 
+    most relevant features.
+
+    Parameters
+    ----------
+    `in_channels` : int
+        Number of input channels
+    `out_channels` : int
+        Number of output channels
+    `filter_sizes`: list of int, default=[3, 5]
+        List of filter sizes for each branches
+    `reduction` : int, default=16
+        Reducing factor of FC layer in fusing phase
+    `activation` : callable, default=Activation.ReLU
+        Type of activation function
+    `optimizer` : Optimizer, optional, default=None
+        Type of optimizer for weight update
+    `initializer` : InitStr, default=None
+        Type of weight initializer
+    `lambda_` : float, default=0.0
+        L2 regularization strength
+
+    """
 
 
-class SKBlock2D(sk._SKBlock2D): ...
+class SKBlock2D(sk._SKBlock2D):
+    """
+    Selective Kernel(SK) block for 2-dimensional data.
+
+    The SK Block dynamically selects between different convolutional kernel 
+    sizes to capture multi-scale features. It processes input through multiple 
+    kernels, fuses the results, and uses attention to adaptively focus on the 
+    most relevant features.
+
+    Parameters
+    ----------
+    `in_channels` : int
+        Number of input channels
+    `out_channels` : int
+        Number of output channels
+    `filter_sizes`: list of int, default=[3, 5]
+        List of filter sizes for each branches
+    `reduction` : int, default=16
+        Reducing factor of FC layer in fusing phase
+    `activation` : callable, default=Activation.ReLU
+        Type of activation function
+    `optimizer` : Optimizer, optional, default=None
+        Type of optimizer for weight update
+    `initializer` : InitStr, default=None
+        Type of weight initializer
+    `lambda_` : float, default=0.0
+        L2 regularization strength
+
+    """
 
 
-class SKBlock3D(sk._SKBlock3D): ...
+class SKBlock3D(sk._SKBlock3D):
+    """
+    Selective Kernel(SK) block for 3-dimensional data.
+
+    The SK Block dynamically selects between different convolutional kernel 
+    sizes to capture multi-scale features. It processes input through multiple 
+    kernels, fuses the results, and uses attention to adaptively focus on the 
+    most relevant features.
+
+    Parameters
+    ----------
+    `in_channels` : int
+        Number of input channels
+    `out_channels` : int
+        Number of output channels
+    `filter_sizes`: list of int, default=[3, 5]
+        List of filter sizes for each branches
+    `reduction` : int, default=16
+        Reducing factor of FC layer in fusing phase
+    `activation` : callable, default=Activation.ReLU
+        Type of activation function
+    `optimizer` : Optimizer, optional, default=None
+        Type of optimizer for weight update
+    `initializer` : InitStr, default=None
+        Type of weight initializer
+    `lambda_` : float, default=0.0
+        L2 regularization strength
+
+    """
 
 
 @dataclass
