@@ -511,7 +511,7 @@ class SEBlock3D(se._SEBlock3D):
     """
 
 
-class SKBlock: ...
+class SKBlock(sk._SKBlock): ...
 
 
 @dataclass

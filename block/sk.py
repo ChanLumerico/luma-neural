@@ -1,4 +1,4 @@
-from typing import override
+from typing import override, Dict, List
 
 from luma.core.super import Optimizer
 from luma.interface.typing import Tensor
@@ -8,7 +8,7 @@ from luma.neural.layer import *
 from luma.neural.autoprop import LayerNode, LayerGraph, MergeMode
 
 
-class SKBlock(LayerGraph):
+class _SKBlock(LayerGraph):
     def __init__(
         self,
         in_channels: int,
@@ -40,20 +40,31 @@ class SKBlock(LayerGraph):
         )
         self.init_nodes()
 
+        super(_SKBlock, self).__init__(
+            graph=self._build_graph(),
+            root=self.rt_,
+            term=self.sum_,
+        )
+
+        self.build()
+        if optimizer is not None:
+            self.set_optimizer(optimizer)
+
     def init_nodes(self) -> None:
         self.br_arr: list[LayerNode] = []
         self.scale_arr: list[LayerNode] = []
         self.slice_arr: list[LayerNode] = []
 
+        self.rt_ = LayerNode(Identity(), name="rt_")
+
         for i, f_size in enumerate(self.filter_sizes):
-            padding = (f_size - 1) // 2
             branch = LayerNode(
                 Sequential(
                     Conv2D(
                         self.in_channels,
                         self.out_channels,
                         filter_size=f_size,
-                        padding=padding,
+                        padding="same",
                         **self.basic_args,
                     ),
                     BatchNorm2D(self.out_channels, self.momentum),
@@ -101,3 +112,32 @@ class SKBlock(LayerGraph):
             name="softmax_",
         )
         self.sum_ = LayerNode(Identity(), MergeMode.SUM, name="sum_")
+
+    def _build_graph(self) -> Dict[LayerNode, List[LayerNode]]:
+        graph = {}
+        graph[self.rt_] = self.br_arr
+
+        for br, sc in zip(self.br_arr, self.scale_arr):
+            graph[br] = [self.fc_, sc]
+
+        graph[self.fc_] = [self.softmax_]
+        graph[self.softmax_] = self.slice_arr
+
+        for sl, sc in zip(self.slice_arr, self.scale_arr):
+            graph[sl] = [sc]
+            graph[sc] = [self.sum_]
+
+        return graph
+    
+    @Tensor.force_dim(4)
+    def forward(self, X: Tensor, is_train: bool = False) -> Tensor:
+        return super().forward(X, is_train)
+
+    @Tensor.force_dim(4)
+    def backward(self, d_out: Tensor) -> Tensor:
+        return super().backward(d_out)
+    
+    @override
+    def out_shape(self, in_shape: tuple[int]) -> tuple[int]:
+         batch_size, _, height, width = in_shape
+         return batch_size, self.out_channels, height, width
