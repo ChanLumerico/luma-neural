@@ -446,3 +446,6 @@ class _Bottleneck_SE(LayerGraph, _ExpansionMixin):
     @override
     def out_shape(self, in_shape: Tuple[int]) -> Tuple[int]:
         return self.conv_.out_shape(in_shape)
+
+
+class _Bottleneck_SK(LayerGraph, _ExpansionMixin): ...

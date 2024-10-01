@@ -1037,6 +1037,8 @@ class ResNetBlock:
 
         """
 
+    class Bottleneck_SK(resnet._Bottleneck_SK): ...
+
 
 @ClassType.non_instantiable()
 class XceptionBlock:
