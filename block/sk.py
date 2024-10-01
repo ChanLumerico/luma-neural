@@ -8,14 +8,16 @@ from luma.neural.layer import *
 from luma.neural.autoprop import LayerNode, LayerGraph, MergeMode
 
 
-class _SKBlock(LayerGraph):
+class _SKBlock1D(LayerGraph): ...
+
+
+class _SKBlock2D(LayerGraph):
     def __init__(
         self,
         in_channels: int,
         out_channels: int,
         filter_sizes: list[int] = [3, 5],
         reduction: int = 16,
-        max_branch: int = 32,
         activation: callable = Activation.ReLU,
         optimizer: Optimizer | None = None,
         initializer: InitUtil.InitStr = None,
@@ -27,7 +29,6 @@ class _SKBlock(LayerGraph):
         self.out_channels = out_channels
         self.filter_sizes = filter_sizes
         self.reduction = reduction
-        self.max_branch = max_branch
         self.activation = activation
         self.optimizer = optimizer
         self.initializer = initializer
@@ -40,7 +41,7 @@ class _SKBlock(LayerGraph):
         )
         self.init_nodes()
 
-        super(_SKBlock, self).__init__(
+        super(_SKBlock2D, self).__init__(
             graph=self._build_graph(),
             root=self.rt_,
             term=self.sum_,
@@ -128,7 +129,7 @@ class _SKBlock(LayerGraph):
             graph[sc] = [self.sum_]
 
         return graph
-    
+
     @Tensor.force_dim(4)
     def forward(self, X: Tensor, is_train: bool = False) -> Tensor:
         return super().forward(X, is_train)
@@ -136,8 +137,11 @@ class _SKBlock(LayerGraph):
     @Tensor.force_dim(4)
     def backward(self, d_out: Tensor) -> Tensor:
         return super().backward(d_out)
-    
+
     @override
     def out_shape(self, in_shape: tuple[int]) -> tuple[int]:
-         batch_size, _, height, width = in_shape
-         return batch_size, self.out_channels, height, width
+        batch_size, _, height, width = in_shape
+        return batch_size, self.out_channels, height, width
+
+
+class _SKBlock3D(LayerGraph): ...

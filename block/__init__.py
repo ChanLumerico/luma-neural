@@ -41,7 +41,9 @@ __all__ = (
     "SEBlock1D",
     "SEBlock2D",
     "SEBlock3D",
-    "SKBlock",
+    "SKBlock1D",
+    "SKBlock2D",
+    "SKBlock3D",
     "IncepBlock",
     "IncepResBlock",
     "ResNetBlock",
@@ -511,7 +513,13 @@ class SEBlock3D(se._SEBlock3D):
     """
 
 
-class SKBlock(sk._SKBlock): ...
+class SKBlock1D(sk._SKBlock1D): ...
+
+
+class SKBlock2D(sk._SKBlock2D): ...
+
+
+class SKBlock3D(sk._SKBlock3D): ...
 
 
 @dataclass
