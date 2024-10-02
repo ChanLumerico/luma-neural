@@ -976,7 +976,7 @@ class ResNetBlock:
 
         Parameters
         ----------
-        `downsampling` : LayerLike, optional
+        `downsampling` : LayerLike, optional, default=None
             An additional layer to the input signal which reduces
             its grid size to perform a downsampling
 
@@ -987,17 +987,16 @@ class ResNetBlock:
         """
         Bottleneck block used in `ResNet-(50, 101, 152)`.
 
-        If `cardinality` is greater than 1, it is served for
+        If `groups` is greater than 1, it is served for
         `ResNeXt-50` and `ResNeXt-101`.
 
         Parameters
         ----------
-        `downsampling` : LayerLike, optional
+        `downsampling` : LayerLike, optional, default=None
             An additional layer to the input signal which reduces
             its grid size to perform a downsampling
-        `cardinality` : int, default=1
-            The cardinality in terms of aggregated residual
-            transformations.
+        `groups` : int, default=1
+            Number of convolutional groups
 
         See [1] and [3] also for additional information.
         """
@@ -1009,7 +1008,7 @@ class ResNetBlock:
 
         Parameters
         ----------
-        `downsampling` : LayerLike, optional
+        `downsampling` : LayerLike, optional, default=None
             An additional layer to the input signal which reduces
             its grid size to perform a downsampling
 
@@ -1021,23 +1020,42 @@ class ResNetBlock:
         Bottleneck block with squeeze-and-excitation(SE)
         used in `SE-ResNet`.
 
-        If `cardinality` is greater than 1, it is served for
+        If `groups` is greater than 1, it is served for
         `SE_ResNeXt`.
 
         Parameters
         ----------
         `se_reduction` : float, default=4
             Reduction factor for SE block
-        `downsampling` : LayerLike, optional
+        `downsampling` : LayerLike, optional, default=None
             An additional layer to the input signal which reduces
             its grid size to perform a downsampling
-        `cardinality` : int, default=1
-            The cardinality in terms of aggregated residual
-            transformations.
+        `groups` : int, default=1
+            Number of convolutional groups
 
         """
 
-    class Bottleneck_SK(resnet._Bottleneck_SK): ...
+    class Bottleneck_SK(resnet._Bottleneck_SK):
+        """
+        Bottleneck block with selective kernel(SK)
+        used in `SK-ResNet`.
+
+        If `groups` is greater than 1, it is served for
+        `SK_ResNeXt`.
+
+        Parameters
+        ----------
+        `downsampling` : LayerLike, optional, default=None
+            An additional layer to the input signal which reduces
+            its grid size to perform a downsampling
+        `filter_sizes` : list of int, default=[3, 5]
+            List of filter sizes for each branches
+        `reduction` : int, default=16
+            Reducing factor of FC layer in fusing phase of SK block
+        `groups` : int, default=1
+            Number of convolutional groups
+
+        """
 
 
 @ClassType.non_instantiable()

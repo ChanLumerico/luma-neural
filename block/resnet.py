@@ -8,6 +8,7 @@ from luma.neural import layer as nl
 from luma.neural.autoprop import LayerNode, LayerGraph, MergeMode
 
 from .se import _SEBlock2D
+from .sk import _SKBlock2D
 
 
 class _ExpansionMixin:
@@ -133,7 +134,7 @@ class _Bottleneck(LayerGraph, _ExpansionMixin):
         out_channels: int,
         stride: int = 1,
         downsampling: LayerLike | None = None,
-        cardinality: int = 1,
+        groups: int = 1,
         activation: callable = nl.Activation.ReLU,
         optimizer: Optimizer | None = None,
         initializer: InitUtil.InitStr = None,
@@ -146,7 +147,7 @@ class _Bottleneck(LayerGraph, _ExpansionMixin):
         self.out_channels = out_channels
         self.stride = stride
         self.downsampling = downsampling
-        self.cardinality = cardinality
+        self.groups = groups
         self.activation = activation
         self.optimizer = optimizer
         self.initializer = initializer
@@ -187,7 +188,7 @@ class _Bottleneck(LayerGraph, _ExpansionMixin):
                     self.out_channels,
                     3,
                     self.stride,
-                    groups=self.cardinality,
+                    groups=self.groups,
                     **self.basic_args,
                 ),
                 nl.BatchNorm2D(self.out_channels, self.momentum),
@@ -337,7 +338,7 @@ class _Bottleneck_SE(LayerGraph, _ExpansionMixin):
         stride: int = 1,
         downsampling: LayerLike | None = None,
         se_reduction: int = 4,
-        cardinality: int = 1,
+        groups: int = 1,
         activation: callable = nl.Activation.ReLU,
         optimizer: Optimizer | None = None,
         initializer: InitUtil.InitStr = None,
@@ -350,7 +351,7 @@ class _Bottleneck_SE(LayerGraph, _ExpansionMixin):
         self.out_channels = out_channels
         self.stride = stride
         self.se_reduction = se_reduction
-        self.cardinality = cardinality
+        self.groups = groups
         self.downsampling = downsampling
         self.activation = activation
         self.optimizer = optimizer
@@ -394,7 +395,7 @@ class _Bottleneck_SE(LayerGraph, _ExpansionMixin):
                     self.out_channels,
                     3,
                     self.stride,
-                    groups=self.cardinality,
+                    groups=self.groups,
                     **self.basic_args,
                 ),
                 nl.BatchNorm2D(self.out_channels, self.momentum),
@@ -448,4 +449,100 @@ class _Bottleneck_SE(LayerGraph, _ExpansionMixin):
         return self.conv_.out_shape(in_shape)
 
 
-class _Bottleneck_SK(LayerGraph, _ExpansionMixin): ...
+class _Bottleneck_SK(LayerGraph, _ExpansionMixin):
+    def __init__(
+        self,
+        in_channels: int,
+        out_channels: int,
+        stride: int = 1,
+        downsampling: LayerLike | None = None,
+        filter_sizes: int = [3, 5],
+        reduction: int = 16,
+        groups: int = 1,
+        activation: callable = nl.Activation.ReLU,
+        optimizer: Optimizer | None = None,
+        initializer: InitUtil.InitStr = None,
+        lambda_: float = 0.0,
+        do_batch_norm: bool = True,
+        momentum: float = 0.9,
+        random_state: int | None = None,
+    ) -> None:
+        self.in_channels = in_channels
+        self.out_channels = out_channels
+        self.stride = stride
+        self.downsampling = downsampling
+        self.filter_sizes = filter_sizes
+        self.reduction = reduction
+        self.groups = groups
+        self.activation = activation
+        self.optimizer = optimizer
+        self.initializer = initializer
+        self.lambda_ = lambda_
+        self.do_batch_norm = do_batch_norm
+        self.momentum = momentum
+
+        self.basic_args = dict(
+            initializer=initializer, lambda_=lambda_, random_state=random_state
+        )
+        self.init_nodes()
+
+        super(_Bottleneck_SK, self).__init__(
+            graph={
+                self.rt_: [self.down_, self.conv_],
+                self.conv_: [self.sum_],
+                self.down_: [self.sum_],
+            },
+            root=self.rt_,
+            term=self.sum_,
+        )
+
+        self.build()
+        if optimizer is not None:
+            self.set_optimizer(optimizer)
+
+    expansion: ClassVar[int] = 4
+
+    def init_nodes(self) -> None:
+        self.rt_ = LayerNode(nl.Identity(), name="rt_")
+        self.conv_ = LayerNode(
+            nl.Sequential(
+                nl.Conv2D(self.in_channels, self.out_channels, 1, **self.basic_args),
+                nl.BatchNorm2D(self.out_channels, self.momentum),
+                self.activation(),
+                _SKBlock2D(
+                    self.out_channels,
+                    self.out_channels,
+                    self.filter_sizes,
+                    self.reduction,
+                    self.activation,
+                    **self.basic_args,
+                ),
+                nl.Conv2D(
+                    self.out_channels,
+                    self.out_channels * type(self).expansion,
+                    1,
+                    **self.basic_args,
+                ),
+                nl.BatchNorm2D(
+                    self.out_channels * type(self).expansion,
+                    self.momentum,
+                ),
+            ),
+            name="conv_",
+        )
+        self.down_ = LayerNode(
+            self.downsampling if self.downsampling else nl.Identity(), name="down_"
+        )
+        self.sum_ = LayerNode(self.activation(), MergeMode.SUM, name="sum_")
+
+    @Tensor.force_dim(4)
+    def forward(self, X: TensorLike, is_train: bool = False) -> TensorLike:
+        return super().forward(X, is_train)
+
+    @Tensor.force_dim(4)
+    def backward(self, d_out: TensorLike) -> TensorLike:
+        return super().backward(d_out)
+
+    @override
+    def out_shape(self, in_shape: Tuple[int]) -> Tuple[int]:
+        return self.conv_.out_shape(in_shape)
