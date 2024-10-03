@@ -22,6 +22,7 @@ from luma.neural.block import (
     incep,
     incep_res,
     mobile,
+    resnest,
     resnet,
     se,
     sk,
@@ -51,6 +52,7 @@ __all__ = (
     "MobileNetBlock",
     "DenseNetBlock",
     "EfficientBlock",
+    "ResNeStBlock",
 )
 
 
@@ -1260,3 +1262,11 @@ class EfficientBlock:
 
         Refer to the figures shown in the original paper[2].
         """
+
+
+@ClassType.non_instantiable()
+class ResNeStBlock:
+
+    class SplitAttention(resnest._SplitAttention): ...
+
+    class Bottleneck(resnest._Bottleneck): ...
