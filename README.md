@@ -173,6 +173,10 @@ Deep learning models and neural network utilities of Luma
 | `SKBlock2D` | $5k+8$ | $(N,C_{in},H,W)$ | $(N,C_{out},H,W)$ |
 | `SKBlock3D` | $5k+8$ | $(N,C_{in},D,H,W)$ | $(N,C_{out},D,H,W)$ |
 
+### ResNeSt Block
+
+*Waiting for future updates…🔮*
+
 ---
 
 ## Neural Models
@@ -375,6 +379,8 @@ Information Processing Systems, 2012.
 | `SK_ResNet_101` | 902 | $(N,3,224,224)$ | 104,298,688 | 78,564 | 104,377,252 | ✅ |
 | `SK_ResNeXt_50` | 443 | $(N,3,224,224)$ | 29,915,712 | 58,240 | 29,973,952 | ✅ |
 | `SK_ResNeXt_101` | 902 | $(N,3,224,224)$ | 53,399,104 | 119,712 | 53,518,816 | ✅ |
+
+#### ResNeSt Series
 
 *Waiting for future updates…🔮*
 
