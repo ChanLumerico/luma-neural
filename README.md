@@ -366,6 +366,16 @@ Information Processing Systems, 2012.
 
 #### SKNet Series
 
+>Li, Xiang, et al. "Selective Kernel Networks." Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), 2019, pp. 510-519.
+>
+
+| Class | # of Layers | Input Shape | Weights | Biases | Total Param. | Implemented |
+| --- | --- | --- | --- | --- | --- | --- |
+| `SK_ResNet_50` | 443 | $(N,3,224,224)$ | 57,236,160 | 39,124 | 57,275,284 | ✅ |
+| `SK_ResNet_101` | 902 | $(N,3,224,224)$ | 104,298,688 | 78,564 | 104,377,252 | ✅ |
+| `SK_ResNeXt_50` | 443 | $(N,3,224,224)$ | 29,915,712 | 58,240 | 29,973,952 | ✅ |
+| `SK_ResNeXt_101` | 902 | $(N,3,224,224)$ | 53,399,104 | 119,712 | 53,518,816 | ✅ |
+
 *Waiting for future updates…🔮*
 
 ---

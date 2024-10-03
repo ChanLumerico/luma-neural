@@ -3097,13 +3097,239 @@ class ResNeXt_101(resnext._ResNeXt_101):
     """
 
 
-class SK_ResNet_50(resnet._SK_ResNet_50): ...
+class SK_ResNet_50(resnet._SK_ResNet_50):
+    """
+    SK-ResNet is a deep neural network that extends the ResNet architecture
+    by incorporating Selective Kernel (SK) blocks. These blocks dynamically
+    adjust the receptive field by adaptively selecting kernels of different
+    sizes, enhancing the network's ability to capture multi-scale features
+    and improving its representational power.
+
+    ResNet-50 is the base model for this variation.
+
+    Specs
+    -----
+    Input/Output Shapes:
+    ```py
+    Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
+    ```
+    Parameter Size:
+    ```
+    57,236,160 weights, 39,124 biases -> 57,275,284 params
+    ```
+    Components
+    ----------
+    Blocks Used:
+    ```py
+    ResNetBlock.Bottleneck_SK()
+    ```
+    Arguments
+    ---------
+    `activation` : callable, default=Activation.ReLU
+        Type of activation function
+    `initializer` : InitStr, default=None
+        Type of weight initializer
+    `out_features` : int, default=1000
+        Number of output features
+    `batch_size` : int, default=100
+        Size of a single mini-batch
+    `n_epochs` : int, default=100
+        Number of epochs for training
+    `valid_size` : float, default=0.1
+        Fractional size of validation set
+    `lambda_` : float, default=0.0
+        L2 regularization strength
+    `early_stopping` : bool, default=False
+        Whether to early-stop the training when the valid score stagnates
+    `patience` : int, default=10
+        Number of epochs to wait until early-stopping
+    `shuffle` : bool, default=True
+        Whethter to shuffle the data at the beginning of every epoch
+
+    References
+    ----------
+    [1] Li, Xiang, et al. "Selective Kernel Networks." Proceedings
+    of the IEEE/CVF Conference on Computer Vision and Pattern
+    Recognition (CVPR), 2019, pp. 510-519.
+
+    """
 
 
-class SK_ResNet_101(resnet._SK_ResNet_101): ...
+class SK_ResNet_101(resnet._SK_ResNet_101):
+    """
+    SK-ResNet is a deep neural network that extends the ResNet architecture
+    by incorporating Selective Kernel (SK) blocks. These blocks dynamically
+    adjust the receptive field by adaptively selecting kernels of different
+    sizes, enhancing the network's ability to capture multi-scale features
+    and improving its representational power.
+
+    ResNet-101 is the base model for this variation.
+
+    Specs
+    -----
+    Input/Output Shapes:
+    ```py
+    Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
+    ```
+    Parameter Size:
+    ```
+    104,298,688 weights, 78,564 biases -> 104,377,252 params
+    ```
+    Components
+    ----------
+    Blocks Used:
+    ```py
+    ResNetBlock.Bottleneck_SK()
+    ```
+    Arguments
+    ---------
+    `activation` : callable, default=Activation.ReLU
+        Type of activation function
+    `initializer` : InitStr, default=None
+        Type of weight initializer
+    `out_features` : int, default=1000
+        Number of output features
+    `batch_size` : int, default=100
+        Size of a single mini-batch
+    `n_epochs` : int, default=100
+        Number of epochs for training
+    `valid_size` : float, default=0.1
+        Fractional size of validation set
+    `lambda_` : float, default=0.0
+        L2 regularization strength
+    `early_stopping` : bool, default=False
+        Whether to early-stop the training when the valid score stagnates
+    `patience` : int, default=10
+        Number of epochs to wait until early-stopping
+    `shuffle` : bool, default=True
+        Whethter to shuffle the data at the beginning of every epoch
+
+    References
+    ----------
+    [1] Li, Xiang, et al. "Selective Kernel Networks." Proceedings
+    of the IEEE/CVF Conference on Computer Vision and Pattern
+    Recognition (CVPR), 2019, pp. 510-519.
+
+    """
 
 
-class SK_ResNeXt_50(resnext._SK_ResNeXt_50): ...
+class SK_ResNeXt_50(resnext._SK_ResNeXt_50):
+    """
+    SK-ResNeXt is a deep neural network that extends the ResNeXt architecture
+    by integrating Selective Kernel (SK) blocks. These blocks dynamically
+    adjust the receptive field by adaptively selecting kernels of varying
+    sizes, enhancing the model's ability to capture multi-scale features.
+    This integration improves the representational power of the network,
+    allowing for more efficient and effective feature learning.
+
+    ResNeXt-50 is the base model for this variation.
+
+    Specs
+    -----
+    Input/Output Shapes:
+    ```py
+    Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
+    ```
+    Parameter Size:
+    ```
+    29,915,712 weights, 58,240 biases -> 29,973,952 params
+    ```
+    Components
+    ----------
+    Blocks Used:
+    ```py
+    ResNetBlock.Bottleneck_SK()  # Override `expantion` to 2
+    ```
+    Arguments
+    ---------
+    `cardinality` : int, default=32
+        The cardinality in terms of aggregated residual transformations.
+    `activation` : callable, default=Activation.ReLU
+        Type of activation function
+    `initializer` : InitStr, default=None
+        Type of weight initializer
+    `out_features` : int, default=1000
+        Number of output features
+    `batch_size` : int, default=100
+        Size of a single mini-batch
+    `n_epochs` : int, default=100
+        Number of epochs for training
+    `valid_size` : float, default=0.1
+        Fractional size of validation set
+    `lambda_` : float, default=0.0
+        L2 regularization strength
+    `early_stopping` : bool, default=False
+        Whether to early-stop the training when the valid score stagnates
+    `patience` : int, default=10
+        Number of epochs to wait until early-stopping
+    `shuffle` : bool, default=True
+        Whethter to shuffle the data at the beginning of every epoch
+
+    References
+    ----------
+    [1] Li, Xiang, et al. "Selective Kernel Networks." Proceedings
+    of the IEEE/CVF Conference on Computer Vision and Pattern
+    Recognition (CVPR), 2019, pp. 510-519.
+
+    """
 
 
-class SK_ResNeXt_101(resnext._SK_ResNeXt_101): ...
+class SK_ResNeXt_101(resnext._SK_ResNeXt_101):
+    """
+    SK-ResNeXt is a deep neural network that extends the ResNeXt architecture
+    by integrating Selective Kernel (SK) blocks. These blocks dynamically
+    adjust the receptive field by adaptively selecting kernels of varying
+    sizes, enhancing the model's ability to capture multi-scale features.
+    This integration improves the representational power of the network,
+    allowing for more efficient and effective feature learning.
+
+    ResNeXt-101 is the base model for this variation.
+
+    Specs
+    -----
+    Input/Output Shapes:
+    ```py
+    Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
+    ```
+    Parameter Size:
+    ```
+    53,399,104 weights, 119,712 biases -> 53,518,816 params
+    ```
+    Components
+    ----------
+    Blocks Used:
+    ```py
+    ResNetBlock.Bottleneck_SK()  # Override `expantion` to 2
+    ```
+    Arguments
+    ---------
+    `cardinality` : int, default=32
+        The cardinality in terms of aggregated residual transformations.
+    `activation` : callable, default=Activation.ReLU
+        Type of activation function
+    `initializer` : InitStr, default=None
+        Type of weight initializer
+    `out_features` : int, default=1000
+        Number of output features
+    `batch_size` : int, default=100
+        Size of a single mini-batch
+    `n_epochs` : int, default=100
+        Number of epochs for training
+    `valid_size` : float, default=0.1
+        Fractional size of validation set
+    `lambda_` : float, default=0.0
+        L2 regularization strength
+    `early_stopping` : bool, default=False
+        Whether to early-stop the training when the valid score stagnates
+    `patience` : int, default=10
+        Number of epochs to wait until early-stopping
+    `shuffle` : bool, default=True
+        Whethter to shuffle the data at the beginning of every epoch
+
+    References
+    ----------
+    [1] Li, Xiang, et al. "Selective Kernel Networks." Proceedings
+    of the IEEE/CVF Conference on Computer Vision and Pattern
+    Recognition (CVPR), 2019, pp. 510-519.
+
+    """

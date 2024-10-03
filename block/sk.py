@@ -15,6 +15,7 @@ class _SKBlock1D(LayerGraph):
         out_channels: int,
         filter_sizes: list[int] = [3, 5],
         reduction: int = 16,
+        groups: int = 1,
         activation: callable = nl.Activation.ReLU,
         optimizer: Optimizer | None = None,
         initializer: InitUtil.InitStr = None,
@@ -26,6 +27,7 @@ class _SKBlock1D(LayerGraph):
         self.out_channels = out_channels
         self.filter_sizes = filter_sizes
         self.reduction = reduction
+        self.groups = groups
         self.activation = activation
         self.optimizer = optimizer
         self.initializer = initializer
@@ -62,6 +64,7 @@ class _SKBlock1D(LayerGraph):
                         self.in_channels,
                         self.out_channels,
                         filter_size=f_size,
+                        groups=self.groups,
                         padding="same",
                         **self.basic_args,
                     ),
@@ -148,6 +151,7 @@ class _SKBlock2D(LayerGraph):
         out_channels: int,
         filter_sizes: list[int] = [3, 5],
         reduction: int = 16,
+        groups: int = 1,
         activation: callable = nl.Activation.ReLU,
         optimizer: Optimizer | None = None,
         initializer: InitUtil.InitStr = None,
@@ -159,6 +163,7 @@ class _SKBlock2D(LayerGraph):
         self.out_channels = out_channels
         self.filter_sizes = filter_sizes
         self.reduction = reduction
+        self.groups = groups
         self.activation = activation
         self.optimizer = optimizer
         self.initializer = initializer
@@ -195,6 +200,7 @@ class _SKBlock2D(LayerGraph):
                         self.in_channels,
                         self.out_channels,
                         filter_size=f_size,
+                        groups=self.groups,
                         padding="same",
                         **self.basic_args,
                     ),
@@ -281,6 +287,7 @@ class _SKBlock3D(LayerGraph):
         out_channels: int,
         filter_sizes: list[int] = [3, 5],
         reduction: int = 16,
+        groups: int = 1,
         activation: callable = nl.Activation.ReLU,
         optimizer: Optimizer | None = None,
         initializer: InitUtil.InitStr = None,
@@ -292,6 +299,7 @@ class _SKBlock3D(LayerGraph):
         self.out_channels = out_channels
         self.filter_sizes = filter_sizes
         self.reduction = reduction
+        self.groups = groups
         self.activation = activation
         self.optimizer = optimizer
         self.initializer = initializer
@@ -327,6 +335,7 @@ class _SKBlock3D(LayerGraph):
                     nl.Conv3D(
                         self.in_channels,
                         self.out_channels,
+                        groups=self.groups,
                         filter_size=f_size,
                         padding="same",
                         **self.basic_args,

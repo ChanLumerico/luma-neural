@@ -514,6 +514,7 @@ class _Bottleneck_SK(LayerGraph, _ExpansionMixin):
                     self.out_channels,
                     self.filter_sizes,
                     self.reduction,
+                    self.groups,
                     self.activation,
                     **self.basic_args,
                 ),
