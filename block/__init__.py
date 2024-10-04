@@ -1264,9 +1264,4 @@ class EfficientBlock:
         """
 
 
-@ClassType.non_instantiable()
-class ResNeStBlock:
-
-    class SplitAttention(resnest._SplitAttention): ...
-
-    class Bottleneck(resnest._Bottleneck): ...
+class ResNeStBlock(resnest._ResNeStBlock): ...
