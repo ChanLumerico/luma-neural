@@ -175,6 +175,10 @@ Deep learning models and neural network utilities of Luma
 
 ### ResNeSt Block
 
+| Class | # of Layers | Input Shape | Output Shape |
+| --- | --- | --- | --- |
+| `ResNeStBlock` | 29~30 | $(N,C_{in},H_{in},W_{in})$ | $(N,C_{out},H_{out},W_{out})$ |
+
 *Waiting for future updates…🔮*
 
 ---

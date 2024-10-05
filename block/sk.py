@@ -41,9 +41,7 @@ class _SKBlock1D(LayerGraph):
         self.init_nodes()
 
         super(_SKBlock1D, self).__init__(
-            graph=self._build_graph(),
-            root=self.rt_,
-            term=self.sum_,
+            graph=self._build_graph(), root=self.rt_, term=self.sum_
         )
 
         self.build()
@@ -177,9 +175,7 @@ class _SKBlock2D(LayerGraph):
         self.init_nodes()
 
         super(_SKBlock2D, self).__init__(
-            graph=self._build_graph(),
-            root=self.rt_,
-            term=self.sum_,
+            graph=self._build_graph(), root=self.rt_, term=self.sum_
         )
 
         self.build()
@@ -313,9 +309,7 @@ class _SKBlock3D(LayerGraph):
         self.init_nodes()
 
         super(_SKBlock3D, self).__init__(
-            graph=self._build_graph(),
-            root=self.rt_,
-            term=self.sum_,
+            graph=self._build_graph(), root=self.rt_, term=self.sum_
         )
 
         self.build()

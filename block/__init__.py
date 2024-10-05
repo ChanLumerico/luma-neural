@@ -1264,4 +1264,31 @@ class EfficientBlock:
         """
 
 
-class ResNeStBlock(resnest._ResNeStBlock): ...
+class ResNeStBlock(resnest._ResNeStBlock):
+    """
+    ResNeSt block which enhances the original ResNet's Bottleneck module
+    by integrating Split-Attention mechanism, used in ResNeSt architecture.
+
+    Parameters
+    ----------
+    `n_splits` : int, default=2
+        Number of the splits
+    `n_groups` : int, default=32
+        Number of the cardinality applied in Split phase
+    `reduction` : int, default=4
+        Reduction rate for squeezing the dimension of the first FC-layer
+        during Attention phase
+
+    Notes
+    -----
+    - This block has an internal Bottleneck-like mechanism, meaning that
+    it handles downsampling strategy automatically based on its channels
+    and stride information, according to the original paper[1].
+
+    Reference
+    ---------
+    `ResNeSt-(50, 101, 200, 269)` :
+        [1] Zhang, Hang, et al. "ResNeSt: Split-Attention Networks." arXiv
+        preprint arXiv:2004.08955 (2020).
+
+    """
