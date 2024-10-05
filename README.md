@@ -44,6 +44,9 @@ Deep learning models and neural network utilities of Luma
 | `Dropout1D` | $(N,C,W)$ | $(N,C,W)$ |
 | `Dropout2D` | $(N,C,H,W)$ | $(N,C,H,W)$ |
 | `Dropout3D` | $(N,C,D,H,W)$ | $(N,C,D,H,W)$ |
+| `DropBlock1D` | $(N,C,W)$ | $(N,C,W)$ |
+| `DropBlock2D` | $(N,C,H,W)$ | $(N,C,H,W)$ |
+| `DropBlock3D` | $(N,C,D,H,W)$ | $(N,C,D,H,W)$ |
 
 ### Linear
 
@@ -177,7 +180,7 @@ Deep learning models and neural network utilities of Luma
 
 | Class | # of Layers | Input Shape | Output Shape |
 | --- | --- | --- | --- |
-| `ResNeStBlock` | $21\sim 23+8r$ | $(N,C_{in},H_{in},W_{in})$ | $(N,C_{out},H_{out},W_{out})$ |
+| `ResNeStBlock` | $22\sim 24+8r$ | $(N,C_{in},H_{in},W_{in})$ | $(N,C_{out},H_{out},W_{out})$ |
 
 *Waiting for future updates…🔮*
 
@@ -388,10 +391,10 @@ Information Processing Systems, 2012.
 
 | Class | # of Layers | Input Shape | Weights | Biases | Total Param. | Implemented |
 | --- | --- | --- | --- | --- | --- | --- |
-| `ResNeSt_50` |  |  |  |  |  |  |
-| `ResNeSt_101` |  |  |  |  |  |  |
-| `ResNeSt_200` |  |  |  |  |  |  |
-| `ResNeSt_269` |  |  |  |  |  |  |
+| `ResNeSt_50` | 517 | $(N,3,224,224)$ | 26,535,136 | 39,944 | 26,575,080 | ✅ |
+| `ResNeSt_101` | 1,044 | $(N,3,224,224)$ | 46,371,552 | 80,200 | 46,451,752 | ✅ |
+| `ResNeSt_200` | 2,067 | $(N,3,224,224)$ | 67,392,736 | 134,664 | 67,527,400 | ✅ |
+| `ResNeSt_269` | 2,780 | $(N,3,224,224)$ | 106,451,680 | 193,864 | 106,645,544 | ✅ |
 
 *Waiting for future updates…🔮*
 

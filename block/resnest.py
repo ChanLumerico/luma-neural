@@ -25,6 +25,7 @@ class _ResNeStBlock(LayerGraph, _ExpansionMixin):
         initializer: InitUtil.InitStr = None,
         lambda_: float = 0.0,
         momentum: float = 0.9,
+        drop_prob: float = 0.1,
         random_state: int | None = None,
     ) -> None:
         self.in_channels = in_channels
@@ -39,6 +40,7 @@ class _ResNeStBlock(LayerGraph, _ExpansionMixin):
         self.initializer = initializer
         self.lambda_ = lambda_
         self.momentum = momentum
+        self.drop_prob = drop_prob
         self.random_state = random_state
 
         assert stride in [1, 2]
@@ -88,6 +90,7 @@ class _ResNeStBlock(LayerGraph, _ExpansionMixin):
                         **self.basic_args,
                     ),
                     nl.BatchNorm2D(self.out_channels, self.momentum),
+                    nl.DropBlock2D(self.drop_prob, 3, self.random_state),
                     self.activation(),
                 ),
                 name=f"split_{r}",

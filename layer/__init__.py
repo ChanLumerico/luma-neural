@@ -44,6 +44,9 @@ __all__ = (
     "Dropout1D",
     "Dropout2D",
     "Dropout3D",
+    "DropBlock1D",
+    "DropBlock2D",
+    "DropBlock3D",
     "Flatten",
     "Reshape",
     "Transpose",
@@ -990,6 +993,87 @@ class Dropout3D(drop._Dropout3D):
         self, dropout_rate: float = 0.5, random_state: int | None = None
     ) -> None:
         super().__init__(dropout_rate, random_state)
+
+
+class DropBlock1D(drop._DropBlock1D):
+    """
+    DropBlock layer for 1-dimensional data.
+
+    DropBlock is a regularization technique for convolutional networks
+    that drops contiguous regions of feature maps during training, rather
+    than individual neurons, to encourage robustness. It works like spatial
+    dropout but with structured blocks, enhancing generalization by
+    preventing overfitting to local features.
+
+    Parameters
+    ----------
+    `drop_prob` : float, default=0.1
+        Probability of dropping a block during training
+    `block_size` : int, default=7
+        Size of the contiguous square region(block) that will be dropped
+    """
+
+    def __init__(
+        self,
+        drop_prob: float = 0.1,
+        block_size: int = 7,
+        random_state: int | None = None,
+    ) -> None:
+        super().__init__(drop_prob, block_size, random_state)
+
+
+class DropBlock2D(drop._DropBlock2D):
+    """
+    DropBlock layer for 2-dimensional data.
+
+    DropBlock is a regularization technique for convolutional networks
+    that drops contiguous regions of feature maps during training, rather
+    than individual neurons, to encourage robustness. It works like spatial
+    dropout but with structured blocks, enhancing generalization by
+    preventing overfitting to local features.
+
+    Parameters
+    ----------
+    `drop_prob` : float, default=0.1
+        Probability of dropping a block during training
+    `block_size` : int, default=7
+        Size of the contiguous square region(block) that will be dropped
+    """
+
+    def __init__(
+        self,
+        drop_prob: float = 0.1,
+        block_size: int = 7,
+        random_state: int | None = None,
+    ) -> None:
+        super().__init__(drop_prob, block_size, random_state)
+
+
+class DropBlock3D(drop._DropBlock3D):
+    """
+    DropBlock layer for 3-dimensional data.
+
+    DropBlock is a regularization technique for convolutional networks
+    that drops contiguous regions of feature maps during training, rather
+    than individual neurons, to encourage robustness. It works like spatial
+    dropout but with structured blocks, enhancing generalization by
+    preventing overfitting to local features.
+
+    Parameters
+    ----------
+    `drop_prob` : float, default=0.1
+        Probability of dropping a block during training
+    `block_size` : int, default=7
+        Size of the contiguous square region(block) that will be dropped
+    """
+
+    def __init__(
+        self,
+        drop_prob: float = 0.1,
+        block_size: int = 7,
+        random_state: int | None = None,
+    ) -> None:
+        super().__init__(drop_prob, block_size, random_state)
 
 
 class Flatten(linear._Flatten):
