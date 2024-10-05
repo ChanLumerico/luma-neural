@@ -177,7 +177,7 @@ Deep learning models and neural network utilities of Luma
 
 | Class | # of Layers | Input Shape | Output Shape |
 | --- | --- | --- | --- |
-| `ResNeStBlock` | 29~30 | $(N,C_{in},H_{in},W_{in})$ | $(N,C_{out},H_{out},W_{out})$ |
+| `ResNeStBlock` | $21\sim 23+8r$ | $(N,C_{in},H_{in},W_{in})$ | $(N,C_{out},H_{out},W_{out})$ |
 
 *Waiting for future updates…🔮*
 
@@ -385,6 +385,13 @@ Information Processing Systems, 2012.
 | `SK_ResNeXt_101` | 902 | $(N,3,224,224)$ | 53,399,104 | 119,712 | 53,518,816 | ✅ |
 
 #### ResNeSt Series
+
+| Class | # of Layers | Input Shape | Weights | Biases | Total Param. | Implemented |
+| --- | --- | --- | --- | --- | --- | --- |
+| `ResNeSt_50` |  |  |  |  |  |  |
+| `ResNeSt_101` |  |  |  |  |  |  |
+| `ResNeSt_200` |  |  |  |  |  |  |
+| `ResNeSt_269` |  |  |  |  |  |  |
 
 *Waiting for future updates…🔮*
 

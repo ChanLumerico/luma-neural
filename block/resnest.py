@@ -16,7 +16,8 @@ class _ResNeStBlock(LayerGraph, _ExpansionMixin):
         in_channels: int,
         out_channels: int,
         n_splits: int = 2,
-        n_groups: int = 32,
+        n_groups: int = 1,
+        filter_size: int = 3,
         stride: int = 1,
         reduction: int = 4,
         activation: callable = nl.Activation.ReLU,
@@ -30,6 +31,7 @@ class _ResNeStBlock(LayerGraph, _ExpansionMixin):
         self.out_channels = out_channels
         self.n_splits = n_splits
         self.n_groups = n_groups
+        self.filter_size = filter_size
         self.stride = stride
         self.reduction = reduction
         self.activation = activation
@@ -80,7 +82,7 @@ class _ResNeStBlock(LayerGraph, _ExpansionMixin):
                     nl.Conv2D(
                         self.out_channels // self.n_splits,
                         self.out_channels,
-                        filter_size=3,
+                        self.filter_size,
                         stride=self.stride,
                         groups=self.n_groups,
                         **self.basic_args,
@@ -98,7 +100,7 @@ class _ResNeStBlock(LayerGraph, _ExpansionMixin):
             slice_ = LayerNode(nl.Slice(f":, {r}, :, :, :"), name=f"slice_{r}")
             self.slice_arr.append(slice_)
 
-        inter_channels = max(self.out_channels // self.reduction, self.n_groups)
+        inter_channels = max(self.out_channels // self.reduction, 32)
         self.fc_ = LayerNode(
             nl.Sequential(
                 nl.GlobalAvgPool2D(),
@@ -164,6 +166,7 @@ class _ResNeStBlock(LayerGraph, _ExpansionMixin):
                         stride=1,
                         **self.basic_args,
                     ),
+                    nl.BatchNorm2D(self.out_channels * type(self).expansion),
                 )
                 if self.do_downsample
                 else nl.Identity()

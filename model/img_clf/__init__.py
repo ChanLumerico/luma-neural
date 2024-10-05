@@ -22,6 +22,7 @@ from . import (
     incep,
     lenet,
     mobile,
+    resnest,
     resnet,
     resnext,
     vgg,
@@ -86,6 +87,10 @@ __all__ = (
     "SK_ResNet_101",
     "SK_ResNeXt_50",
     "SK_ResNeXt_101",
+    "ResNeSt_50",
+    "ResNeSt_101",
+    "ResNeSt_200",
+    "ResNeSt_269",
 )
 
 
@@ -3333,3 +3338,15 @@ class SK_ResNeXt_101(resnext._SK_ResNeXt_101):
     Recognition (CVPR), 2019, pp. 510-519.
 
     """
+
+
+class ResNeSt_50(resnest._ResNeSt_50): ...
+
+
+class ResNeSt_101(resnest._ResNeSt_101): ...
+
+
+class ResNeSt_200(resnest._ResNeSt_200): ...
+
+
+class ResNeSt_269(resnest._ResNeSt_269): ...
