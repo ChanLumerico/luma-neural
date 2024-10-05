@@ -389,6 +389,9 @@ Information Processing Systems, 2012.
 
 #### ResNeSt Series
 
+>Zhang, Hang, et al. “ResNeSt: Split-Attention Networks.” Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), 2020, pp. 2736-2746.
+>
+
 | Class | # of Layers | Input Shape | Weights | Biases | Total Param. | Implemented |
 | --- | --- | --- | --- | --- | --- | --- |
 | `ResNeSt_50` | 517 | $(N,3,224,224)$ | 26,535,136 | 39,944 | 26,575,080 | ✅ |
