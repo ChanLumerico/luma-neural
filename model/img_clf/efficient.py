@@ -1008,7 +1008,7 @@ class _EfficientNet_B7(Estimator, NeuralModel, ImageClassifier):
         return super(_EfficientNet_B7, self).score_nn(X, y, metric, argmax)
 
 
-class _EfficientNet_V2_Small(Estimator, NeuralModel, ImageClassifier):
+class _EfficientNet_V2_S(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.Swish,
@@ -1119,7 +1119,7 @@ class _EfficientNet_V2_Small(Estimator, NeuralModel, ImageClassifier):
 
     @Tensor.force_shape(input_shape)
     def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_EfficientNet_V2_Small, self).fit_nn(X, y)
+        return super(_EfficientNet_V2_S, self).fit_nn(X, y)
 
     @override
     def train(self, X: TensorLike, y: TensorLike, epoch: int) -> list[float]:
@@ -1134,7 +1134,7 @@ class _EfficientNet_V2_Small(Estimator, NeuralModel, ImageClassifier):
             if isinstance(drop_layer, nl.Dropout):
                 drop_layer.dropout_rate = new_drop_rate
 
-        return super(_EfficientNet_V2_Small, self).train(X, y, epoch)
+        return super(_EfficientNet_V2_S, self).train(X, y, epoch)
 
     def update_size_dropout_rate(self, stage: int) -> tuple[int, float]:
         res_arr = [128, 160, 192, 224]
@@ -1146,7 +1146,7 @@ class _EfficientNet_V2_Small(Estimator, NeuralModel, ImageClassifier):
     @override
     @Tensor.force_shape(input_shape)
     def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_EfficientNet_V2_Small, self).predict_nn(X, argmax)
+        return super(_EfficientNet_V2_S, self).predict_nn(X, argmax)
 
     @override
     @Tensor.force_shape(input_shape)
@@ -1157,10 +1157,10 @@ class _EfficientNet_V2_Small(Estimator, NeuralModel, ImageClassifier):
         metric: Evaluator = Accuracy,
         argmax: bool = True,
     ) -> float:
-        return super(_EfficientNet_V2_Small, self).score_nn(X, y, metric, argmax)
+        return super(_EfficientNet_V2_S, self).score_nn(X, y, metric, argmax)
 
 
-class _EfficientNet_V2_Medium(Estimator, NeuralModel, ImageClassifier):
+class _EfficientNet_V2_M(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.Swish,
@@ -1271,7 +1271,7 @@ class _EfficientNet_V2_Medium(Estimator, NeuralModel, ImageClassifier):
 
     @Tensor.force_shape(input_shape)
     def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_EfficientNet_V2_Medium, self).fit_nn(X, y)
+        return super(_EfficientNet_V2_M, self).fit_nn(X, y)
 
     @override
     def train(self, X: TensorLike, y: TensorLike, epoch: int) -> list[float]:
@@ -1286,7 +1286,7 @@ class _EfficientNet_V2_Medium(Estimator, NeuralModel, ImageClassifier):
             if isinstance(drop_layer, nl.Dropout):
                 drop_layer.dropout_rate = new_drop_rate
 
-        return super(_EfficientNet_V2_Medium, self).train(X, y, epoch)
+        return super(_EfficientNet_V2_M, self).train(X, y, epoch)
 
     def update_size_dropout_rate(self, stage: int) -> tuple[int, float]:
         res_arr = [160, 192, 224, 256]
@@ -1298,7 +1298,7 @@ class _EfficientNet_V2_Medium(Estimator, NeuralModel, ImageClassifier):
     @override
     @Tensor.force_shape(input_shape)
     def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_EfficientNet_V2_Medium, self).predict_nn(X, argmax)
+        return super(_EfficientNet_V2_M, self).predict_nn(X, argmax)
 
     @override
     @Tensor.force_shape(input_shape)
@@ -1309,10 +1309,10 @@ class _EfficientNet_V2_Medium(Estimator, NeuralModel, ImageClassifier):
         metric: Evaluator = Accuracy,
         argmax: bool = True,
     ) -> float:
-        return super(_EfficientNet_V2_Medium, self).score_nn(X, y, metric, argmax)
+        return super(_EfficientNet_V2_M, self).score_nn(X, y, metric, argmax)
 
 
-class _EfficientNet_V2_Large(Estimator, NeuralModel, ImageClassifier):
+class _EfficientNet_V2_L(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.Swish,
@@ -1423,7 +1423,7 @@ class _EfficientNet_V2_Large(Estimator, NeuralModel, ImageClassifier):
 
     @Tensor.force_shape(input_shape)
     def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_EfficientNet_V2_Large, self).fit_nn(X, y)
+        return super(_EfficientNet_V2_L, self).fit_nn(X, y)
 
     @override
     def train(self, X: TensorLike, y: TensorLike, epoch: int) -> list[float]:
@@ -1438,7 +1438,7 @@ class _EfficientNet_V2_Large(Estimator, NeuralModel, ImageClassifier):
             if isinstance(drop_layer, nl.Dropout):
                 drop_layer.dropout_rate = new_drop_rate
 
-        return super(_EfficientNet_V2_Large, self).train(X, y, epoch)
+        return super(_EfficientNet_V2_L, self).train(X, y, epoch)
 
     def update_size_dropout_rate(self, stage: int) -> tuple[int, float]:
         res_arr = [192, 224, 256, 320]
@@ -1450,7 +1450,7 @@ class _EfficientNet_V2_Large(Estimator, NeuralModel, ImageClassifier):
     @override
     @Tensor.force_shape(input_shape)
     def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_EfficientNet_V2_Large, self).predict_nn(X, argmax)
+        return super(_EfficientNet_V2_L, self).predict_nn(X, argmax)
 
     @override
     @Tensor.force_shape(input_shape)
@@ -1461,10 +1461,10 @@ class _EfficientNet_V2_Large(Estimator, NeuralModel, ImageClassifier):
         metric: Evaluator = Accuracy,
         argmax: bool = True,
     ) -> float:
-        return super(_EfficientNet_V2_Large, self).score_nn(X, y, metric, argmax)
+        return super(_EfficientNet_V2_L, self).score_nn(X, y, metric, argmax)
 
 
-class _EfficientNet_V2_XLarge(Estimator, NeuralModel, ImageClassifier):
+class _EfficientNet_V2_XL(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.Swish,
@@ -1575,7 +1575,7 @@ class _EfficientNet_V2_XLarge(Estimator, NeuralModel, ImageClassifier):
 
     @Tensor.force_shape(input_shape)
     def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_EfficientNet_V2_XLarge, self).fit_nn(X, y)
+        return super(_EfficientNet_V2_XL, self).fit_nn(X, y)
 
     @override
     def train(self, X: TensorLike, y: TensorLike, epoch: int) -> list[float]:
@@ -1590,7 +1590,7 @@ class _EfficientNet_V2_XLarge(Estimator, NeuralModel, ImageClassifier):
             if isinstance(drop_layer, nl.Dropout):
                 drop_layer.dropout_rate = new_drop_rate
 
-        return super(_EfficientNet_V2_XLarge, self).train(X, y, epoch)
+        return super(_EfficientNet_V2_XL, self).train(X, y, epoch)
 
     def update_size_dropout_rate(self, stage: int) -> tuple[int, float]:
         res_arr = [192, 224, 256, 320]
@@ -1602,7 +1602,7 @@ class _EfficientNet_V2_XLarge(Estimator, NeuralModel, ImageClassifier):
     @override
     @Tensor.force_shape(input_shape)
     def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_EfficientNet_V2_XLarge, self).predict_nn(X, argmax)
+        return super(_EfficientNet_V2_XL, self).predict_nn(X, argmax)
 
     @override
     @Tensor.force_shape(input_shape)
@@ -1613,4 +1613,4 @@ class _EfficientNet_V2_XLarge(Estimator, NeuralModel, ImageClassifier):
         metric: Evaluator = Accuracy,
         argmax: bool = True,
     ) -> float:
-        return super(_EfficientNet_V2_XLarge, self).score_nn(X, y, metric, argmax)
+        return super(_EfficientNet_V2_XL, self).score_nn(X, y, metric, argmax)

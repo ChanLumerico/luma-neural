@@ -17,6 +17,7 @@ and Inception mechanisms, ensuring flexibility for various use cases.
 
 from . import (
     alex,
+    convnext,
     dense,
     efficient,
     incep,
@@ -77,10 +78,10 @@ __all__ = (
     "EfficientNet_B5",
     "EfficientNet_B6",
     "EfficientNet_B7",
-    "EfficientNet_V2_Small",
-    "EfficientNet_V2_Medium",
-    "EfficientNet_V2_Large",
-    "EfficientNet_V2_XLarge",
+    "EfficientNet_V2_S",
+    "EfficientNet_V2_M",
+    "EfficientNet_V2_L",
+    "EfficientNet_V2_XL",
     "ResNeXt_50",
     "ResNeXt_101",
     "SK_ResNet_50",
@@ -91,6 +92,11 @@ __all__ = (
     "ResNeSt_101",
     "ResNeSt_200",
     "ResNeSt_269",
+    "ConvNeXt_T",
+    "ConvNeXt_S",
+    "ConvNeXt_B",
+    "ConvNeXt_L",
+    "ConvNeXt_XL",
 )
 
 
@@ -2732,7 +2738,7 @@ class EfficientNet_B7(efficient._EfficientNet_B7):
     """
 
 
-class EfficientNet_V2_Small(efficient._EfficientNet_V2_Small):
+class EfficientNet_V2_S(efficient._EfficientNet_V2_S):
     """
     EfficientNet-V2-S is a smaller variant in the EfficientNet-V2 family,
     designed with improved training speed and better parameter efficiency
@@ -2794,7 +2800,7 @@ class EfficientNet_V2_Small(efficient._EfficientNet_V2_Small):
     """
 
 
-class EfficientNet_V2_Medium(efficient._EfficientNet_V2_Medium):
+class EfficientNet_V2_M(efficient._EfficientNet_V2_M):
     """
     EfficientNet-V2-M is a medium-sized variant in the EfficientNet-V2 family,
     designed with improved training speed and better parameter efficiency
@@ -2856,7 +2862,7 @@ class EfficientNet_V2_Medium(efficient._EfficientNet_V2_Medium):
     """
 
 
-class EfficientNet_V2_Large(efficient._EfficientNet_V2_Large):
+class EfficientNet_V2_L(efficient._EfficientNet_V2_L):
     """
     EfficientNet-V2-L is a larger variant in the EfficientNet-V2 family,
     designed with improved training speed and better parameter efficiency
@@ -2918,7 +2924,7 @@ class EfficientNet_V2_Large(efficient._EfficientNet_V2_Large):
     """
 
 
-class EfficientNet_V2_XLarge(efficient._EfficientNet_V2_XLarge):
+class EfficientNet_V2_XL(efficient._EfficientNet_V2_XL):
     """
     EfficientNet-V2-XL is the largest model in the EfficientNet-V2 family,
     designed specifically for large-scale datasets like ImageNet-21k.
@@ -3340,13 +3346,260 @@ class SK_ResNeXt_101(resnext._SK_ResNeXt_101):
     """
 
 
-class ResNeSt_50(resnest._ResNeSt_50): ...
+class ResNeSt_50(resnest._ResNeSt_50):
+    """
+    ResNeSt (Residual Networks with Squeeze-and-Excitation Networks and
+    Split-Attention) is a variant of ResNet that improves performance by
+    using split-attention blocks to enhance feature aggregation and
+    channel-wise attention. It achieves state-of-the-art results in image
+    classification and object detection tasks.
+
+    ResNet-50 is the base model for this variation.
+
+    Specs
+    -----
+    Input/Output Shapes:
+    ```py
+    Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
+    ```
+    Parameter Size:
+    ```
+    26,535,136 weights, 39,944 biases -> 26,575,080 params
+    ```
+    Components
+    ----------
+    Blocks Used:
+    ```py
+    ResNeStBlock()
+    ```
+    Arguments
+    ---------
+    `radix` : int, default=2
+        The number of 'splits' of Split-Attention module
+    `cardinality` : int, default=1
+        The cardinality referring to the number of 'groups'
+    `activation` : callable, default=Activation.ReLU
+        Type of activation function
+    `initializer` : InitStr, default=None
+        Type of weight initializer
+    `out_features` : int, default=1000
+        Number of output features
+    `batch_size` : int, default=100
+        Size of a single mini-batch
+    `n_epochs` : int, default=100
+        Number of epochs for training
+    `valid_size` : float, default=0.1
+        Fractional size of validation set
+    `lambda_` : float, default=0.0001
+        L2 regularization strength
+    `early_stopping` : bool, default=False
+        Whether to early-stop the training when the valid score stagnates
+    `patience` : int, default=10
+        Number of epochs to wait until early-stopping
+    `shuffle` : bool, default=True
+        Whethter to shuffle the data at the beginning of every epoch
+
+    References
+    ----------
+    [1] Zhang, Hang, et al. "ResNeSt: Split-Attention Networks." arXiv
+    preprint arXiv:2004.08955 (2020).
+
+    """
 
 
-class ResNeSt_101(resnest._ResNeSt_101): ...
+class ResNeSt_101(resnest._ResNeSt_101):
+    """
+    ResNeSt (Residual Networks with Squeeze-and-Excitation Networks and
+    Split-Attention) is a variant of ResNet that improves performance by
+    using split-attention blocks to enhance feature aggregation and
+    channel-wise attention. It achieves state-of-the-art results in image
+    classification and object detection tasks.
+
+    ResNet-101 is the base model for this variation.
+
+    Specs
+    -----
+    Input/Output Shapes:
+    ```py
+    Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
+    ```
+    Parameter Size:
+    ```
+    46,371,552 weights, 80,200 biases -> 46,451,752 params
+    ```
+    Components
+    ----------
+    Blocks Used:
+    ```py
+    ResNeStBlock()
+    ```
+    Arguments
+    ---------
+    `radix` : int, default=2
+        The number of 'splits' of Split-Attention module
+    `cardinality` : int, default=1
+        The cardinality referring to the number of 'groups'
+    `activation` : callable, default=Activation.ReLU
+        Type of activation function
+    `initializer` : InitStr, default=None
+        Type of weight initializer
+    `out_features` : int, default=1000
+        Number of output features
+    `batch_size` : int, default=100
+        Size of a single mini-batch
+    `n_epochs` : int, default=100
+        Number of epochs for training
+    `valid_size` : float, default=0.1
+        Fractional size of validation set
+    `lambda_` : float, default=0.0001
+        L2 regularization strength
+    `early_stopping` : bool, default=False
+        Whether to early-stop the training when the valid score stagnates
+    `patience` : int, default=10
+        Number of epochs to wait until early-stopping
+    `shuffle` : bool, default=True
+        Whethter to shuffle the data at the beginning of every epoch
+
+    References
+    ----------
+    [1] Zhang, Hang, et al. "ResNeSt: Split-Attention Networks." arXiv
+    preprint arXiv:2004.08955 (2020).
+
+    """
 
 
-class ResNeSt_200(resnest._ResNeSt_200): ...
+class ResNeSt_200(resnest._ResNeSt_200):
+    """
+    ResNeSt (Residual Networks with Squeeze-and-Excitation Networks and
+    Split-Attention) is a variant of ResNet that improves performance by
+    using split-attention blocks to enhance feature aggregation and
+    channel-wise attention. It achieves state-of-the-art results in image
+    classification and object detection tasks.
+
+    ResNet-200 is the base model for this variation.
+
+    Specs
+    -----
+    Input/Output Shapes:
+    ```py
+    Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
+    ```
+    Parameter Size:
+    ```
+    67,392,736 weights, 134,664 biases -> 67,527,400 params
+    ```
+    Components
+    ----------
+    Blocks Used:
+    ```py
+    ResNeStBlock()
+    ```
+    Arguments
+    ---------
+    `radix` : int, default=2
+        The number of 'splits' of Split-Attention module
+    `cardinality` : int, default=1
+        The cardinality referring to the number of 'groups'
+    `activation` : callable, default=Activation.ReLU
+        Type of activation function
+    `initializer` : InitStr, default=None
+        Type of weight initializer
+    `out_features` : int, default=1000
+        Number of output features
+    `batch_size` : int, default=100
+        Size of a single mini-batch
+    `n_epochs` : int, default=100
+        Number of epochs for training
+    `valid_size` : float, default=0.1
+        Fractional size of validation set
+    `lambda_` : float, default=0.0001
+        L2 regularization strength
+    `early_stopping` : bool, default=False
+        Whether to early-stop the training when the valid score stagnates
+    `patience` : int, default=10
+        Number of epochs to wait until early-stopping
+    `shuffle` : bool, default=True
+        Whethter to shuffle the data at the beginning of every epoch
+
+    References
+    ----------
+    [1] Zhang, Hang, et al. "ResNeSt: Split-Attention Networks." arXiv
+    preprint arXiv:2004.08955 (2020).
+
+    """
 
 
-class ResNeSt_269(resnest._ResNeSt_269): ...
+class ResNeSt_269(resnest._ResNeSt_269):
+    """
+    ResNeSt (Residual Networks with Squeeze-and-Excitation Networks and
+    Split-Attention) is a variant of ResNet that improves performance by
+    using split-attention blocks to enhance feature aggregation and
+    channel-wise attention. It achieves state-of-the-art results in image
+    classification and object detection tasks.
+
+    ResNet-269 is the base model for this variation.
+
+    Specs
+    -----
+    Input/Output Shapes:
+    ```py
+    Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
+    ```
+    Parameter Size:
+    ```
+    106,451,680 weights, 193,864 biases -> 106,645,544 params
+    ```
+    Components
+    ----------
+    Blocks Used:
+    ```py
+    ResNeStBlock()
+    ```
+    Arguments
+    ---------
+    `radix` : int, default=2
+        The number of 'splits' of Split-Attention module
+    `cardinality` : int, default=1
+        The cardinality referring to the number of 'groups'
+    `activation` : callable, default=Activation.ReLU
+        Type of activation function
+    `initializer` : InitStr, default=None
+        Type of weight initializer
+    `out_features` : int, default=1000
+        Number of output features
+    `batch_size` : int, default=100
+        Size of a single mini-batch
+    `n_epochs` : int, default=100
+        Number of epochs for training
+    `valid_size` : float, default=0.1
+        Fractional size of validation set
+    `lambda_` : float, default=0.0001
+        L2 regularization strength
+    `early_stopping` : bool, default=False
+        Whether to early-stop the training when the valid score stagnates
+    `patience` : int, default=10
+        Number of epochs to wait until early-stopping
+    `shuffle` : bool, default=True
+        Whethter to shuffle the data at the beginning of every epoch
+
+    References
+    ----------
+    [1] Zhang, Hang, et al. "ResNeSt: Split-Attention Networks." arXiv
+    preprint arXiv:2004.08955 (2020).
+
+    """
+
+
+class ConvNeXt_T: ...
+
+
+class ConvNeXt_S: ...
+
+
+class ConvNeXt_B: ...
+
+
+class ConvNeXt_L: ...
+
+
+class ConvNeXt_XL: ...
