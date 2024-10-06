@@ -399,6 +399,8 @@ Information Processing Systems, 2012.
 | `ResNeSt_200` | 2,067 | $(N,3,224,224)$ | 67,392,736 | 134,664 | 67,527,400 | ✅ |
 | `ResNeSt_269` | 2,780 | $(N,3,224,224)$ | 106,451,680 | 193,864 | 106,645,544 | ✅ |
 
+#### ConvNeXt Series
+
 *Waiting for future updates…🔮*
 
 ---
