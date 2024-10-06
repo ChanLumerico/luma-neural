@@ -89,9 +89,37 @@ import os
 reg_path: str = r"luma/neural/model/registry.json"
 
 
-def register_model(
-    name: str, acc_dict: dict[float] | None = None, **kwargs: Any
-) -> None:
+def register_model(name: str, **kwargs: Any) -> None:
+    if load_model_registry(name) is not None:
+        print(
+            f"Model '{name}' is already registered.",
+            "Skipping registration.",
+        )
+        return
+
+    with open(reg_path, "r") as f:
+        try:
+            model_data = json.load(f)
+        except json.JSONDecodeError:
+            model_data = []
+
+    model = get_model(name)
+    model_inst = model()
+    new_entry = {
+        "name": model.__name__,
+        "weights": model_inst.param_size[0],
+        "biases": model_inst.param_size[1],
+        "params": sum(model_inst.param_size),
+        "layers": model_inst.layer_count,
+        **kwargs,
+    }
+
+    model_data.append(new_entry)
+    with open(reg_path, "w") as f:
+        json.dump(model_data, f, indent=4)
+
+
+def load_model_registry(name: str) -> dict | None:
     if not os.path.exists(reg_path):
         raise FileNotFoundError(f"[Fatal] Model registry file not found!")
 
@@ -104,24 +132,4 @@ def register_model(
     for entry in model_data:
         entry_name = entry["name"]
         if entry_name == name or _get_alt_name(entry_name) == name:
-            print(
-                f"Model '{entry_name}' is already registered.",
-                "Skipping registration.",
-            )
-            return
-
-    model = get_model(name)
-    model_inst = model()
-    new_entry = {
-        "name": model.__name__,
-        "weights": model_inst.param_size[0],
-        "biases": model_inst.param_size[1],
-        "params": sum(model_inst.param_size),
-        "layers": model_inst.layer_count,
-        "accuracy": acc_dict if acc_dict is not None else {},
-        **kwargs,
-    }
-
-    model_data.append(new_entry)
-    with open(reg_path, "w") as f:
-        json.dump(model_data, f, indent=4)
+            return entry
