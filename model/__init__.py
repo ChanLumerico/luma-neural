@@ -11,6 +11,7 @@ and improving performance over time through training.
 """
 
 from types import ModuleType
+from typing import Any
 
 from .simple import *
 from .img_clf import *
@@ -64,9 +65,13 @@ def debug_models(submodules: list[str] | None = None) -> None:
     print(f"Failed Models: {failed_models}")
 
 
+def _get_alt_name(name: str) -> str:
+    return name.lower().replace("_", "-")
+
+
 def get_model(name: str) -> type | None:
     for model_name in MODELS:
-        alt_name = model_name.lower().replace("_", "-")
+        alt_name = _get_alt_name(model_name)
         if name == model_name or name == alt_name:
             return globals()[model_name]
 
@@ -76,3 +81,47 @@ def get_model_instance(name: str, **kwargs) -> object:
     if model is None:
         raise ValueError(f"'{name}' is an invalid or unsupported model!")
     return model(**kwargs)
+
+
+import json
+import os
+
+reg_path: str = r"luma/neural/model/registry.json"
+
+
+def register_model(
+    name: str, acc_dict: dict[float] | None = None, **kwargs: Any
+) -> None:
+    if not os.path.exists(reg_path):
+        raise FileNotFoundError(f"[Fatal] Model registry file not found!")
+
+    with open(reg_path, "r") as f:
+        try:
+            model_data = json.load(f)
+        except json.JSONDecodeError:
+            model_data = []
+
+    for entry in model_data:
+        entry_name = entry["name"]
+        if entry_name == name or _get_alt_name(entry_name) == name:
+            print(
+                f"Model '{entry_name}' is already registered.",
+                "Skipping registration.",
+            )
+            return
+
+    model = get_model(name)
+    model_inst = model()
+    new_entry = {
+        "name": model.__name__,
+        "weights": model_inst.param_size[0],
+        "biases": model_inst.param_size[1],
+        "params": sum(model_inst.param_size),
+        "layers": model_inst.layer_count,
+        "accuracy": acc_dict if acc_dict is not None else {},
+        **kwargs,
+    }
+
+    model_data.append(new_entry)
+    with open(reg_path, "w") as f:
+        json.dump(model_data, f, indent=4)
