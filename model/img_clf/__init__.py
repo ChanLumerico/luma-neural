@@ -57,8 +57,8 @@ __all__ = (
     "Xception",
     "MobileNet_V1",
     "MobileNet_V2",
-    "MobileNet_V3_Small",
-    "MobileNet_V3_Large",
+    "MobileNet_V3_S",
+    "MobileNet_V3_L",
     "SE_ResNet_50",
     "SE_ResNet_152",
     "SE_Inception_ResNet_V2",
@@ -1543,7 +1543,7 @@ class MobileNet_V2(mobile._Mobile_V2):
     """
 
 
-class MobileNet_V3_Small(mobile._Mobile_V3_Small):
+class MobileNet_V3_S(mobile._MobileNet_V3_S):
     """
     MobileNet-V3-Small improves on its predecessors by incorporating
     squeeze-and-excitation (SE) modules and the hard-swish activation,
@@ -1601,7 +1601,7 @@ class MobileNet_V3_Small(mobile._Mobile_V3_Small):
     """
 
 
-class MobileNet_V3_Large(mobile._Mobile_V3_Large):
+class MobileNet_V3_L(mobile._MobileNet_V3_L):
     """
     MobileNet-V3-Large enhances its predecessors by integrating
     squeeze-and-excitation(SE) modules and the hard-swish activation,

@@ -11,7 +11,7 @@ and improving performance over time through training.
 """
 
 from types import ModuleType
-from typing import Any
+from typing import Any, Never
 
 from .simple import *
 from .img_clf import *
@@ -119,10 +119,13 @@ def register_model(name: str, **kwargs: Any) -> None:
         json.dump(model_data, f, indent=4)
 
 
-def load_model_registry(name: str) -> dict | None:
+def _check_reg_path() -> Never:
     if not os.path.exists(reg_path):
         raise FileNotFoundError(f"[Fatal] Model registry file not found!")
 
+
+def load_model_registry(name: str) -> dict | None:
+    _check_reg_path()
     with open(reg_path, "r") as f:
         try:
             model_data = json.load(f)
@@ -133,3 +136,11 @@ def load_model_registry(name: str) -> dict | None:
         entry_name = entry["name"]
         if entry_name == name or _get_alt_name(entry_name) == name:
             return entry
+
+
+def load_entire_registry() -> list[dict]:
+    _check_reg_path()
+    with open(reg_path, "r") as f:
+        model_data = json.load(f)
+
+    return model_data

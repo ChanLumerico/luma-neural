@@ -15,8 +15,8 @@ from ..types import ImageClassifier
 __all__ = (
     "_Mobile_V1",
     "_Mobile_V2",
-    "_Mobile_V3_Small",
-    "_Mobile_V3_Large",
+    "_MobileNet_V3_S",
+    "_MobileNet_V3_L",
 )
 
 
@@ -300,7 +300,7 @@ class _Mobile_V2(Estimator, NeuralModel, ImageClassifier):
         return super(_Mobile_V2, self).score_nn(X, y, metric, argmax)
 
 
-class _Mobile_V3_Small(Estimator, NeuralModel, ImageClassifier):
+class _MobileNet_V3_S(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         initializer: InitUtil.InitStr = None,
@@ -414,12 +414,12 @@ class _Mobile_V3_Small(Estimator, NeuralModel, ImageClassifier):
 
     @Tensor.force_shape(input_shape)
     def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_Mobile_V3_Small, self).fit_nn(X, y)
+        return super(_MobileNet_V3_S, self).fit_nn(X, y)
 
     @override
     @Tensor.force_shape(input_shape)
     def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_Mobile_V3_Small, self).predict_nn(X, argmax)
+        return super(_MobileNet_V3_S, self).predict_nn(X, argmax)
 
     @override
     @Tensor.force_shape(input_shape)
@@ -430,10 +430,10 @@ class _Mobile_V3_Small(Estimator, NeuralModel, ImageClassifier):
         metric: Evaluator = Accuracy,
         argmax: bool = True,
     ) -> float:
-        return super(_Mobile_V3_Small, self).score_nn(X, y, metric, argmax)
+        return super(_MobileNet_V3_S, self).score_nn(X, y, metric, argmax)
 
 
-class _Mobile_V3_Large(Estimator, NeuralModel, ImageClassifier):
+class _MobileNet_V3_L(Estimator, NeuralModel, ImageClassifier):
     def __init__(
         self,
         initializer: InitUtil.InitStr = None,
@@ -551,12 +551,12 @@ class _Mobile_V3_Large(Estimator, NeuralModel, ImageClassifier):
 
     @Tensor.force_shape(input_shape)
     def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_Mobile_V3_Large, self).fit_nn(X, y)
+        return super(_MobileNet_V3_L, self).fit_nn(X, y)
 
     @override
     @Tensor.force_shape(input_shape)
     def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_Mobile_V3_Large, self).predict_nn(X, argmax)
+        return super(_MobileNet_V3_L, self).predict_nn(X, argmax)
 
     @override
     @Tensor.force_shape(input_shape)
@@ -567,4 +567,4 @@ class _Mobile_V3_Large(Estimator, NeuralModel, ImageClassifier):
         metric: Evaluator = Accuracy,
         argmax: bool = True,
     ) -> float:
-        return super(_Mobile_V3_Large, self).score_nn(X, y, metric, argmax)
+        return super(_MobileNet_V3_L, self).score_nn(X, y, metric, argmax)

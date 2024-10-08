@@ -1,6 +1,7 @@
 [
     {
         "name": "LeNet_1",
+        "family": "LeNet",
         "weights": 2180,
         "biases": 22,
         "params": 2202,
@@ -11,6 +12,7 @@
     },
     {
         "name": "LeNet_4",
+        "family": "LeNet",
         "weights": 50900,
         "biases": 150,
         "params": 51050,
@@ -21,6 +23,7 @@
     },
     {
         "name": "LeNet_5",
+        "family": "LeNet",
         "weights": 61470,
         "biases": 236,
         "params": 61706,
@@ -31,641 +34,645 @@
     },
     {
         "name": "AlexNet",
+        "family": null,
         "weights": 62367776,
         "biases": 10568,
         "params": 62378344,
         "layers": 26,
         "accuracy": {
             "cifar10": 89.0,
-            "imagenet-1k": 57.1,
-            "imagenet-1k_top5": 80.2
+            "imagenet-1k": 80.2
         }
     },
     {
         "name": "ZFNet",
+        "family": null,
         "weights": 62347040,
         "biases": 10568,
         "params": 62357608,
         "layers": 26,
         "accuracy": {
-            "imagenet-1k": 60.7,
-            "imagenet-1k_top5": 83.2
+            "imagenet-1k": 83.2
         }
     },
     {
         "name": "VGGNet_11",
+        "family": "VGGNet",
         "weights": 132851392,
         "biases": 11944,
         "params": 132863336,
         "layers": 29,
         "accuracy": {
-            "imagenet-1k": 70.5,
-            "imagenet-1k_top5": 89.8
+            "imagenet-1k": 89.8
         }
     },
     {
         "name": "VGGNet_13",
+        "family": "VGGNet",
         "weights": 133035712,
         "biases": 12136,
         "params": 133047848,
         "layers": 33,
         "accuracy": {
-            "imagenet-1k": 71.5,
-            "imagenet-1k_top5": 90.7
+            "imagenet-1k": 90.7
         }
     },
     {
         "name": "VGGNet_16",
+        "family": "VGGNet",
         "weights": 138344128,
         "biases": 13416,
         "params": 138357544,
         "layers": 39,
         "accuracy": {
-            "imagenet-1k": 71.5,
-            "imagenet-1k_top5": 89.8
+            "imagenet-1k": 89.8
         }
     },
     {
         "name": "VGGNet_19",
+        "family": "VGGNet",
         "weights": 143652544,
         "biases": 14696,
         "params": 143667240,
         "layers": 45,
         "accuracy": {
-            "imagenet-1k": 71.0,
-            "imagenet-1k_top5": 89.4
+            "imagenet-1k": 89.4
         }
     },
     {
         "name": "Inception_V1",
+        "family": "Inception",
         "weights": 6990272,
         "biases": 8280,
         "params": 6998552,
         "layers": 131,
         "accuracy": {
-            "imagenet-1k": 69.8,
-            "imagenet-1k_top5": 89.8
+            "imagenet-1k": 89.8
         }
     },
     {
         "name": "Inception_V2",
+        "family": "Inception",
         "weights": 24974688,
         "biases": 20136,
         "params": 24994824,
         "layers": 227,
         "accuracy": {
-            "imagenet-1k": 71.5,
-            "imagenet-1k_top5": 91.3
+            "imagenet-1k": 91.3
         }
     },
     {
         "name": "Inception_V3",
+        "family": "Inception",
         "weights": 25012960,
         "biases": 20136,
         "params": 25033096,
         "layers": 332,
         "accuracy": {
-            "imagenet-1k": 77.9,
-            "imagenet-1k_top5": 93.7
+            "imagenet-1k": 93.7
         }
     },
     {
         "name": "Inception_V4",
+        "family": "Inception",
         "weights": 42678816,
         "biases": 32584,
         "params": 42711400,
         "layers": 504,
         "accuracy": {
-            "imagenet-1k": 80.2,
-            "imagenet-1k_top5": 94.6
+            "imagenet-1k": 94.6
         }
     },
     {
         "name": "Inception_ResNet_V1",
+        "family": "Inception_ResNet",
         "weights": 21611648,
         "biases": 33720,
         "params": 21645368,
         "layers": 432,
         "accuracy": {
-            "imagenet-1k": 79.8,
-            "imagenet-1k_top5": 94.0
+            "imagenet-1k": 94.0
         }
     },
     {
         "name": "Inception_ResNet_V2",
+        "family": "Inception_ResNet",
         "weights": 34149472,
         "biases": 43562,
         "params": 34193034,
         "layers": 451,
         "accuracy": {
-            "imagenet-1k": 80.3,
-            "imagenet-1k_top5": 94.6
+            "imagenet-1k": 94.6
         }
     },
     {
         "name": "ResNet_18",
+        "family": "ResNet",
         "weights": 11688512,
         "biases": 5800,
         "params": 11694312,
         "layers": 74,
         "accuracy": {
-            "imagenet-1k": 69.8,
-            "imagenet-1k_top5": 89.5
+            "imagenet-1k": 89.5
         }
     },
     {
         "name": "ResNet_34",
+        "family": "ResNet",
         "weights": 21796672,
         "biases": 9512,
         "params": 21806184,
         "layers": 138,
         "accuracy": {
-            "imagenet-1k": 73.3,
-            "imagenet-1k_top5": 91.6
+            "imagenet-1k": 91.6
         }
     },
     {
         "name": "ResNet_50",
+        "family": "ResNet",
         "weights": 25556032,
         "biases": 27560,
         "params": 25583592,
         "layers": 187,
         "accuracy": {
-            "imagenet-1k": 76.2,
-            "imagenet-1k_top5": 92.8
+            "imagenet-1k": 92.8
         }
     },
     {
         "name": "ResNet_101",
+        "family": "ResNet",
         "weights": 44548160,
         "biases": 53672,
         "params": 44601832,
         "layers": 374,
         "accuracy": {
-            "imagenet-1k": 77.4,
-            "imagenet-1k_top5": 93.7
+            "imagenet-1k": 93.7
         }
     },
     {
         "name": "ResNet_152",
+        "family": "ResNet",
         "weights": 60191808,
         "biases": 76712,
         "params": 60268520,
         "layers": 561,
         "accuracy": {
-            "imagenet-1k": 78.3,
-            "imagenet-1k_top5": 94.1
+            "imagenet-1k": 94.1
         }
     },
     {
         "name": "ResNet_200",
+        "family": "ResNet",
         "weights": 64668864,
         "biases": 89000,
         "params": 64757864,
         "layers": 803,
         "accuracy": {
-            "imagenet-1k": 78.7,
-            "imagenet-1k_top5": 94.3
+            "imagenet-1k": 94.3
         }
     },
     {
         "name": "ResNet_269",
+        "family": "ResNet",
         "weights": 102068416,
         "biases": 127400,
         "params": 102195816,
         "layers": 1079,
         "accuracy": {
-            "imagenet-1k": 79.0,
-            "imagenet-1k_top5": 94.6
+            "imagenet-1k": 94.6
         }
     },
     {
         "name": "ResNet_1001",
+        "family": "ResNet",
         "weights": 159884992,
         "biases": 208040,
         "params": 160093032,
         "layers": 1727,
         "accuracy": {
-            "imagenet-1k": 79.5,
-            "imagenet-1k_top5": 94.9
+            "imagenet-1k": 94.9
         }
     },
     {
         "name": "Xception",
+        "family": null,
         "weights": 22113984,
         "biases": 50288,
         "params": 22164272,
         "layers": 175,
         "accuracy": {
-            "imagenet-1k": 79.0,
-            "imagenet-1k_top5": 94.1
+            "imagenet-1k": 94.1
         }
     },
     {
         "name": "MobileNet_V1",
+        "family": "MobileNet",
         "weights": 4230976,
         "biases": 11944,
         "params": 4242920,
         "layers": 71,
         "accuracy": {
-            "imagenet-1k": 70.6,
-            "imagenet-1k_top5": 89.5
+            "imagenet-1k": 89.5
         }
     },
     {
         "name": "MobileNet_V2",
+        "family": "MobileNet",
         "weights": 8418624,
         "biases": 19336,
         "params": 8437960,
         "layers": 162,
         "accuracy": {
-            "imagenet-1k": 71.8,
-            "imagenet-1k_top5": 91.0
+            "imagenet-1k": 91.0
         }
     },
     {
-        "name": "MobileNet_V3_Small",
+        "name": "MobileNet_V3_S",
+        "family": "MobileNet",
         "weights": 32455856,
         "biases": 326138,
         "params": 32781994,
         "layers": 174,
         "accuracy": {
-            "imagenet-1k": 75.2,
-            "imagenet-1k_top5": 92.8
+            "imagenet-1k": 92.8
         }
     },
     {
-        "name": "MobileNet_V3_Large",
+        "name": "MobileNet_V3_L",
+        "family": "MobileNet",
         "weights": 167606960,
         "biases": 1136502,
         "params": 168743462,
         "layers": 203,
         "accuracy": {
-            "imagenet-1k": 75.2,
-            "imagenet-1k_top5": 93.5
+            "imagenet-1k": 93.5
         }
     },
     {
         "name": "SE_ResNet_50",
+        "family": "SENet",
         "weights": 35615808,
         "biases": 46440,
         "params": 35662248,
         "layers": 299,
         "accuracy": {
-            "imagenet-1k": 77.5,
-            "imagenet-1k_top5": 93.2
+            "imagenet-1k": 93.2
         }
     },
     {
         "name": "SE_ResNet_152",
+        "family": "SENet",
         "weights": 86504512,
         "biases": 136552,
         "params": 86641064,
         "layers": 911,
         "accuracy": {
-            "imagenet-1k": 78.5,
-            "imagenet-1k_top5": 94.0
+            "imagenet-1k": 94.0
         }
     },
     {
         "name": "SE_Inception_ResNet_V2",
+        "family": "SENet",
         "weights": 58794080,
         "biases": 80762,
         "params": 58874842,
         "layers": 612,
         "accuracy": {
-            "imagenet-1k": 80.0,
-            "imagenet-1k_top5": 94.5
+            "imagenet-1k": 94.5
         }
     },
     {
         "name": "SE_DenseNet_121",
+        "family": "SENet",
         "weights": 9190272,
         "biases": 14760,
         "params": 9205032,
         "layers": 397,
         "accuracy": {
-            "imagenet-1k": 76.3,
-            "imagenet-1k_top5": 93.0
+            "imagenet-1k": 93.0
         }
     },
     {
         "name": "SE_DenseNet_169",
+        "family": "SENet",
         "weights": 16515968,
         "biases": 19848,
         "params": 16535816,
         "layers": 541,
         "accuracy": {
-            "imagenet-1k": 77.1,
-            "imagenet-1k_top5": 93.7
+            "imagenet-1k": 93.7
         }
     },
     {
         "name": "SE_ResNeXt_50",
+        "family": "SENet",
         "weights": 35087680,
         "biases": 53992,
         "params": 35141672,
         "layers": 299,
         "accuracy": {
-            "imagenet-1k": 77.4,
-            "imagenet-1k_top5": 93.3
+            "imagenet-1k": 93.3
         }
     },
     {
         "name": "SE_ResNeXt_101",
+        "family": "SENet",
         "weights": 63149376,
         "biases": 110568,
         "params": 63259944,
         "layers": 605,
         "accuracy": {
-            "imagenet-1k": 78.1,
-            "imagenet-1k_top5": 94.0
+            "imagenet-1k": 94.0
         }
     },
     {
         "name": "DenseNet_121",
+        "family": "DenseNet",
         "weights": 7977856,
         "biases": 11240,
         "params": 7989096,
         "layers": 369,
         "accuracy": {
-            "imagenet-1k": 74.9,
-            "imagenet-1k_top5": 92.3
+            "imagenet-1k": 92.3
         }
     },
     {
         "name": "DenseNet_169",
+        "family": "DenseNet",
         "weights": 14148480,
         "biases": 15208,
         "params": 14163688,
         "layers": 513,
         "accuracy": {
-            "imagenet-1k": 75.6,
-            "imagenet-1k_top5": 92.7
+            "imagenet-1k": 92.7
         }
     },
     {
         "name": "DenseNet_201",
+        "family": "DenseNet",
         "weights": 20012928,
         "biases": 18024,
         "params": 20030952,
         "layers": 609,
         "accuracy": {
-            "imagenet-1k": 76.5,
-            "imagenet-1k_top5": 93.5
+            "imagenet-1k": 93.5
         }
     },
     {
         "name": "DenseNet_264",
+        "family": "DenseNet",
         "weights": 33336704,
         "biases": 23400,
         "params": 33360104,
         "layers": 801,
         "accuracy": {
-            "imagenet-1k": 77.2,
-            "imagenet-1k_top5": 93.9
+            "imagenet-1k": 93.9
         }
     },
     {
         "name": "EfficientNet_B0",
+        "family": "EfficientNet",
         "weights": 4803040,
         "biases": 24268,
         "params": 4827308,
         "layers": 262,
         "accuracy": {
-            "imagenet-1k": 77.1,
-            "imagenet-1k_top5": 93.3
+            "imagenet-1k": 93.3
         }
     },
     {
         "name": "EfficientNet_B1",
+        "family": "EfficientNet",
         "weights": 6544500,
         "biases": 32568,
         "params": 6577068,
         "layers": 310,
         "accuracy": {
-            "imagenet-1k": 78.0,
-            "imagenet-1k_top5": 94.0
+            "imagenet-1k": 94.0
         }
     },
     {
         "name": "EfficientNet_B2",
+        "family": "EfficientNet",
         "weights": 8503007,
         "biases": 40160,
         "params": 8543167,
         "layers": 358,
         "accuracy": {
-            "imagenet-1k": 78.4,
-            "imagenet-1k_top5": 94.3
+            "imagenet-1k": 94.3
         }
     },
     {
         "name": "EfficientNet_B3",
+        "family": "EfficientNet",
         "weights": 13657980,
         "biases": 57390,
         "params": 13715370,
         "layers": 435,
         "accuracy": {
-            "imagenet-1k": 79.1,
-            "imagenet-1k_top5": 94.6
+            "imagenet-1k": 94.6
         }
     },
     {
         "name": "EfficientNet_B4",
+        "family": "EfficientNet",
         "weights": 17877155,
         "biases": 72278,
         "params": 17949433,
         "layers": 515,
         "accuracy": {
-            "imagenet-1k": 80.1,
-            "imagenet-1k_top5": 95.0
+            "imagenet-1k": 95.0
         }
     },
     {
         "name": "EfficientNet_B5",
+        "family": "EfficientNet",
         "weights": 24674011,
         "biases": 94261,
         "params": 24768272,
         "layers": 611,
         "accuracy": {
-            "imagenet-1k": 80.7,
-            "imagenet-1k_top5": 95.3
+            "imagenet-1k": 95.3
         }
     },
     {
         "name": "EfficientNet_B6",
+        "family": "EfficientNet",
         "weights": 38260230,
         "biases": 132704,
         "params": 38392934,
         "layers": 768,
         "accuracy": {
-            "imagenet-1k": 81.3,
-            "imagenet-1k_top5": 95.6
+            "imagenet-1k": 95.6
         }
     },
     {
         "name": "EfficientNet_B7",
+        "family": "EfficientNet",
         "weights": 56528906,
         "biases": 178066,
         "params": 56706972,
         "layers": 925,
         "accuracy": {
-            "imagenet-1k": 81.7,
-            "imagenet-1k_top5": 95.8
+            "imagenet-1k": 95.8
         }
     },
     {
-        "name": "EfficientNet_V2_Small",
+        "name": "EfficientNet_V2_S",
+        "family": "EfficientNet_V2",
         "weights": 18414552,
         "biases": 86116,
         "params": 18500668,
         "layers": 634,
         "accuracy": {
-            "imagenet-1k": 82.0,
-            "imagenet-1k_top5": 96.0
+            "imagenet-1k": 96.0,
+            "imagenet-21k": 83.4
         }
     },
     {
-        "name": "EfficientNet_V2_Medium",
+        "name": "EfficientNet_V2_M",
+        "family": "EfficientNet_V2",
         "weights": 46012920,
         "biases": 162264,
         "params": 46175184,
         "layers": 864,
         "accuracy": {
-            "imagenet-1k": 83.0,
-            "imagenet-1k_top5": 96.5
+            "imagenet-1k": 96.5,
+            "imagenet-21k": 84.1
         }
     },
     {
-        "name": "EfficientNet_V2_Large",
+        "name": "EfficientNet_V2_L",
+        "family": "EfficientNet_V2",
         "weights": 104084896,
         "biases": 303032,
         "params": 104387928,
         "layers": 1292,
         "accuracy": {
-            "imagenet-1k": 83.5,
-            "imagenet-1k_top5": 96.7
+            "imagenet-1k": 96.7,
+            "imagenet-21k": 84.8
         }
     },
     {
-        "name": "EfficientNet_V2_XLarge",
+        "name": "EfficientNet_V2_XL",
+        "family": "EfficientNet_V2",
         "weights": 201762976,
         "biases": 450227,
         "params": 202213203,
         "layers": 1530,
         "accuracy": {
-            "imagenet-1k": 84.0,
-            "imagenet-1k_top5": 97.0
+            "imagenet-1k": 97.0,
+            "imagenet-21k": 85.3
         }
     },
     {
         "name": "ResNeXt_50",
+        "family": "ResNeXt",
         "weights": 25027904,
         "biases": 35112,
         "params": 25063016,
         "layers": 187,
         "accuracy": {
-            "imagenet-1k": 77.5,
-            "imagenet-1k_top5": 93.6
+            "imagenet-1k": 93.6
         }
     },
     {
         "name": "ResNeXt_101",
+        "family": "ResNeXt",
         "weights": 44176704,
         "biases": 69928,
         "params": 44246632,
         "layers": 374,
         "accuracy": {
-            "imagenet-1k": 78.2,
-            "imagenet-1k_top5": 94.1
+            "imagenet-1k": 94.1
         }
     },
     {
         "name": "SK_ResNet_50",
+        "family": "SKNet",
         "weights": 57236160,
         "biases": 39124,
         "params": 57275284,
         "layers": 443,
         "accuracy": {
-            "imagenet-1k": 78.0,
-            "imagenet-1k_top5": 93.8
+            "imagenet-1k": 93.8
         }
     },
     {
         "name": "SK_ResNet_101",
+        "family": "SKNet",
         "weights": 104298688,
         "biases": 78564,
         "params": 104377252,
         "layers": 902,
         "accuracy": {
-            "imagenet-1k": 78.8,
-            "imagenet-1k_top5": 94.3
+            "imagenet-1k": 94.3
         }
     },
     {
         "name": "SK_ResNeXt_50",
+        "family": "SKNet",
         "weights": 29915712,
         "biases": 58240,
         "params": 29973952,
         "layers": 443,
         "accuracy": {
-            "imagenet-1k": 78.3,
-            "imagenet-1k_top5": 94.0
+            "imagenet-1k": 94.0
         }
     },
     {
         "name": "SK_ResNeXt_101",
+        "family": "SKNet",
         "weights": 53399104,
         "biases": 119712,
         "params": 53518816,
         "layers": 902,
         "accuracy": {
-            "imagenet-1k": 79.0,
-            "imagenet-1k_top5": 94.5
+            "imagenet-1k": 94.5
         }
     },
     {
         "name": "ResNeSt_50",
+        "family": "ResNeSt",
         "weights": 26535136,
         "biases": 39944,
         "params": 26575080,
         "layers": 517,
         "accuracy": {
-            "imagenet-1k": 78.7,
-            "imagenet-1k_top5": 94.4
+            "imagenet-1k": 94.4
         }
     },
     {
         "name": "ResNeSt_101",
+        "family": "ResNeSt",
         "weights": 46371552,
         "biases": 80200,
         "params": 46451752,
         "layers": 1044,
         "accuracy": {
-            "imagenet-1k": 79.5,
-            "imagenet-1k_top5": 95.0
+            "imagenet-1k": 95.0
         }
     },
     {
         "name": "ResNeSt_200",
+        "family": "ResNeSt",
         "weights": 67392736,
         "biases": 134664,
         "params": 67527400,
         "layers": 2067,
         "accuracy": {
-            "imagenet-1k": 80.0,
-            "imagenet-1k_top5": 95.3
+            "imagenet-1k": 95.3
         }
     },
     {
         "name": "ResNeSt_269",
+        "family": "ResNeSt",
         "weights": 106451680,
         "biases": 193864,
         "params": 106645544,
         "layers": 2780,
         "accuracy": {
-            "imagenet-1k": 80.5,
-            "imagenet-1k_top5": 95.6
+            "imagenet-1k": 95.6
         }
     }
 ]
