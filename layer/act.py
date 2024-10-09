@@ -128,7 +128,7 @@ class _Activation:
             self.output_ = e_X / np.sum(e_X, axis=self.dim, keepdims=True)
             return self.output_
 
-        def backward(self, d_out: np.ndarray) -> np.ndarray:
+        def backward(self, d_out: TensorLike) -> TensorLike:
             sum_d_out_y = np.sum(d_out * self.output_, axis=self.dim, keepdims=True)
 
             self.dX = self.output_ * (d_out - sum_d_out_y)
@@ -251,6 +251,42 @@ class _Activation:
                 + (self.input_ * relu6_grad / 6)
             )
             return self.dX
+
+        def out_shape(self, in_shape: Tuple[int]) -> Tuple[int]:
+            return _Activation._out_shape(in_shape)
+
+    class GELU(Layer):
+        def __init__(self) -> None:
+            super().__init__()
+            self.a = np.sqrt(2 / np.pi)
+            self.b = 0.044715
+
+            self.input_ = None
+            self.tanh_z = None
+            self.sech_z_squared = None
+            self.z = None
+
+        def forward(self, X: TensorLike, is_train: bool = False) -> TensorLike:
+            _ = is_train
+            self.input_ = X
+
+            self.z = self.a * X + self.b * (X**3)
+            self.tanh_z = np.tanh(self.z)
+
+            output = 0.5 * X * (1 + self.tanh_z)
+            return output
+
+        def backward(self, d_out: TensorLike) -> TensorLike:
+            self.sech_z_squared = 1 - self.tanh_z**2
+            dz_dx = self.a + 3 * self.b * (self.input_**2)
+
+            dGELU = (
+                0.5 * (1 + self.tanh_z)
+                + 0.5 * self.input_ * self.sech_z_squared * dz_dx
+            )
+
+            dX = d_out * dGELU
+            return dX
 
         def out_shape(self, in_shape: Tuple[int]) -> Tuple[int]:
             return _Activation._out_shape(in_shape)
