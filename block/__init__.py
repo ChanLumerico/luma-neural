@@ -17,6 +17,7 @@ from luma.interface.typing import ClassType
 from luma.interface.util import InitUtil
 
 from luma.neural.block import (
+    convnext,
     dense,
     efficient,
     incep,
@@ -53,6 +54,7 @@ __all__ = (
     "DenseNetBlock",
     "EfficientBlock",
     "ResNeStBlock",
+    "ConvNeXtBlock",
 )
 
 
@@ -1292,3 +1294,6 @@ class ResNeStBlock(resnest._ResNeStBlock):
         preprint arXiv:2004.08955 (2020).
 
     """
+
+
+class ConvNeXtBlock: ...
