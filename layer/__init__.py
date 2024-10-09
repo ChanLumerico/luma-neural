@@ -1295,21 +1295,22 @@ class LayerNorm(norm._LayerNorm):
 
     Parameters
     ----------
-    `in_shape` : int or tuple of int
-        Shape of the input
+    `in_shape` : int or tuple of int, optional, default=None
+        Shape of the input; If set to None, it copies the shape of the input
+        tensor when forwarding
 
     Notes
     -----
     - The input `X` must have the form of >=2D-array(`Matrix`).
 
         ```py
-        X.shape = (batch_size, *spatial)
+        X.shape = (batch_size, *)
         ```
     """
 
     def __init__(
         self,
-        in_shape: Tuple[int] | int,
+        in_shape: Tuple[int] | int | None = None,
         epsilon: float = 1e-5,
     ) -> None:
         super().__init__(in_shape, epsilon)

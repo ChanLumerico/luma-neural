@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Optional, Tuple
 import numpy as np
 
 from luma.interface.typing import Tensor
@@ -294,21 +294,30 @@ class _LocalResponseNorm(Layer):
 
 
 class _LayerNorm(Layer):
-    def __init__(self, in_shape: tuple[int] | int, epsilon: float = 1e-5) -> None:
+    def __init__(
+        self, in_shape: Optional[tuple[int] | int] = None, epsilon: float = 1e-5
+    ) -> None:
         super().__init__()
         self.in_shape = in_shape
-        if isinstance(self.in_shape, int):
-            self.in_shape = (self.in_shape,)
         self.epsilon = epsilon
 
-        gamma = np.ones(in_shape[1:])
-        beta = np.zeros(in_shape[1:])
-        self.weights_ = [gamma, beta]
+        if self.in_shape is not None:
+            if isinstance(self.in_shape, int):
+                self.in_shape = (self.in_shape,)
+
+            gamma = np.ones(self.in_shape)
+            beta = np.zeros(self.in_shape)
+            self.weights_ = [gamma, beta]
 
     def forward(self, X: Tensor, is_train: bool = False) -> Tensor:
         _ = is_train
         self.input_ = X
         X_axis = tuple(range(1, X.ndim))
+
+        if self.in_shape is None:
+            gamma = np.ones(X.shape[1:])
+            beta = np.zeros(X.shape[1:])
+            self.weights_ = [gamma, beta]
 
         mean = X.mean(axis=X_axis, keepdims=True)
         var = X.var(axis=X_axis, keepdims=True)
@@ -338,3 +347,6 @@ class _LayerNorm(Layer):
         dX = dX_norm * std_inv + (dvar * 2 * X_mu + dmu) / n_features
         self.dX = dX
         return self.dX
+
+    def out_shape(self, in_shape: Tuple[int]) -> Tuple[int]:
+        return in_shape
