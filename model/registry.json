@@ -639,7 +639,7 @@
         "params": 26575080,
         "layers": 517,
         "accuracy": {
-            "imagenet-1k": 94.4
+            "imagenet-1k": 95.4
         }
     },
     {
@@ -650,7 +650,7 @@
         "params": 46451752,
         "layers": 1044,
         "accuracy": {
-            "imagenet-1k": 95.0
+            "imagenet-1k": 96.0
         }
     },
     {
@@ -661,7 +661,7 @@
         "params": 67527400,
         "layers": 2067,
         "accuracy": {
-            "imagenet-1k": 95.3
+            "imagenet-1k": 96.3
         }
     },
     {
@@ -672,7 +672,7 @@
         "params": 106645544,
         "layers": 2780,
         "accuracy": {
-            "imagenet-1k": 95.6
+            "imagenet-1k": 96.6
         }
     }
 ]
