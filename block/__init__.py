@@ -1296,4 +1296,22 @@ class ResNeStBlock(resnest._ResNeStBlock):
     """
 
 
-class ConvNeXtBlock: ...
+class ConvNeXtBlock(convnext._ConvNeXtBlock):
+    """
+    A ConvNeXt Block is a building block of the ConvNeXt architecture,
+    designed to improve traditional convolutional layers by incorporating a
+    depthwise convolution followed by layer normalization, a pointwise
+    convolution, and a GELU activation, along with residual connections for
+    enhanced feature extraction and better gradient flow.
+
+    This block aims to bridge the gap between convolutional networks and
+    transformer-based architectures in terms of performance and scalability.
+
+    Reference
+    ---------
+    `ConvNeXt-(T, S, B, L, XL)` :
+        [1] Liu, Zhuang, et al. "A ConvNet for the 2020s." Proceedings of the
+        IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR),
+        2022, pp. 11976-11986.
+
+    """

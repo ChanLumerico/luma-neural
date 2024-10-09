@@ -518,11 +518,17 @@ class NeuralModel(ABC, NeuralBase):
                 trunc_str = f"... {len(self.model) - i} more layers/blocks"
                 print(f"\n{trunc_str:^83}")
                 break
+
+            param_size_str = (
+                str(layer.param_size)
+                if layer.param_size is not NotImplemented
+                else "(post-init)"
+            )
             print(
                 f"{name:<20}",
                 f"{str(layer):<20}",
                 f"{str(layer.out_shape(in_shape)):<20}",
-                f"{str(layer.param_size):<20}",
+                f"{param_size_str:<20}",
             )
             in_shape = layer.out_shape(in_shape)
 

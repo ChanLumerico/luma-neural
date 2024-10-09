@@ -1503,7 +1503,10 @@ class Sequential(Layer):
     def param_size(self) -> Tuple[int, int]:
         w_size, b_size = 0, 0
         for _, layer in self.layers:
-            w_, b_ = layer.param_size
+            param_size = layer.param_size
+            if param_size is NotImplemented:
+                continue
+            w_, b_ = param_size
             w_size += w_
             b_size += b_
 

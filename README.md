@@ -182,6 +182,12 @@ Deep learning models and neural network utilities of Luma
 | --- | --- | --- | --- |
 | `ResNeStBlock` | $22\sim 24+8r$ | $(N,C_{in},H_{in},W_{in})$ | $(N,C_{out},H_{out},W_{out})$ |
 
+### ConvNeXt Block
+
+| Class | # of Layers | Input Shape | Output Shape |
+| --- | --- | --- | --- |
+| `ConvNeXtBlock` | 7 | $(N,C,H,W)$ | $(N,C,H,W)$ |
+
 *Waiting for future updates…🔮*
 
 ---
@@ -400,6 +406,17 @@ Information Processing Systems, 2012.
 | `ResNeSt_269` | 2,780 | $(N,3,224,224)$ | 106,451,680 | 193,864 | 106,645,544 | ✅ |
 
 #### ConvNeXt Series
+
+>Liu, Zhuang, et al. "A ConvNet for the 2020s." Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), 2022, pp. 11976-11986.
+>
+
+| Class | # of Layers | Input Shape | Weights | Biases | Total Param. | Implemented |
+| --- | --- | --- | --- | --- | --- | --- |
+| `ConvNeXt_T` |  |  |  |  |  |  |
+| `ConvNeXt_S` |  |  |  |  |  |  |
+| `ConvNeXt_B` |  |  |  |  |  |  |
+| `ConvNeXt_L` |  |  |  |  |  |  |
+| `ConvNeXt_XL` |  |  |  |  |  |  |
 
 *Waiting for future updates…🔮*
 

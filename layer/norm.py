@@ -1,4 +1,4 @@
-from typing import Optional, Tuple
+from typing import Optional, Tuple, override
 import numpy as np
 
 from luma.interface.typing import Tensor
@@ -347,6 +347,11 @@ class _LayerNorm(Layer):
         dX = dX_norm * std_inv + (dvar * 2 * X_mu + dmu) / n_features
         self.dX = dX
         return self.dX
+
+    @override
+    @property
+    def param_size(self) -> tuple[int, int]:
+        return super().param_size() if self.in_shape is not None else NotImplemented
 
     def out_shape(self, in_shape: Tuple[int]) -> Tuple[int]:
         return in_shape
