@@ -3590,16 +3590,280 @@ class ResNeSt_269(resnest._ResNeSt_269):
     """
 
 
-class ConvNeXt_T(convnext._ConvNeXt_T): ...
+class ConvNeXt_T(convnext._ConvNeXt_T):
+    """
+    ConvNeXt-T (ConvNeXt-Tiny) is a lightweight variant of the ConvNeXt
+    architecture, designed to be more efficient while maintaining strong
+    performance on image classification tasks. It utilizes modernized
+    convolutional blocks with depthwise convolutions, layer normalization,
+    and residual connections to improve feature extraction.
+
+    Specs
+    -----
+    Input/Output Shapes:
+    ```py
+    Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
+    ```
+    Parameter Size:
+    ```
+    28,524,000 weights, 42,184 biases -> 28,566,184 params
+    ```
+    Components
+    ----------
+    Blocks Used:
+    ```py
+    ConvNeXtBlock()
+    ```
+    Arguments
+    ---------
+    `activation` : callable, default=Activation.GELU
+        Type of activation function
+    `initializer` : InitStr, default=None
+        Type of weight initializer
+    `out_features` : int, default=1000
+        Number of output features
+    `batch_size` : int, default=100
+        Size of a single mini-batch
+    `n_epochs` : int, default=100
+        Number of epochs for training
+    `valid_size` : float, default=0.1
+        Fractional size of validation set
+    `lambda_` : float, default=0.0001
+        L2 regularization strength
+    `early_stopping` : bool, default=False
+        Whether to early-stop the training when the valid score stagnates
+    `patience` : int, default=10
+        Number of epochs to wait until early-stopping
+    `shuffle` : bool, default=True
+        Whethter to shuffle the data at the beginning of every epoch
+
+    References
+    ----------
+    [1] Liu, Zhuang, et al. "A ConvNet for the 2020s." Proceedings of the
+    IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR),
+    2022, pp. 11976-11986.
+
+    """
 
 
-class ConvNeXt_S(convnext._ConvNeXt_S): ...
+class ConvNeXt_S(convnext._ConvNeXt_S):
+    """
+    ConvNeXt-S, (ConvNeXt-Small) is a mid-sized variant of the ConvNeXt
+    architecture, offering more capacity and depth than ConvNeXt-Tiny while
+    still being relatively efficient. It uses modernized convolutional blocks,
+    including depthwise convolutions, layer normalization, and residual
+    connections, to enhance feature learning.
+
+    Specs
+    -----
+    Input/Output Shapes:
+    ```py
+    Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
+    ```
+    Parameter Size:
+    ```
+    50,096,352 weights, 83,656 biases -> 50,180,008 params
+    ```
+    Components
+    ----------
+    Blocks Used:
+    ```py
+    ConvNeXtBlock()
+    ```
+    Arguments
+    ---------
+    `activation` : callable, default=Activation.GELU
+        Type of activation function
+    `initializer` : InitStr, default=None
+        Type of weight initializer
+    `out_features` : int, default=1000
+        Number of output features
+    `batch_size` : int, default=100
+        Size of a single mini-batch
+    `n_epochs` : int, default=100
+        Number of epochs for training
+    `valid_size` : float, default=0.1
+        Fractional size of validation set
+    `lambda_` : float, default=0.0001
+        L2 regularization strength
+    `early_stopping` : bool, default=False
+        Whether to early-stop the training when the valid score stagnates
+    `patience` : int, default=10
+        Number of epochs to wait until early-stopping
+    `shuffle` : bool, default=True
+        Whethter to shuffle the data at the beginning of every epoch
+
+    References
+    ----------
+    [1] Liu, Zhuang, et al. "A ConvNet for the 2020s." Proceedings of the
+    IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR),
+    2022, pp. 11976-11986.
+
+    """
 
 
-class ConvNeXt_B(convnext._ConvNeXt_B): ...
+class ConvNeXt_B(convnext._ConvNeXt_B):
+    """
+    ConvNeXt-B, (ConvNeXt-Base) is a standard-sized version of the ConvNeXt
+    architecture, designed for achieving high accuracy on image classification
+    tasks. It incorporates deeper layers and more parameters compared to smaller
+    variants, using the same advanced convolutional blocks and residual
+    connections.
+
+    Specs
+    -----
+    Input/Output Shapes:
+    ```py
+    Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
+    ```
+    Parameter Size:
+    ```
+    88,422,016 weights, 111,208 biases -> 88,533,224 params
+    ```
+    Components
+    ----------
+    Blocks Used:
+    ```py
+    ConvNeXtBlock()
+    ```
+    Arguments
+    ---------
+    `activation` : callable, default=Activation.GELU
+        Type of activation function
+    `initializer` : InitStr, default=None
+        Type of weight initializer
+    `out_features` : int, default=1000
+        Number of output features
+    `batch_size` : int, default=100
+        Size of a single mini-batch
+    `n_epochs` : int, default=100
+        Number of epochs for training
+    `valid_size` : float, default=0.1
+        Fractional size of validation set
+    `lambda_` : float, default=0.0001
+        L2 regularization strength
+    `early_stopping` : bool, default=False
+        Whether to early-stop the training when the valid score stagnates
+    `patience` : int, default=10
+        Number of epochs to wait until early-stopping
+    `shuffle` : bool, default=True
+        Whethter to shuffle the data at the beginning of every epoch
+
+    References
+    ----------
+    [1] Liu, Zhuang, et al. "A ConvNet for the 2020s." Proceedings of the
+    IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR),
+    2022, pp. 11976-11986.
+
+    """
 
 
-class ConvNeXt_L(convnext._ConvNeXt_L): ...
+class ConvNeXt_L(convnext._ConvNeXt_L):
+    """
+    ConvNeXt-L, (ConvNeXt-Large) is a larger variant of the ConvNeXt architecture,
+    designed to maximize performance on large-scale datasets. It uses more layers
+    and parameters than ConvNeXt-B, leveraging depthwise convolutions and residual
+    connections to enhance feature extraction.
+
+    Specs
+    -----
+    Input/Output Shapes:
+    ```py
+    Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
+    ```
+    Parameter Size:
+    ```
+    197,513,664 weights, 166,312 biases -> 197,679,976 params
+    ```
+    Components
+    ----------
+    Blocks Used:
+    ```py
+    ConvNeXtBlock()
+    ```
+    Arguments
+    ---------
+    `activation` : callable, default=Activation.GELU
+        Type of activation function
+    `initializer` : InitStr, default=None
+        Type of weight initializer
+    `out_features` : int, default=1000
+        Number of output features
+    `batch_size` : int, default=100
+        Size of a single mini-batch
+    `n_epochs` : int, default=100
+        Number of epochs for training
+    `valid_size` : float, default=0.1
+        Fractional size of validation set
+    `lambda_` : float, default=0.0001
+        L2 regularization strength
+    `early_stopping` : bool, default=False
+        Whether to early-stop the training when the valid score stagnates
+    `patience` : int, default=10
+        Number of epochs to wait until early-stopping
+    `shuffle` : bool, default=True
+        Whethter to shuffle the data at the beginning of every epoch
+
+    References
+    ----------
+    [1] Liu, Zhuang, et al. "A ConvNet for the 2020s." Proceedings of the
+    IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR),
+    2022, pp. 11976-11986.
+
+    """
 
 
-class ConvNeXt_XL(convnext._ConvNeXt_XL): ...
+class ConvNeXt_XL(convnext._ConvNeXt_XL):
+    """
+    ConvNeXt-XL, (ConvNeXt-Extra Large) is the largest variant in the ConvNeXt
+    family, offering the highest capacity for complex image classification tasks.
+    It features a significantly increased number of layers and parameters,
+    utilizing the same modernized convolutional design to capture detailed
+    features.
+
+    Specs
+    -----
+    Input/Output Shapes:
+    ```py
+    Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
+    ```
+    Parameter Size:
+    ```
+    349,859,072 weights, 221,416 biases -> 350,080,488 params
+    ```
+    Components
+    ----------
+    Blocks Used:
+    ```py
+    ConvNeXtBlock()
+    ```
+    Arguments
+    ---------
+    `activation` : callable, default=Activation.GELU
+        Type of activation function
+    `initializer` : InitStr, default=None
+        Type of weight initializer
+    `out_features` : int, default=1000
+        Number of output features
+    `batch_size` : int, default=100
+        Size of a single mini-batch
+    `n_epochs` : int, default=100
+        Number of epochs for training
+    `valid_size` : float, default=0.1
+        Fractional size of validation set
+    `lambda_` : float, default=0.0001
+        L2 regularization strength
+    `early_stopping` : bool, default=False
+        Whether to early-stop the training when the valid score stagnates
+    `patience` : int, default=10
+        Number of epochs to wait until early-stopping
+    `shuffle` : bool, default=True
+        Whethter to shuffle the data at the beginning of every epoch
+
+    References
+    ----------
+    [1] Liu, Zhuang, et al. "A ConvNet for the 2020s." Proceedings of the
+    IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR),
+    2022, pp. 11976-11986.
+
+    """

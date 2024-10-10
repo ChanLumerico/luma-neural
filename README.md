@@ -412,11 +412,11 @@ Information Processing Systems, 2012.
 
 | Class | # of Layers | Input Shape | Weights | Biases | Total Param. | Implemented |
 | --- | --- | --- | --- | --- | --- | --- |
-| `ConvNeXt_T` |  |  |  |  |  |  |
-| `ConvNeXt_S` |  |  |  |  |  |  |
-| `ConvNeXt_B` |  |  |  |  |  |  |
-| `ConvNeXt_L` |  |  |  |  |  |  |
-| `ConvNeXt_XL` |  |  |  |  |  |  |
+| `ConvNeXt_T` | 137 | $(N,3,224,224)$ | 28,524,000 | 42,184 | 28,566,184 | ✅ |
+| `ConvNeXt_S` | 263 | $(N,3,224,224)$ | 50,096,352 | 83,656 | 50,180,008 | ✅ |
+| `ConvNeXt_B` | 263 | $(N,3,224,224)$ | 88,422,016 | 111,208 | 88,533,224 | ✅ |
+| `ConvNeXt_L` | 263 | $(N,3,224,224)$ | 197,513,664 | 166,312 | 197,679,976 | ✅ |
+| `ConvNeXt_XL` | 263 | $(N,3,224,224)$ | 349,859,072 | 221,416 | 350,080,488 | ✅ |
 
 *Waiting for future updates…🔮*
 
