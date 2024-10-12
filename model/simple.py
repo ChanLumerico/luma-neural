@@ -1,4 +1,4 @@
-from typing import Literal, Self, override
+from typing import ClassVar, Literal, Self, override
 
 from luma.core.super import Estimator, Evaluator, Supervised
 from luma.interface.typing import Matrix, Tensor, Vector
@@ -67,6 +67,9 @@ class SimpleMLP(Estimator, NeuralModel):
         one-hot encoded.
 
     """
+
+    do_debug: ClassVar[bool] = False
+    do_register: ClassVar[bool] = False
 
     def __init__(
         self,
@@ -241,6 +244,9 @@ class SimpleCNN(Estimator, NeuralModel):
         one-hot encoded.
 
     """
+
+    do_debug: ClassVar[bool] = False
+    do_register: ClassVar[bool] = False
 
     def __init__(
         self,

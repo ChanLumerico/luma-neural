@@ -39,13 +39,15 @@ def debug_models(submodules: list[str] | None = None) -> None:
             submodule = globals()[module_name]
             all_models.extend(submodule.__all__)
 
+    all_models = [m_name for m_name in all_models if get_model(m_name).do_debug]
+
     print(f"Start debugging for {len(all_models)} model(s)...")
     print("=" * 75)
 
     fail_count = 0
     failed_models: list[str] = []
     for i, model_name in enumerate(all_models, start=1):
-        model: type = globals()[model_name]
+        model: type = get_model(model_name)
         print(f"[{i}/{len(all_models)}]", end=" ")
 
         try:
@@ -104,6 +106,12 @@ def register_model(name: str, **kwargs: Any) -> None:
             model_data = []
 
     model = get_model(name)
+    if not model.do_register:
+        raise ValueError(
+            f"Model '{model.__name__}' is not supposed to be registered."
+            + " Skipping registration.",
+        )
+
     model_inst = model()
     new_entry = {
         "name": model.__name__,

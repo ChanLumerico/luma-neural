@@ -27,3 +27,18 @@ class ObjectDetector(metaclass=ABCMeta):
     bounding box prediction, class identification, and confidence
     scoring.
     """
+
+
+class AutoEncoder(metaclass=ABCMeta):
+    """
+    Abstract base class for autoencoder models.
+
+    This class serves as an annotation for building custom
+    autoencoder models.
+
+    The `AutoEncoder` class is intended to be inherited by
+    specific autoencoder models, which will implement
+    the necessary methods for tasks such as encoding input data
+    into a latent representation and decoding it back to the original
+    data space.
+    """

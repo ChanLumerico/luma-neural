@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Self, Literal, Optional, Any
+from typing import ClassVar, Self, Literal, Optional, Any
 import numpy as np
 import time
 
@@ -287,6 +287,9 @@ class NeuralModel(ABC, NeuralBase):
         def summarize(self, in_shape: tuple[int]) -> None
         ```
     """
+
+    do_debug: ClassVar[bool] = True
+    do_register: ClassVar[bool] = True
 
     def __init__(
         self,
