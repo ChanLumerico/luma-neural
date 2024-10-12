@@ -355,3 +355,21 @@ class _LayerNorm(Layer):
 
     def out_shape(self, in_shape: Tuple[int]) -> Tuple[int]:
         return in_shape
+
+
+class _GlobalResponseNorm1D(Layer):
+    def __init__(self, in_features: int) -> None:
+        super().__init__()
+        self.in_features = in_features
+
+
+class _GlobalResponseNorm2D(Layer):
+    def __init__(self, in_features: int) -> None:
+        super().__init__()
+        self.in_features = in_features
+
+
+class _GlobalResponseNorm3D(Layer):
+    def __init__(self, in_features: int) -> None:
+        super().__init__()
+        self.in_features = in_features
