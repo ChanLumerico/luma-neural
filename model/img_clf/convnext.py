@@ -82,7 +82,7 @@ class _ConvNeXt_T(Estimator, NeuralModel, ImageClassifier):
             for j in range(depths[i]):
                 self.model += (
                     f"ConvNeXt{i + 1}_{j + 1}",
-                    nb.ConvNeXtBlock(channels[i], 7, self.activation, **base_args),
+                    nb.ConvNeXtBlock.V1(channels[i], 7, self.activation, **base_args),
                 )
 
             if i < len(channels) - 1:
@@ -186,7 +186,7 @@ class _ConvNeXt_S(Estimator, NeuralModel, ImageClassifier):
             for j in range(depths[i]):
                 self.model += (
                     f"ConvNeXt{i + 1}_{j + 1}",
-                    nb.ConvNeXtBlock(channels[i], 7, self.activation, **base_args),
+                    nb.ConvNeXtBlock.V1(channels[i], 7, self.activation, **base_args),
                 )
 
             if i < len(channels) - 1:
@@ -290,7 +290,7 @@ class _ConvNeXt_B(Estimator, NeuralModel, ImageClassifier):
             for j in range(depths[i]):
                 self.model += (
                     f"ConvNeXt{i + 1}_{j + 1}",
-                    nb.ConvNeXtBlock(channels[i], 7, self.activation, **base_args),
+                    nb.ConvNeXtBlock.V1(channels[i], 7, self.activation, **base_args),
                 )
 
             if i < len(channels) - 1:
@@ -394,7 +394,7 @@ class _ConvNeXt_L(Estimator, NeuralModel, ImageClassifier):
             for j in range(depths[i]):
                 self.model += (
                     f"ConvNeXt{i + 1}_{j + 1}",
-                    nb.ConvNeXtBlock(channels[i], 7, self.activation, **base_args),
+                    nb.ConvNeXtBlock.V1(channels[i], 7, self.activation, **base_args),
                 )
 
             if i < len(channels) - 1:
@@ -498,7 +498,7 @@ class _ConvNeXt_XL(Estimator, NeuralModel, ImageClassifier):
             for j in range(depths[i]):
                 self.model += (
                     f"ConvNeXt{i + 1}_{j + 1}",
-                    nb.ConvNeXtBlock(channels[i], 7, self.activation, **base_args),
+                    nb.ConvNeXtBlock.V1(channels[i], 7, self.activation, **base_args),
                 )
 
             if i < len(channels) - 1:

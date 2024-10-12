@@ -55,6 +55,7 @@ __all__ = (
     "BatchNorm2D",
     "BatchNorm3D",
     "LocalResponseNorm",
+    "GlobalResponseNorm",
     "LayerNorm",
     "Slice",
     "Identity",
@@ -1284,6 +1285,32 @@ class LocalResponseNorm(norm._LocalResponseNorm):
             beta,
             k,
         )
+
+
+class GlobalResponseNorm(norm._GlobalResponseNorm):
+    """
+    Global Response Normalization (GRN) is a neural network technique that
+    normalizes activations across all channels and spatial dimensions for
+    each individual sample. By computing global statistics like mean and
+    standard deviation, GRN ensures consistent scaling of feature maps,
+    which stabilizes training and accelerates convergence.
+
+    Parameters
+    ----------
+    `in_features` : int
+        Number of the channels of the input tensor
+
+    Notes
+    -----
+    - The input `X` must have the form of >=3D-array(`Tensor`).
+
+        ```py
+        X.shape = (batch_size, channels, *)
+        ```
+    """
+
+    def __init__(self, in_features: int, epsilon: float = 0.00001) -> None:
+        super().__init__(in_features, epsilon)
 
 
 class LayerNorm(norm._LayerNorm):

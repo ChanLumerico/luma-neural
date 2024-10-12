@@ -10,7 +10,7 @@ from luma.neural.autoprop import LayerNode, SequentialNode, LayerGraph, MergeMod
 from .resnet import _ExpansionMixin
 
 
-class _ConvNeXtBlock(LayerGraph, _ExpansionMixin):
+class _V1(LayerGraph, _ExpansionMixin):
     def __init__(
         self,
         in_channels: int,
@@ -34,7 +34,7 @@ class _ConvNeXtBlock(LayerGraph, _ExpansionMixin):
         )
         self.init_nodes()
 
-        super(_ConvNeXtBlock, self).__init__(
+        super(_V1, self).__init__(
             graph={self.rt_: [self.conv_, self.sum_], self.conv_: [self.sum_]},
             root=self.rt_,
             term=self.sum_,
@@ -71,3 +71,6 @@ class _ConvNeXtBlock(LayerGraph, _ExpansionMixin):
     @override
     def out_shape(self, in_shape: Tuple[int]) -> Tuple[int]:
         return self.conv_.out_shape(in_shape)
+
+
+class _V2(LayerGraph, _ExpansionMixin): ...

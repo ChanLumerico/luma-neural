@@ -3612,7 +3612,7 @@ class ConvNeXt_T(convnext._ConvNeXt_T):
     ----------
     Blocks Used:
     ```py
-    ConvNeXtBlock()
+    ConvNeXtBlock.V1()
     ```
     Arguments
     ---------
@@ -3668,7 +3668,7 @@ class ConvNeXt_S(convnext._ConvNeXt_S):
     ----------
     Blocks Used:
     ```py
-    ConvNeXtBlock()
+    ConvNeXtBlock.V1()
     ```
     Arguments
     ---------
@@ -3724,7 +3724,7 @@ class ConvNeXt_B(convnext._ConvNeXt_B):
     ----------
     Blocks Used:
     ```py
-    ConvNeXtBlock()
+    ConvNeXtBlock.V1()
     ```
     Arguments
     ---------
@@ -3779,7 +3779,7 @@ class ConvNeXt_L(convnext._ConvNeXt_L):
     ----------
     Blocks Used:
     ```py
-    ConvNeXtBlock()
+    ConvNeXtBlock.V1()
     ```
     Arguments
     ---------
@@ -3835,7 +3835,7 @@ class ConvNeXt_XL(convnext._ConvNeXt_XL):
     ----------
     Blocks Used:
     ```py
-    ConvNeXtBlock()
+    ConvNeXtBlock.V1()
     ```
     Arguments
     ---------

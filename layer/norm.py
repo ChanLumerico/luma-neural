@@ -1,7 +1,7 @@
 from typing import Optional, Tuple, override
 import numpy as np
 
-from luma.interface.typing import Tensor
+from luma.interface.typing import Tensor, TensorLike
 from luma.neural.base import Layer
 
 
@@ -10,6 +10,7 @@ __all__ = (
     "_BatchNorm2D",
     "_BatchNorm3D",
     "_LocalResponseNorm",
+    "_GlobalResponseNorm",
     "_LayerNorm",
 )
 
@@ -357,19 +358,75 @@ class _LayerNorm(Layer):
         return in_shape
 
 
-class _GlobalResponseNorm1D(Layer):
-    def __init__(self, in_features: int) -> None:
+class _GlobalResponseNorm(Layer):
+    def __init__(self, in_features: int, epsilon: float = 1e-5) -> None:
         super().__init__()
         self.in_features = in_features
+        self.epsilon = epsilon
 
+        gamma = np.ones((1, in_features))
+        beta = np.zeros((1, in_features))
+        self.weights_ = [gamma, beta]
 
-class _GlobalResponseNorm2D(Layer):
-    def __init__(self, in_features: int) -> None:
-        super().__init__()
-        self.in_features = in_features
+    def forward(self, X: Tensor, is_train: bool = False) -> Tensor:
+        _ = is_train
+        self.input_ = X
+        C = X.shape[1]
+        self.axes = tuple(range(2, X.ndim))
 
+        self.mean = np.mean(X, axis=self.axes, keepdims=True)
+        self.std = np.std(X, axis=self.axes, keepdims=True)
+        self.X_norm = (X - self.mean) / (self.std + self.epsilon)
 
-class _GlobalResponseNorm3D(Layer):
-    def __init__(self, in_features: int) -> None:
-        super().__init__()
-        self.in_features = in_features
+        n_spatial = X.ndim - 2
+        shape = [1, C] + [1] * n_spatial
+
+        gamma_reshape = self.weights_[0].reshape(shape)
+        beta_reshape = self.weights_[1].reshape(shape)
+
+        out = gamma_reshape * self.X_norm + beta_reshape
+        return out
+
+    def backward(self, d_out: Tensor) -> Tensor:
+        C = self.input_.shape[1]
+        n_spatial = self.input_.ndim - 2
+        shape = [1, C] + [1] * n_spatial
+
+        axes_reduce = (0,) + self.axes
+        gamma_grad = np.sum(d_out * self.X_norm, axis=axes_reduce, keepdims=True)
+        beta_grad = np.sum(d_out, axis=axes_reduce, keepdims=True)
+
+        self.dW = [gamma_grad.squeeze(), beta_grad.squeeze()]
+
+        gamma_reshape = self.weights_[0].reshape(shape)
+        dX_norm = d_out * gamma_reshape
+
+        dvar = np.sum(
+            dX_norm
+            * (self.input_ - self.mean)
+            * -0.5
+            * (self.std + self.epsilon) ** -3,
+            axis=axes_reduce,
+            keepdims=True,
+        )
+
+        mean = np.prod([x for x in self.input_.shape[2:]])
+        dmean = (
+            np.sum(
+                dX_norm * -1 / (self.std + self.epsilon), axis=self.axes, keepdims=True
+            )
+            + dvar
+            * np.sum(-2 * (self.input_ - self.mean), axis=self.axes, keepdims=True)
+            / mean
+        )
+
+        dX = (
+            (dX_norm / (self.std + self.epsilon))
+            + (dvar * 2 * (self.input_ - self.mean) / mean)
+            + (dmean / mean)
+        )
+        self.dX = dX
+        return self.dX
+
+    def out_shape(self, in_shape: Tuple[int]) -> Tuple[int]:
+        return in_shape
