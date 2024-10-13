@@ -1,10 +1,7 @@
-from typing import Self, override, ClassVar
+from typing import ClassVar
 from dataclasses import asdict
 
-from luma.core.super import Estimator, Evaluator
-from luma.interface.typing import Matrix, Tensor, Vector
 from luma.interface.util import InitUtil
-from luma.metric.classification import Accuracy
 
 from luma.neural.base import NeuralModel
 from luma.neural import block as nb
@@ -13,10 +10,7 @@ from luma.neural import layer as nl
 from ..types import ImageClassifier
 
 
-__all__ = ("_AlexNet", "_ZFNet")
-
-
-class _AlexNet(Estimator, NeuralModel, ImageClassifier):
+class _AlexNet(NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.ReLU,
@@ -42,7 +36,7 @@ class _AlexNet(Estimator, NeuralModel, ImageClassifier):
         self.random_state = random_state
         self._fitted = False
 
-        super().__init__(
+        super(_AlexNet, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -52,7 +46,7 @@ class _AlexNet(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_AlexNet, self).init_model()
         self.model = nl.Sequential()
 
         self.feature_sizes_ = [
@@ -64,18 +58,6 @@ class _AlexNet(Estimator, NeuralModel, ImageClassifier):
             self._get_feature_shapes(self.feature_sizes_[1]),
         ]
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "dropout_rate": ("0,1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": (f"0<,+inf", int),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -203,28 +185,8 @@ class _AlexNet(Estimator, NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, 227, 227)
 
-    @Tensor.force_shape(input_shape)
-    def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_AlexNet, self).fit_nn(X, y)
 
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_AlexNet, self).predict_nn(X, argmax)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self,
-        X: Tensor,
-        y: Matrix,
-        metric: Evaluator = Accuracy,
-        argmax: bool = True,
-    ) -> float:
-        return super(_AlexNet, self).score_nn(X, y, metric, argmax)
-
-
-class _ZFNet(Estimator, NeuralModel, ImageClassifier):
+class _ZFNet(NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.ReLU,
@@ -250,7 +212,7 @@ class _ZFNet(Estimator, NeuralModel, ImageClassifier):
         self.random_state = random_state
         self._fitted = False
 
-        super().__init__(
+        super(_ZFNet, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -260,7 +222,7 @@ class _ZFNet(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_ZFNet, self).init_model()
         self.model = nl.Sequential()
 
         self.feature_sizes_ = [
@@ -272,18 +234,6 @@ class _ZFNet(Estimator, NeuralModel, ImageClassifier):
             self._get_feature_shapes(self.feature_sizes_[1]),
         ]
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "dropout_rate": ("0,1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": (f"0<,+inf", int),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -410,23 +360,3 @@ class _ZFNet(Estimator, NeuralModel, ImageClassifier):
         )
 
     input_shape: ClassVar[tuple] = (-1, 3, 227, 227)
-
-    @Tensor.force_shape(input_shape)
-    def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_ZFNet, self).fit_nn(X, y)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_ZFNet, self).predict_nn(X, argmax)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self,
-        X: Tensor,
-        y: Matrix,
-        metric: Evaluator = Accuracy,
-        argmax: bool = True,
-    ) -> float:
-        return super(_ZFNet, self).score_nn(X, y, metric, argmax)

@@ -1,9 +1,6 @@
-from typing import Self, override, ClassVar
+from typing import ClassVar
 
-from luma.core.super import Estimator, Evaluator
-from luma.interface.typing import Matrix, Tensor, Vector
 from luma.interface.util import InitUtil
-from luma.metric.classification import Accuracy
 
 from luma.neural.base import NeuralModel
 from luma.neural import block as nb
@@ -12,10 +9,7 @@ from luma.neural import layer as nl
 from ..types import ImageClassifier
 
 
-__all__ = ("_LeNet_1", "_LeNet_4", "_LeNet_5")
-
-
-class _LeNet_1(Estimator, NeuralModel, ImageClassifier):
+class _LeNet_1(NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.Tanh,
@@ -39,7 +33,7 @@ class _LeNet_1(Estimator, NeuralModel, ImageClassifier):
         self.random_state = random_state
         self._fitted = False
 
-        super().__init__(
+        super(_LeNet_1, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -49,7 +43,7 @@ class _LeNet_1(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_LeNet_1, self).init_model()
         self.model = nl.Sequential()
 
         self.feature_sizes_ = [
@@ -61,18 +55,6 @@ class _LeNet_1(Estimator, NeuralModel, ImageClassifier):
             [(8 * 4 * 4, self.out_features)],
         ]
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "dropout_rate": ("0,1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": (f"0<,+inf", int),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -117,28 +99,8 @@ class _LeNet_1(Estimator, NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 1, 28, 28)
 
-    @Tensor.force_shape(input_shape)
-    def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_LeNet_1, self).fit_nn(X, y)
 
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_LeNet_1, self).predict_nn(X, argmax)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self,
-        X: Tensor,
-        y: Matrix,
-        metric: Evaluator = Accuracy,
-        argmax: bool = True,
-    ) -> float:
-        return super(_LeNet_1, self).score_nn(X, y, metric, argmax)
-
-
-class _LeNet_4(Estimator, NeuralModel, ImageClassifier):
+class _LeNet_4(NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.Tanh,
@@ -164,7 +126,7 @@ class _LeNet_4(Estimator, NeuralModel, ImageClassifier):
         self.random_state = random_state
         self._fitted = False
 
-        super().__init__(
+        super(_LeNet_4, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -174,7 +136,7 @@ class _LeNet_4(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_LeNet_4, self).init_model()
         self.model = nl.Sequential()
 
         self.feature_sizes_ = [
@@ -186,18 +148,6 @@ class _LeNet_4(Estimator, NeuralModel, ImageClassifier):
             [(16 * 5 * 5, 120), (120, self.out_features)],
         ]
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "dropout_rate": ("0,1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": (f"0<,+inf", int),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -251,28 +201,8 @@ class _LeNet_4(Estimator, NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 1, 32, 32)
 
-    @Tensor.force_shape(input_shape)
-    def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_LeNet_4, self).fit_nn(X, y)
 
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_LeNet_4, self).predict_nn(X, argmax)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self,
-        X: Tensor,
-        y: Matrix,
-        metric: Evaluator = Accuracy,
-        argmax: bool = True,
-    ) -> float:
-        return super(_LeNet_4, self).score_nn(X, y, metric, argmax)
-
-
-class _LeNet_5(Estimator, NeuralModel, ImageClassifier):
+class _LeNet_5(NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.Tanh,
@@ -298,7 +228,7 @@ class _LeNet_5(Estimator, NeuralModel, ImageClassifier):
         self.random_state = random_state
         self._fitted = False
 
-        super().__init__(
+        super(_LeNet_5, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -308,7 +238,7 @@ class _LeNet_5(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_LeNet_5, self).init_model()
         self.model = nl.Sequential()
 
         self.feature_sizes_ = [
@@ -320,19 +250,6 @@ class _LeNet_5(Estimator, NeuralModel, ImageClassifier):
             [(16 * 5 * 5, 120), (120, 84), (84, self.out_features)],
         ]
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "learning_rate": ("0<,+inf", None),
-                "valid_size": ("0<,<1", None),
-                "dropout_rate": ("0,1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": (f"0<,+inf", int),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -394,23 +311,3 @@ class _LeNet_5(Estimator, NeuralModel, ImageClassifier):
         )
 
     input_shape: ClassVar[tuple] = (-1, 1, 32, 32)
-
-    @Tensor.force_shape(input_shape)
-    def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_LeNet_5, self).fit_nn(X, y)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_LeNet_5, self).predict_nn(X, argmax)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self,
-        X: Tensor,
-        y: Matrix,
-        metric: Evaluator = Accuracy,
-        argmax: bool = True,
-    ) -> float:
-        return super(_LeNet_5, self).score_nn(X, y, metric, argmax)

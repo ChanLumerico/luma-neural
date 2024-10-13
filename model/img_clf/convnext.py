@@ -1,9 +1,6 @@
-from typing import Any, Self, override, ClassVar
+from typing import ClassVar
 
-from luma.core.super import Estimator, Evaluator
-from luma.interface.typing import Matrix, Tensor, Vector
 from luma.interface.util import InitUtil
-from luma.metric.classification import Accuracy
 
 from luma.neural.base import NeuralModel
 from luma.neural import block as nb
@@ -12,7 +9,7 @@ from luma.neural import layer as nl
 from ..types import ImageClassifier
 
 
-class _ConvNeXt_T(Estimator, NeuralModel, ImageClassifier):
+class _ConvNeXt_T(NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.GELU,
@@ -36,7 +33,7 @@ class _ConvNeXt_T(Estimator, NeuralModel, ImageClassifier):
         self.random_state = random_state
         self._fitted = False
 
-        super().__init__(
+        super(_ConvNeXt_T, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -46,22 +43,9 @@ class _ConvNeXt_T(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_ConvNeXt_T, self).init_model()
         self.model = nl.Sequential()
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "momentum": ("0,1", None),
-                "dropout_rate": ("0,1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": ("0<,+inf", int),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -97,24 +81,8 @@ class _ConvNeXt_T(Estimator, NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
-    @Tensor.force_shape(input_shape)
-    def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_ConvNeXt_T, self).fit_nn(X, y)
 
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_ConvNeXt_T, self).predict_nn(X, argmax)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self, X: Tensor, y: Matrix, metric: Evaluator = Accuracy, argmax: bool = True
-    ) -> float:
-        return super(_ConvNeXt_T, self).score_nn(X, y, metric, argmax)
-
-
-class _ConvNeXt_S(Estimator, NeuralModel, ImageClassifier):
+class _ConvNeXt_S(NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.GELU,
@@ -138,7 +106,7 @@ class _ConvNeXt_S(Estimator, NeuralModel, ImageClassifier):
         self.random_state = random_state
         self._fitted = False
 
-        super().__init__(
+        super(_ConvNeXt_S, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -148,22 +116,9 @@ class _ConvNeXt_S(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_ConvNeXt_S, self).init_model()
         self.model = nl.Sequential()
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "momentum": ("0,1", None),
-                "dropout_rate": ("0,1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": ("0<,+inf", int),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -199,24 +154,8 @@ class _ConvNeXt_S(Estimator, NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
-    @Tensor.force_shape(input_shape)
-    def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_ConvNeXt_S, self).fit_nn(X, y)
 
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_ConvNeXt_S, self).predict_nn(X, argmax)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self, X: Tensor, y: Matrix, metric: Evaluator = Accuracy, argmax: bool = True
-    ) -> float:
-        return super(_ConvNeXt_S, self).score_nn(X, y, metric, argmax)
-
-
-class _ConvNeXt_B(Estimator, NeuralModel, ImageClassifier):
+class _ConvNeXt_B(NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.GELU,
@@ -240,7 +179,7 @@ class _ConvNeXt_B(Estimator, NeuralModel, ImageClassifier):
         self.random_state = random_state
         self._fitted = False
 
-        super().__init__(
+        super(_ConvNeXt_B, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -250,22 +189,9 @@ class _ConvNeXt_B(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_ConvNeXt_B, self).init_model()
         self.model = nl.Sequential()
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "momentum": ("0,1", None),
-                "dropout_rate": ("0,1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": ("0<,+inf", int),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -301,24 +227,8 @@ class _ConvNeXt_B(Estimator, NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
-    @Tensor.force_shape(input_shape)
-    def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_ConvNeXt_B, self).fit_nn(X, y)
 
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_ConvNeXt_B, self).predict_nn(X, argmax)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self, X: Tensor, y: Matrix, metric: Evaluator = Accuracy, argmax: bool = True
-    ) -> float:
-        return super(_ConvNeXt_B, self).score_nn(X, y, metric, argmax)
-
-
-class _ConvNeXt_L(Estimator, NeuralModel, ImageClassifier):
+class _ConvNeXt_L(NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.GELU,
@@ -342,7 +252,7 @@ class _ConvNeXt_L(Estimator, NeuralModel, ImageClassifier):
         self.random_state = random_state
         self._fitted = False
 
-        super().__init__(
+        super(_ConvNeXt_L, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -352,22 +262,9 @@ class _ConvNeXt_L(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_ConvNeXt_L, self).init_model()
         self.model = nl.Sequential()
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "momentum": ("0,1", None),
-                "dropout_rate": ("0,1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": ("0<,+inf", int),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -403,24 +300,8 @@ class _ConvNeXt_L(Estimator, NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
-    @Tensor.force_shape(input_shape)
-    def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_ConvNeXt_L, self).fit_nn(X, y)
 
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_ConvNeXt_L, self).predict_nn(X, argmax)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self, X: Tensor, y: Matrix, metric: Evaluator = Accuracy, argmax: bool = True
-    ) -> float:
-        return super(_ConvNeXt_L, self).score_nn(X, y, metric, argmax)
-
-
-class _ConvNeXt_XL(Estimator, NeuralModel, ImageClassifier):
+class _ConvNeXt_XL(NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.GELU,
@@ -444,7 +325,7 @@ class _ConvNeXt_XL(Estimator, NeuralModel, ImageClassifier):
         self.random_state = random_state
         self._fitted = False
 
-        super().__init__(
+        super(_ConvNeXt_XL, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -454,22 +335,9 @@ class _ConvNeXt_XL(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_ConvNeXt_XL, self).init_model()
         self.model = nl.Sequential()
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "momentum": ("0,1", None),
-                "dropout_rate": ("0,1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": ("0<,+inf", int),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -505,24 +373,8 @@ class _ConvNeXt_XL(Estimator, NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
-    @Tensor.force_shape(input_shape)
-    def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_ConvNeXt_XL, self).fit_nn(X, y)
 
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_ConvNeXt_XL, self).predict_nn(X, argmax)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self, X: Tensor, y: Matrix, metric: Evaluator = Accuracy, argmax: bool = True
-    ) -> float:
-        return super(_ConvNeXt_XL, self).score_nn(X, y, metric, argmax)
-
-
-class _ConvNeXt_V2_A(Estimator, NeuralModel, ImageClassifier):
+class _ConvNeXt_V2_A(NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.GELU,
@@ -546,7 +398,7 @@ class _ConvNeXt_V2_A(Estimator, NeuralModel, ImageClassifier):
         self.random_state = random_state
         self._fitted = False
 
-        super().__init__(
+        super(_ConvNeXt_V2_A, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -556,22 +408,9 @@ class _ConvNeXt_V2_A(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_ConvNeXt_V2_A, self).init_model()
         self.model = nl.Sequential()
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "momentum": ("0,1", None),
-                "dropout_rate": ("0,1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": ("0<,+inf", int),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -609,24 +448,8 @@ class _ConvNeXt_V2_A(Estimator, NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
-    @Tensor.force_shape(input_shape)
-    def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_ConvNeXt_V2_A, self).fit_nn(X, y)
 
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_ConvNeXt_V2_A, self).predict_nn(X, argmax)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self, X: Tensor, y: Matrix, metric: Evaluator = Accuracy, argmax: bool = True
-    ) -> float:
-        return super(_ConvNeXt_V2_A, self).score_nn(X, y, metric, argmax)
-
-
-class _ConvNeXt_V2_F(Estimator, NeuralModel, ImageClassifier):
+class _ConvNeXt_V2_F(NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.GELU,
@@ -650,7 +473,7 @@ class _ConvNeXt_V2_F(Estimator, NeuralModel, ImageClassifier):
         self.random_state = random_state
         self._fitted = False
 
-        super().__init__(
+        super(_ConvNeXt_V2_F, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -660,22 +483,9 @@ class _ConvNeXt_V2_F(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_ConvNeXt_V2_F, self).init_model()
         self.model = nl.Sequential()
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "momentum": ("0,1", None),
-                "dropout_rate": ("0,1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": ("0<,+inf", int),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -713,24 +523,8 @@ class _ConvNeXt_V2_F(Estimator, NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
-    @Tensor.force_shape(input_shape)
-    def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_ConvNeXt_V2_F, self).fit_nn(X, y)
 
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_ConvNeXt_V2_F, self).predict_nn(X, argmax)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self, X: Tensor, y: Matrix, metric: Evaluator = Accuracy, argmax: bool = True
-    ) -> float:
-        return super(_ConvNeXt_V2_F, self).score_nn(X, y, metric, argmax)
-
-
-class _ConvNeXt_V2_P(Estimator, NeuralModel, ImageClassifier):
+class _ConvNeXt_V2_P(NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.GELU,
@@ -754,7 +548,7 @@ class _ConvNeXt_V2_P(Estimator, NeuralModel, ImageClassifier):
         self.random_state = random_state
         self._fitted = False
 
-        super().__init__(
+        super(_ConvNeXt_V2_P, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -764,22 +558,9 @@ class _ConvNeXt_V2_P(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_ConvNeXt_V2_P, self).init_model()
         self.model = nl.Sequential()
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "momentum": ("0,1", None),
-                "dropout_rate": ("0,1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": ("0<,+inf", int),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -817,24 +598,8 @@ class _ConvNeXt_V2_P(Estimator, NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
-    @Tensor.force_shape(input_shape)
-    def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_ConvNeXt_V2_P, self).fit_nn(X, y)
 
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_ConvNeXt_V2_P, self).predict_nn(X, argmax)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self, X: Tensor, y: Matrix, metric: Evaluator = Accuracy, argmax: bool = True
-    ) -> float:
-        return super(_ConvNeXt_V2_P, self).score_nn(X, y, metric, argmax)
-
-
-class _ConvNeXt_V2_N(Estimator, NeuralModel, ImageClassifier):
+class _ConvNeXt_V2_N(NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.GELU,
@@ -858,7 +623,7 @@ class _ConvNeXt_V2_N(Estimator, NeuralModel, ImageClassifier):
         self.random_state = random_state
         self._fitted = False
 
-        super().__init__(
+        super(_ConvNeXt_V2_N, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -868,22 +633,9 @@ class _ConvNeXt_V2_N(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_ConvNeXt_V2_N, self).init_model()
         self.model = nl.Sequential()
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "momentum": ("0,1", None),
-                "dropout_rate": ("0,1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": ("0<,+inf", int),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -921,24 +673,8 @@ class _ConvNeXt_V2_N(Estimator, NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
-    @Tensor.force_shape(input_shape)
-    def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_ConvNeXt_V2_N, self).fit_nn(X, y)
 
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_ConvNeXt_V2_N, self).predict_nn(X, argmax)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self, X: Tensor, y: Matrix, metric: Evaluator = Accuracy, argmax: bool = True
-    ) -> float:
-        return super(_ConvNeXt_V2_N, self).score_nn(X, y, metric, argmax)
-
-
-class _ConvNeXt_V2_T(Estimator, NeuralModel, ImageClassifier):
+class _ConvNeXt_V2_T(NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.GELU,
@@ -962,7 +698,7 @@ class _ConvNeXt_V2_T(Estimator, NeuralModel, ImageClassifier):
         self.random_state = random_state
         self._fitted = False
 
-        super().__init__(
+        super(_ConvNeXt_V2_T, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -972,22 +708,9 @@ class _ConvNeXt_V2_T(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_ConvNeXt_V2_T, self).init_model()
         self.model = nl.Sequential()
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "momentum": ("0,1", None),
-                "dropout_rate": ("0,1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": ("0<,+inf", int),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -1025,24 +748,8 @@ class _ConvNeXt_V2_T(Estimator, NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
-    @Tensor.force_shape(input_shape)
-    def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_ConvNeXt_V2_T, self).fit_nn(X, y)
 
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_ConvNeXt_V2_T, self).predict_nn(X, argmax)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self, X: Tensor, y: Matrix, metric: Evaluator = Accuracy, argmax: bool = True
-    ) -> float:
-        return super(_ConvNeXt_V2_T, self).score_nn(X, y, metric, argmax)
-
-
-class _ConvNeXt_V2_B(Estimator, NeuralModel, ImageClassifier):
+class _ConvNeXt_V2_B(NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.GELU,
@@ -1066,7 +773,7 @@ class _ConvNeXt_V2_B(Estimator, NeuralModel, ImageClassifier):
         self.random_state = random_state
         self._fitted = False
 
-        super().__init__(
+        super(_ConvNeXt_V2_B, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -1076,22 +783,9 @@ class _ConvNeXt_V2_B(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_ConvNeXt_V2_B, self).init_model()
         self.model = nl.Sequential()
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "momentum": ("0,1", None),
-                "dropout_rate": ("0,1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": ("0<,+inf", int),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -1129,24 +823,8 @@ class _ConvNeXt_V2_B(Estimator, NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
-    @Tensor.force_shape(input_shape)
-    def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_ConvNeXt_V2_B, self).fit_nn(X, y)
 
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_ConvNeXt_V2_B, self).predict_nn(X, argmax)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self, X: Tensor, y: Matrix, metric: Evaluator = Accuracy, argmax: bool = True
-    ) -> float:
-        return super(_ConvNeXt_V2_B, self).score_nn(X, y, metric, argmax)
-
-
-class _ConvNeXt_V2_L(Estimator, NeuralModel, ImageClassifier):
+class _ConvNeXt_V2_L(NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.GELU,
@@ -1170,7 +848,7 @@ class _ConvNeXt_V2_L(Estimator, NeuralModel, ImageClassifier):
         self.random_state = random_state
         self._fitted = False
 
-        super().__init__(
+        super(_ConvNeXt_V2_L, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -1180,22 +858,9 @@ class _ConvNeXt_V2_L(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_ConvNeXt_V2_L, self).init_model()
         self.model = nl.Sequential()
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "momentum": ("0,1", None),
-                "dropout_rate": ("0,1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": ("0<,+inf", int),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -1233,24 +898,8 @@ class _ConvNeXt_V2_L(Estimator, NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
-    @Tensor.force_shape(input_shape)
-    def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_ConvNeXt_V2_L, self).fit_nn(X, y)
 
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_ConvNeXt_V2_L, self).predict_nn(X, argmax)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self, X: Tensor, y: Matrix, metric: Evaluator = Accuracy, argmax: bool = True
-    ) -> float:
-        return super(_ConvNeXt_V2_L, self).score_nn(X, y, metric, argmax)
-
-
-class _ConvNeXt_V2_H(Estimator, NeuralModel, ImageClassifier):
+class _ConvNeXt_V2_H(NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.GELU,
@@ -1274,7 +923,7 @@ class _ConvNeXt_V2_H(Estimator, NeuralModel, ImageClassifier):
         self.random_state = random_state
         self._fitted = False
 
-        super().__init__(
+        super(_ConvNeXt_V2_H, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -1284,22 +933,9 @@ class _ConvNeXt_V2_H(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_ConvNeXt_V2_H, self).init_model()
         self.model = nl.Sequential()
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "momentum": ("0,1", None),
-                "dropout_rate": ("0,1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": ("0<,+inf", int),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -1336,19 +972,3 @@ class _ConvNeXt_V2_H(Estimator, NeuralModel, ImageClassifier):
         )
 
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
-
-    @Tensor.force_shape(input_shape)
-    def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_ConvNeXt_V2_H, self).fit_nn(X, y)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_ConvNeXt_V2_H, self).predict_nn(X, argmax)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self, X: Tensor, y: Matrix, metric: Evaluator = Accuracy, argmax: bool = True
-    ) -> float:
-        return super(_ConvNeXt_V2_H, self).score_nn(X, y, metric, argmax)

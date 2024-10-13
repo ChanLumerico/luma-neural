@@ -1435,7 +1435,7 @@ class Xception(incep._Xception):
     """
 
 
-class MobileNet_V1(mobile._Mobile_V1):
+class MobileNet_V1(mobile._MobileNet_V1):
     """
     MobileNet-V1 uses depthwise separable convolutions to significantly
     reduce the number of parameters and computational cost, making it
@@ -1493,7 +1493,7 @@ class MobileNet_V1(mobile._Mobile_V1):
     """
 
 
-class MobileNet_V2(mobile._Mobile_V2):
+class MobileNet_V2(mobile._MobileNet_V2):
     """
     MobileNet-V2 builds on the efficiency of its predecessor by introducing
     inverted residuals and linear bottlenecks, further reducing

@@ -1,9 +1,7 @@
-from typing import Self, override, ClassVar
+from typing import override, ClassVar
 
-from luma.core.super import Estimator, Evaluator
-from luma.interface.typing import Matrix, Tensor, TensorLike, Vector
+from luma.interface.typing import TensorLike
 from luma.interface.util import InitUtil
-from luma.metric.classification import Accuracy
 from luma.preprocessing.image import Resize
 
 from luma.neural.base import NeuralModel
@@ -40,7 +38,7 @@ multipliers = [
 input_sizes = [224, 240, 260, 300, 380, 456, 528, 600]
 
 
-class _EfficientNet_B0(Estimator, NeuralModel, ImageClassifier):
+class _EfficientNet_B0(NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.Swish,
@@ -66,7 +64,7 @@ class _EfficientNet_B0(Estimator, NeuralModel, ImageClassifier):
         self.random_state = random_state
         self._fitted = False
 
-        super().__init__(
+        super(_EfficientNet_B0, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -76,7 +74,7 @@ class _EfficientNet_B0(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_EfficientNet_B0, self).init_model()
         self.model: nl.Sequential = nl.Sequential()
 
         self.feature_sizes_ = []
@@ -84,18 +82,6 @@ class _EfficientNet_B0(Estimator, NeuralModel, ImageClassifier):
             self._get_feature_shapes(sizes) for sizes in self.feature_sizes_
         ]
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": ("0<,+inf", int),
-                "growth_rate": ("0<,+inf", int),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -140,28 +126,8 @@ class _EfficientNet_B0(Estimator, NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, input_sizes[0], input_sizes[0])
 
-    @Tensor.force_shape(input_shape)
-    def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_EfficientNet_B0, self).fit_nn(X, y)
 
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_EfficientNet_B0, self).predict_nn(X, argmax)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self,
-        X: Tensor,
-        y: Matrix,
-        metric: Evaluator = Accuracy,
-        argmax: bool = True,
-    ) -> float:
-        return super(_EfficientNet_B0, self).score_nn(X, y, metric, argmax)
-
-
-class _EfficientNet_B1(Estimator, NeuralModel, ImageClassifier):
+class _EfficientNet_B1(NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.Swish,
@@ -187,7 +153,7 @@ class _EfficientNet_B1(Estimator, NeuralModel, ImageClassifier):
         self.random_state = random_state
         self._fitted = False
 
-        super().__init__(
+        super(_EfficientNet_B1, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -197,7 +163,7 @@ class _EfficientNet_B1(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_EfficientNet_B1, self).init_model()
         self.model: nl.Sequential = nl.Sequential()
 
         self.feature_sizes_ = []
@@ -205,18 +171,6 @@ class _EfficientNet_B1(Estimator, NeuralModel, ImageClassifier):
             self._get_feature_shapes(sizes) for sizes in self.feature_sizes_
         ]
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": ("0<,+inf", int),
-                "growth_rate": ("0<,+inf", int),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -261,28 +215,8 @@ class _EfficientNet_B1(Estimator, NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, input_sizes[1], input_sizes[1])
 
-    @Tensor.force_shape(input_shape)
-    def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_EfficientNet_B1, self).fit_nn(X, y)
 
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_EfficientNet_B1, self).predict_nn(X, argmax)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self,
-        X: Tensor,
-        y: Matrix,
-        metric: Evaluator = Accuracy,
-        argmax: bool = True,
-    ) -> float:
-        return super(_EfficientNet_B1, self).score_nn(X, y, metric, argmax)
-
-
-class _EfficientNet_B2(Estimator, NeuralModel, ImageClassifier):
+class _EfficientNet_B2(NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.Swish,
@@ -308,7 +242,7 @@ class _EfficientNet_B2(Estimator, NeuralModel, ImageClassifier):
         self.random_state = random_state
         self._fitted = False
 
-        super().__init__(
+        super(_EfficientNet_B2, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -318,7 +252,7 @@ class _EfficientNet_B2(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_EfficientNet_B2, self).init_model()
         self.model: nl.Sequential = nl.Sequential()
 
         self.feature_sizes_ = []
@@ -326,18 +260,6 @@ class _EfficientNet_B2(Estimator, NeuralModel, ImageClassifier):
             self._get_feature_shapes(sizes) for sizes in self.feature_sizes_
         ]
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": ("0<,+inf", int),
-                "growth_rate": ("0<,+inf", int),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -382,28 +304,8 @@ class _EfficientNet_B2(Estimator, NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, input_sizes[2], input_sizes[2])
 
-    @Tensor.force_shape(input_shape)
-    def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_EfficientNet_B2, self).fit_nn(X, y)
 
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_EfficientNet_B2, self).predict_nn(X, argmax)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self,
-        X: Tensor,
-        y: Matrix,
-        metric: Evaluator = Accuracy,
-        argmax: bool = True,
-    ) -> float:
-        return super(_EfficientNet_B2, self).score_nn(X, y, metric, argmax)
-
-
-class _EfficientNet_B3(Estimator, NeuralModel, ImageClassifier):
+class _EfficientNet_B3(NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.Swish,
@@ -429,7 +331,7 @@ class _EfficientNet_B3(Estimator, NeuralModel, ImageClassifier):
         self.random_state = random_state
         self._fitted = False
 
-        super().__init__(
+        super(_EfficientNet_B3, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -439,7 +341,7 @@ class _EfficientNet_B3(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_EfficientNet_B3, self).init_model()
         self.model: nl.Sequential = nl.Sequential()
 
         self.feature_sizes_ = []
@@ -447,18 +349,6 @@ class _EfficientNet_B3(Estimator, NeuralModel, ImageClassifier):
             self._get_feature_shapes(sizes) for sizes in self.feature_sizes_
         ]
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": ("0<,+inf", int),
-                "growth_rate": ("0<,+inf", int),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -503,28 +393,8 @@ class _EfficientNet_B3(Estimator, NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, input_sizes[3], input_sizes[3])
 
-    @Tensor.force_shape(input_shape)
-    def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_EfficientNet_B3, self).fit_nn(X, y)
 
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_EfficientNet_B3, self).predict_nn(X, argmax)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self,
-        X: Tensor,
-        y: Matrix,
-        metric: Evaluator = Accuracy,
-        argmax: bool = True,
-    ) -> float:
-        return super(_EfficientNet_B3, self).score_nn(X, y, metric, argmax)
-
-
-class _EfficientNet_B4(Estimator, NeuralModel, ImageClassifier):
+class _EfficientNet_B4(NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.Swish,
@@ -550,7 +420,7 @@ class _EfficientNet_B4(Estimator, NeuralModel, ImageClassifier):
         self.random_state = random_state
         self._fitted = False
 
-        super().__init__(
+        super(_EfficientNet_B4, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -560,7 +430,7 @@ class _EfficientNet_B4(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_EfficientNet_B4, self).init_model()
         self.model: nl.Sequential = nl.Sequential()
 
         self.feature_sizes_ = []
@@ -568,18 +438,6 @@ class _EfficientNet_B4(Estimator, NeuralModel, ImageClassifier):
             self._get_feature_shapes(sizes) for sizes in self.feature_sizes_
         ]
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": ("0<,+inf", int),
-                "growth_rate": ("0<,+inf", int),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -624,28 +482,8 @@ class _EfficientNet_B4(Estimator, NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, input_sizes[4], input_sizes[4])
 
-    @Tensor.force_shape(input_shape)
-    def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_EfficientNet_B4, self).fit_nn(X, y)
 
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_EfficientNet_B4, self).predict_nn(X, argmax)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self,
-        X: Tensor,
-        y: Matrix,
-        metric: Evaluator = Accuracy,
-        argmax: bool = True,
-    ) -> float:
-        return super(_EfficientNet_B4, self).score_nn(X, y, metric, argmax)
-
-
-class _EfficientNet_B5(Estimator, NeuralModel, ImageClassifier):
+class _EfficientNet_B5(NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.Swish,
@@ -671,7 +509,7 @@ class _EfficientNet_B5(Estimator, NeuralModel, ImageClassifier):
         self.random_state = random_state
         self._fitted = False
 
-        super().__init__(
+        super(_EfficientNet_B5, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -681,7 +519,7 @@ class _EfficientNet_B5(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_EfficientNet_B5, self).init_model()
         self.model: nl.Sequential = nl.Sequential()
 
         self.feature_sizes_ = []
@@ -689,18 +527,6 @@ class _EfficientNet_B5(Estimator, NeuralModel, ImageClassifier):
             self._get_feature_shapes(sizes) for sizes in self.feature_sizes_
         ]
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": ("0<,+inf", int),
-                "growth_rate": ("0<,+inf", int),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -745,28 +571,8 @@ class _EfficientNet_B5(Estimator, NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, input_sizes[5], input_sizes[5])
 
-    @Tensor.force_shape(input_shape)
-    def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_EfficientNet_B5, self).fit_nn(X, y)
 
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_EfficientNet_B5, self).predict_nn(X, argmax)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self,
-        X: Tensor,
-        y: Matrix,
-        metric: Evaluator = Accuracy,
-        argmax: bool = True,
-    ) -> float:
-        return super(_EfficientNet_B5, self).score_nn(X, y, metric, argmax)
-
-
-class _EfficientNet_B6(Estimator, NeuralModel, ImageClassifier):
+class _EfficientNet_B6(NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.Swish,
@@ -792,7 +598,7 @@ class _EfficientNet_B6(Estimator, NeuralModel, ImageClassifier):
         self.random_state = random_state
         self._fitted = False
 
-        super().__init__(
+        super(_EfficientNet_B6, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -802,7 +608,7 @@ class _EfficientNet_B6(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_EfficientNet_B6, self).init_model()
         self.model: nl.Sequential = nl.Sequential()
 
         self.feature_sizes_ = []
@@ -810,18 +616,6 @@ class _EfficientNet_B6(Estimator, NeuralModel, ImageClassifier):
             self._get_feature_shapes(sizes) for sizes in self.feature_sizes_
         ]
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": ("0<,+inf", int),
-                "growth_rate": ("0<,+inf", int),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -866,28 +660,8 @@ class _EfficientNet_B6(Estimator, NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, input_sizes[6], input_sizes[6])
 
-    @Tensor.force_shape(input_shape)
-    def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_EfficientNet_B6, self).fit_nn(X, y)
 
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_EfficientNet_B6, self).predict_nn(X, argmax)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self,
-        X: Tensor,
-        y: Matrix,
-        metric: Evaluator = Accuracy,
-        argmax: bool = True,
-    ) -> float:
-        return super(_EfficientNet_B6, self).score_nn(X, y, metric, argmax)
-
-
-class _EfficientNet_B7(Estimator, NeuralModel, ImageClassifier):
+class _EfficientNet_B7(NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.Swish,
@@ -913,7 +687,7 @@ class _EfficientNet_B7(Estimator, NeuralModel, ImageClassifier):
         self.random_state = random_state
         self._fitted = False
 
-        super().__init__(
+        super(_EfficientNet_B7, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -923,7 +697,7 @@ class _EfficientNet_B7(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_EfficientNet_B7, self).init_model()
         self.model: nl.Sequential = nl.Sequential()
 
         self.feature_sizes_ = []
@@ -931,18 +705,6 @@ class _EfficientNet_B7(Estimator, NeuralModel, ImageClassifier):
             self._get_feature_shapes(sizes) for sizes in self.feature_sizes_
         ]
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": ("0<,+inf", int),
-                "growth_rate": ("0<,+inf", int),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -987,28 +749,8 @@ class _EfficientNet_B7(Estimator, NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, input_sizes[7], input_sizes[7])
 
-    @Tensor.force_shape(input_shape)
-    def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_EfficientNet_B7, self).fit_nn(X, y)
 
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_EfficientNet_B7, self).predict_nn(X, argmax)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self,
-        X: Tensor,
-        y: Matrix,
-        metric: Evaluator = Accuracy,
-        argmax: bool = True,
-    ) -> float:
-        return super(_EfficientNet_B7, self).score_nn(X, y, metric, argmax)
-
-
-class _EfficientNet_V2_S(Estimator, NeuralModel, ImageClassifier):
+class _EfficientNet_V2_S(NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.Swish,
@@ -1039,7 +781,7 @@ class _EfficientNet_V2_S(Estimator, NeuralModel, ImageClassifier):
         self._fitted = False
         self._cur_stage = -1
 
-        super().__init__(
+        super(_EfficientNet_V2_S, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -1049,7 +791,7 @@ class _EfficientNet_V2_S(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_EfficientNet_V2_S, self).init_model()
         self.model: nl.Sequential = nl.Sequential()
 
         self.feature_sizes_ = []
@@ -1057,18 +799,6 @@ class _EfficientNet_V2_S(Estimator, NeuralModel, ImageClassifier):
             self._get_feature_shapes(sizes) for sizes in self.feature_sizes_
         ]
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": ("0<,+inf", int),
-                "growth_rate": ("0<,+inf", int),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -1117,10 +847,6 @@ class _EfficientNet_V2_S(Estimator, NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, 384, 384)
 
-    @Tensor.force_shape(input_shape)
-    def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_EfficientNet_V2_S, self).fit_nn(X, y)
-
     @override
     def train(self, X: TensorLike, y: TensorLike, epoch: int) -> list[float]:
         new_stage = epoch // (self.n_epochs // 4)
@@ -1143,24 +869,8 @@ class _EfficientNet_V2_S(Estimator, NeuralModel, ImageClassifier):
         assert stage < 4
         return res_arr[stage], drop_rate_arr[stage]
 
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_EfficientNet_V2_S, self).predict_nn(X, argmax)
 
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self,
-        X: Tensor,
-        y: Matrix,
-        metric: Evaluator = Accuracy,
-        argmax: bool = True,
-    ) -> float:
-        return super(_EfficientNet_V2_S, self).score_nn(X, y, metric, argmax)
-
-
-class _EfficientNet_V2_M(Estimator, NeuralModel, ImageClassifier):
+class _EfficientNet_V2_M(NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.Swish,
@@ -1191,7 +901,7 @@ class _EfficientNet_V2_M(Estimator, NeuralModel, ImageClassifier):
         self._fitted = False
         self._cur_stage = -1
 
-        super().__init__(
+        super(_EfficientNet_V2_M, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -1201,7 +911,7 @@ class _EfficientNet_V2_M(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_EfficientNet_V2_M, self).init_model()
         self.model: nl.Sequential = nl.Sequential()
 
         self.feature_sizes_ = []
@@ -1209,18 +919,6 @@ class _EfficientNet_V2_M(Estimator, NeuralModel, ImageClassifier):
             self._get_feature_shapes(sizes) for sizes in self.feature_sizes_
         ]
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": ("0<,+inf", int),
-                "growth_rate": ("0<,+inf", int),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -1269,10 +967,6 @@ class _EfficientNet_V2_M(Estimator, NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, 480, 480)
 
-    @Tensor.force_shape(input_shape)
-    def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_EfficientNet_V2_M, self).fit_nn(X, y)
-
     @override
     def train(self, X: TensorLike, y: TensorLike, epoch: int) -> list[float]:
         new_stage = epoch // (self.n_epochs // 4)
@@ -1295,24 +989,8 @@ class _EfficientNet_V2_M(Estimator, NeuralModel, ImageClassifier):
         assert stage < 4
         return res_arr[stage], drop_rate_arr[stage]
 
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_EfficientNet_V2_M, self).predict_nn(X, argmax)
 
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self,
-        X: Tensor,
-        y: Matrix,
-        metric: Evaluator = Accuracy,
-        argmax: bool = True,
-    ) -> float:
-        return super(_EfficientNet_V2_M, self).score_nn(X, y, metric, argmax)
-
-
-class _EfficientNet_V2_L(Estimator, NeuralModel, ImageClassifier):
+class _EfficientNet_V2_L(NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.Swish,
@@ -1343,7 +1021,7 @@ class _EfficientNet_V2_L(Estimator, NeuralModel, ImageClassifier):
         self._fitted = False
         self._cur_stage = -1
 
-        super().__init__(
+        super(_EfficientNet_V2_L, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -1353,7 +1031,7 @@ class _EfficientNet_V2_L(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_EfficientNet_V2_L, self).init_model()
         self.model: nl.Sequential = nl.Sequential()
 
         self.feature_sizes_ = []
@@ -1361,18 +1039,6 @@ class _EfficientNet_V2_L(Estimator, NeuralModel, ImageClassifier):
             self._get_feature_shapes(sizes) for sizes in self.feature_sizes_
         ]
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": ("0<,+inf", int),
-                "growth_rate": ("0<,+inf", int),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -1421,10 +1087,6 @@ class _EfficientNet_V2_L(Estimator, NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, 480, 480)
 
-    @Tensor.force_shape(input_shape)
-    def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_EfficientNet_V2_L, self).fit_nn(X, y)
-
     @override
     def train(self, X: TensorLike, y: TensorLike, epoch: int) -> list[float]:
         new_stage = epoch // (self.n_epochs // 4)
@@ -1447,24 +1109,8 @@ class _EfficientNet_V2_L(Estimator, NeuralModel, ImageClassifier):
         assert stage < 4
         return res_arr[stage], drop_rate_arr[stage]
 
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_EfficientNet_V2_L, self).predict_nn(X, argmax)
 
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self,
-        X: Tensor,
-        y: Matrix,
-        metric: Evaluator = Accuracy,
-        argmax: bool = True,
-    ) -> float:
-        return super(_EfficientNet_V2_L, self).score_nn(X, y, metric, argmax)
-
-
-class _EfficientNet_V2_XL(Estimator, NeuralModel, ImageClassifier):
+class _EfficientNet_V2_XL(NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.Swish,
@@ -1495,7 +1141,7 @@ class _EfficientNet_V2_XL(Estimator, NeuralModel, ImageClassifier):
         self._fitted = False
         self._cur_stage = -1
 
-        super().__init__(
+        super(_EfficientNet_V2_XL, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -1505,7 +1151,7 @@ class _EfficientNet_V2_XL(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_EfficientNet_V2_XL, self).init_model()
         self.model: nl.Sequential = nl.Sequential()
 
         self.feature_sizes_ = []
@@ -1513,18 +1159,6 @@ class _EfficientNet_V2_XL(Estimator, NeuralModel, ImageClassifier):
             self._get_feature_shapes(sizes) for sizes in self.feature_sizes_
         ]
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": ("0<,+inf", int),
-                "growth_rate": ("0<,+inf", int),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -1573,10 +1207,6 @@ class _EfficientNet_V2_XL(Estimator, NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, 480, 480)
 
-    @Tensor.force_shape(input_shape)
-    def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_EfficientNet_V2_XL, self).fit_nn(X, y)
-
     @override
     def train(self, X: TensorLike, y: TensorLike, epoch: int) -> list[float]:
         new_stage = epoch // (self.n_epochs // 4)
@@ -1598,19 +1228,3 @@ class _EfficientNet_V2_XL(Estimator, NeuralModel, ImageClassifier):
 
         assert stage < 4
         return res_arr[stage], drop_rate_arr[stage]
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_EfficientNet_V2_XL, self).predict_nn(X, argmax)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self,
-        X: Tensor,
-        y: Matrix,
-        metric: Evaluator = Accuracy,
-        argmax: bool = True,
-    ) -> float:
-        return super(_EfficientNet_V2_XL, self).score_nn(X, y, metric, argmax)

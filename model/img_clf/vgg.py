@@ -1,10 +1,7 @@
-from typing import Self, override, ClassVar
+from typing import ClassVar
 from dataclasses import asdict
 
-from luma.core.super import Estimator, Evaluator
-from luma.interface.typing import Matrix, Tensor, Vector
 from luma.interface.util import InitUtil
-from luma.metric.classification import Accuracy
 
 from luma.neural.base import NeuralModel
 from luma.neural import block as nb
@@ -13,15 +10,7 @@ from luma.neural import layer as nl
 from ..types import ImageClassifier
 
 
-__all__ = (
-    "_VGGNet_11",
-    "_VGGNet_13",
-    "_VGGNet_16",
-    "_VGGNet_19",
-)
-
-
-class _VGGNet_11(Estimator, NeuralModel, ImageClassifier):
+class _VGGNet_11(NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.ReLU,
@@ -47,7 +36,7 @@ class _VGGNet_11(Estimator, NeuralModel, ImageClassifier):
         self.random_state = random_state
         self._fitted = False
 
-        super().__init__(
+        super(_VGGNet_11, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -57,7 +46,7 @@ class _VGGNet_11(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_VGGNet_11, self).init_model()
         self.model = nl.Sequential()
 
         self.feature_sizes_ = [
@@ -69,18 +58,6 @@ class _VGGNet_11(Estimator, NeuralModel, ImageClassifier):
             self._get_feature_shapes(self.feature_sizes_[1]),
         ]
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "dropout_rate": ("0,1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": (f"0<,+inf", int),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -167,28 +144,8 @@ class _VGGNet_11(Estimator, NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
-    @Tensor.force_shape(input_shape)
-    def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_VGGNet_11, self).fit_nn(X, y)
 
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_VGGNet_11, self).predict_nn(X, argmax)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self,
-        X: Tensor,
-        y: Matrix,
-        metric: Evaluator = Accuracy,
-        argmax: bool = True,
-    ) -> float:
-        return super(_VGGNet_11, self).score_nn(X, y, metric, argmax)
-
-
-class _VGGNet_13(Estimator, NeuralModel, ImageClassifier):
+class _VGGNet_13(NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.ReLU,
@@ -214,7 +171,7 @@ class _VGGNet_13(Estimator, NeuralModel, ImageClassifier):
         self.random_state = random_state
         self._fitted = False
 
-        super().__init__(
+        super(_VGGNet_13, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -224,7 +181,7 @@ class _VGGNet_13(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_VGGNet_13, self).init_model()
         self.model = nl.Sequential()
 
         self.feature_sizes_ = [
@@ -236,18 +193,6 @@ class _VGGNet_13(Estimator, NeuralModel, ImageClassifier):
             self._get_feature_shapes(self.feature_sizes_[1]),
         ]
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "dropout_rate": ("0,1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": (f"0<,+inf", int),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -346,28 +291,8 @@ class _VGGNet_13(Estimator, NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
-    @Tensor.force_shape(input_shape)
-    def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_VGGNet_13, self).fit_nn(X, y)
 
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_VGGNet_13, self).predict_nn(X, argmax)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self,
-        X: Tensor,
-        y: Matrix,
-        metric: Evaluator = Accuracy,
-        argmax: bool = True,
-    ) -> float:
-        return super(_VGGNet_13, self).score_nn(X, y, metric, argmax)
-
-
-class _VGGNet_16(Estimator, NeuralModel, ImageClassifier):
+class _VGGNet_16(NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.ReLU,
@@ -393,7 +318,7 @@ class _VGGNet_16(Estimator, NeuralModel, ImageClassifier):
         self.random_state = random_state
         self._fitted = False
 
-        super().__init__(
+        super(_VGGNet_16, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -403,7 +328,7 @@ class _VGGNet_16(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_VGGNet_16, self).init_model()
         self.model = nl.Sequential()
 
         self.feature_sizes_ = [
@@ -415,18 +340,6 @@ class _VGGNet_16(Estimator, NeuralModel, ImageClassifier):
             self._get_feature_shapes(self.feature_sizes_[1]),
         ]
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "dropout_rate": ("0,1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": (f"0<,+inf", int),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -537,28 +450,8 @@ class _VGGNet_16(Estimator, NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
-    @Tensor.force_shape(input_shape)
-    def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_VGGNet_16, self).fit_nn(X, y)
 
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_VGGNet_16, self).predict_nn(X, argmax)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self,
-        X: Tensor,
-        y: Matrix,
-        metric: Evaluator = Accuracy,
-        argmax: bool = True,
-    ) -> float:
-        return super(_VGGNet_16, self).score_nn(X, y, metric, argmax)
-
-
-class _VGGNet_19(Estimator, NeuralModel, ImageClassifier):
+class _VGGNet_19(NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.ReLU,
@@ -584,7 +477,7 @@ class _VGGNet_19(Estimator, NeuralModel, ImageClassifier):
         self.random_state = random_state
         self._fitted = False
 
-        super().__init__(
+        super(_VGGNet_19, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -594,7 +487,7 @@ class _VGGNet_19(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_VGGNet_19, self).init_model()
         self.model = nl.Sequential()
 
         self.feature_sizes_ = [
@@ -606,18 +499,6 @@ class _VGGNet_19(Estimator, NeuralModel, ImageClassifier):
             self._get_feature_shapes(self.feature_sizes_[1]),
         ]
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "dropout_rate": ("0,1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": (f"0<,+inf", int),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -739,23 +620,3 @@ class _VGGNet_19(Estimator, NeuralModel, ImageClassifier):
         )
 
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
-
-    @Tensor.force_shape(input_shape)
-    def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_VGGNet_19, self).fit_nn(X, y)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_VGGNet_19, self).predict_nn(X, argmax)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self,
-        X: Tensor,
-        y: Matrix,
-        metric: Evaluator = Accuracy,
-        argmax: bool = True,
-    ) -> float:
-        return super(_VGGNet_19, self).score_nn(X, y, metric, argmax)

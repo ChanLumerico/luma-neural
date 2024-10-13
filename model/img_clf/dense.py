@@ -1,9 +1,6 @@
-from typing import Self, override, ClassVar, List
+from typing import ClassVar
 
-from luma.core.super import Estimator, Evaluator
-from luma.interface.typing import Matrix, Tensor, Vector
 from luma.interface.util import InitUtil
-from luma.metric.classification import Accuracy
 
 from luma.neural.base import NeuralModel
 from luma.neural import block as nb
@@ -17,7 +14,7 @@ DenseUnit = nb.DenseNetBlock.DenseUnit
 Transition = nb.DenseNetBlock.Transition
 
 
-class _DenseNet_121(Estimator, NeuralModel, ImageClassifier):
+class _DenseNet_121(NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.ReLU,
@@ -45,7 +42,7 @@ class _DenseNet_121(Estimator, NeuralModel, ImageClassifier):
         self.random_state = random_state
         self._fitted = False
 
-        super().__init__(
+        super(_DenseNet_121, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -55,7 +52,7 @@ class _DenseNet_121(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_DenseNet_121, self).init_model()
         self.model: nl.Sequential = nl.Sequential()
 
         self.feature_sizes_ = []
@@ -63,18 +60,6 @@ class _DenseNet_121(Estimator, NeuralModel, ImageClassifier):
             self._get_feature_shapes(sizes) for sizes in self.feature_sizes_
         ]
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": ("0<,+inf", int),
-                "growth_rate": ("0<,+inf", int),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -119,28 +104,8 @@ class _DenseNet_121(Estimator, NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
-    @Tensor.force_shape(input_shape)
-    def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_DenseNet_121, self).fit_nn(X, y)
 
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_DenseNet_121, self).predict_nn(X, argmax)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self,
-        X: Tensor,
-        y: Matrix,
-        metric: Evaluator = Accuracy,
-        argmax: bool = True,
-    ) -> float:
-        return super(_DenseNet_121, self).score_nn(X, y, metric, argmax)
-
-
-class _DenseNet_169(Estimator, NeuralModel, ImageClassifier):
+class _DenseNet_169(NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.ReLU,
@@ -168,7 +133,7 @@ class _DenseNet_169(Estimator, NeuralModel, ImageClassifier):
         self.random_state = random_state
         self._fitted = False
 
-        super().__init__(
+        super(_DenseNet_169, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -178,7 +143,7 @@ class _DenseNet_169(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_DenseNet_169, self).init_model()
         self.model: nl.Sequential = nl.Sequential()
 
         self.feature_sizes_ = []
@@ -186,18 +151,6 @@ class _DenseNet_169(Estimator, NeuralModel, ImageClassifier):
             self._get_feature_shapes(sizes) for sizes in self.feature_sizes_
         ]
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": ("0<,+inf", int),
-                "growth_rate": ("0<,+inf", int),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -242,28 +195,8 @@ class _DenseNet_169(Estimator, NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
-    @Tensor.force_shape(input_shape)
-    def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_DenseNet_169, self).fit_nn(X, y)
 
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_DenseNet_169, self).predict_nn(X, argmax)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self,
-        X: Tensor,
-        y: Matrix,
-        metric: Evaluator = Accuracy,
-        argmax: bool = True,
-    ) -> float:
-        return super(_DenseNet_169, self).score_nn(X, y, metric, argmax)
-
-
-class _DenseNet_201(Estimator, NeuralModel, ImageClassifier):
+class _DenseNet_201(NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.ReLU,
@@ -291,7 +224,7 @@ class _DenseNet_201(Estimator, NeuralModel, ImageClassifier):
         self.random_state = random_state
         self._fitted = False
 
-        super().__init__(
+        super(_DenseNet_201, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -301,7 +234,7 @@ class _DenseNet_201(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_DenseNet_201, self).init_model()
         self.model: nl.Sequential = nl.Sequential()
 
         self.feature_sizes_ = []
@@ -309,18 +242,6 @@ class _DenseNet_201(Estimator, NeuralModel, ImageClassifier):
             self._get_feature_shapes(sizes) for sizes in self.feature_sizes_
         ]
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": ("0<,+inf", int),
-                "growth_rate": ("0<,+inf", int),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -365,28 +286,8 @@ class _DenseNet_201(Estimator, NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
-    @Tensor.force_shape(input_shape)
-    def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_DenseNet_201, self).fit_nn(X, y)
 
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_DenseNet_201, self).predict_nn(X, argmax)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self,
-        X: Tensor,
-        y: Matrix,
-        metric: Evaluator = Accuracy,
-        argmax: bool = True,
-    ) -> float:
-        return super(_DenseNet_201, self).score_nn(X, y, metric, argmax)
-
-
-class _DenseNet_264(Estimator, NeuralModel, ImageClassifier):
+class _DenseNet_264(NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.ReLU,
@@ -414,7 +315,7 @@ class _DenseNet_264(Estimator, NeuralModel, ImageClassifier):
         self.random_state = random_state
         self._fitted = False
 
-        super().__init__(
+        super(_DenseNet_264, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -424,7 +325,7 @@ class _DenseNet_264(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_DenseNet_264, self).init_model()
         self.model: nl.Sequential = nl.Sequential()
 
         self.feature_sizes_ = []
@@ -432,18 +333,6 @@ class _DenseNet_264(Estimator, NeuralModel, ImageClassifier):
             self._get_feature_shapes(sizes) for sizes in self.feature_sizes_
         ]
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": ("0<,+inf", int),
-                "growth_rate": ("0<,+inf", int),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -488,28 +377,8 @@ class _DenseNet_264(Estimator, NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
-    @Tensor.force_shape(input_shape)
-    def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_DenseNet_264, self).fit_nn(X, y)
 
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_DenseNet_264, self).predict_nn(X, argmax)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self,
-        X: Tensor,
-        y: Matrix,
-        metric: Evaluator = Accuracy,
-        argmax: bool = True,
-    ) -> float:
-        return super(_DenseNet_264, self).score_nn(X, y, metric, argmax)
-
-
-class _SE_DenseNet_121(Estimator, NeuralModel, ImageClassifier):
+class _SE_DenseNet_121(NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.ReLU,
@@ -537,7 +406,7 @@ class _SE_DenseNet_121(Estimator, NeuralModel, ImageClassifier):
         self.random_state = random_state
         self._fitted = False
 
-        super().__init__(
+        super(_SE_DenseNet_121, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -547,7 +416,7 @@ class _SE_DenseNet_121(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_SE_DenseNet_121, self).init_model()
         self.model: nl.Sequential = nl.Sequential()
 
         self.feature_sizes_ = []
@@ -555,18 +424,6 @@ class _SE_DenseNet_121(Estimator, NeuralModel, ImageClassifier):
             self._get_feature_shapes(sizes) for sizes in self.feature_sizes_
         ]
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": ("0<,+inf", int),
-                "growth_rate": ("0<,+inf", int),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -624,28 +481,8 @@ class _SE_DenseNet_121(Estimator, NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
-    @Tensor.force_shape(input_shape)
-    def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_SE_DenseNet_121, self).fit_nn(X, y)
 
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_SE_DenseNet_121, self).predict_nn(X, argmax)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self,
-        X: Tensor,
-        y: Matrix,
-        metric: Evaluator = Accuracy,
-        argmax: bool = True,
-    ) -> float:
-        return super(_SE_DenseNet_121, self).score_nn(X, y, metric, argmax)
-
-
-class _SE_DenseNet_169(Estimator, NeuralModel, ImageClassifier):
+class _SE_DenseNet_169(NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.ReLU,
@@ -673,7 +510,7 @@ class _SE_DenseNet_169(Estimator, NeuralModel, ImageClassifier):
         self.random_state = random_state
         self._fitted = False
 
-        super().__init__(
+        super(_SE_DenseNet_169, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -683,7 +520,7 @@ class _SE_DenseNet_169(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_SE_DenseNet_169, self).init_model()
         self.model: nl.Sequential = nl.Sequential()
 
         self.feature_sizes_ = []
@@ -691,18 +528,6 @@ class _SE_DenseNet_169(Estimator, NeuralModel, ImageClassifier):
             self._get_feature_shapes(sizes) for sizes in self.feature_sizes_
         ]
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": ("0<,+inf", int),
-                "growth_rate": ("0<,+inf", int),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -759,23 +584,3 @@ class _SE_DenseNet_169(Estimator, NeuralModel, ImageClassifier):
         )
 
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
-
-    @Tensor.force_shape(input_shape)
-    def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_SE_DenseNet_169, self).fit_nn(X, y)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_SE_DenseNet_169, self).predict_nn(X, argmax)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self,
-        X: Tensor,
-        y: Matrix,
-        metric: Evaluator = Accuracy,
-        argmax: bool = True,
-    ) -> float:
-        return super(_SE_DenseNet_169, self).score_nn(X, y, metric, argmax)

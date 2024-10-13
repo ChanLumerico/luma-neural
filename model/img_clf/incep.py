@@ -1,10 +1,8 @@
-from typing import Any, Self, override, ClassVar
+from typing import Self, ClassVar
 from dataclasses import asdict
 
-from luma.core.super import Estimator, Evaluator
-from luma.interface.typing import Matrix, Tensor, Vector
+from luma.interface.typing import Matrix, Tensor
 from luma.interface.util import InitUtil
-from luma.metric.classification import Accuracy
 from luma.preprocessing.encoder import LabelSmoothing
 
 from luma.neural.base import NeuralModel
@@ -15,19 +13,7 @@ from luma.neural import layer as nl
 from ..types import ImageClassifier
 
 
-__all__ = (
-    "_Inception_V1",
-    "_Inception_V2",
-    "_Inception_V3",
-    "_Inception_V4",
-    "_Inception_ResNet_V1",
-    "_Inception_ResNet_V2",
-    "_Xception",
-    "_SE_Inception_ResNet_V2",
-)
-
-
-class _Inception_V1(Estimator, NeuralModel, ImageClassifier):
+class _Inception_V1(NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.ReLU,
@@ -53,7 +39,7 @@ class _Inception_V1(Estimator, NeuralModel, ImageClassifier):
         self.random_state = random_state
         self._fitted = False
 
-        super().__init__(
+        super(_Inception_V1, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -63,7 +49,7 @@ class _Inception_V1(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_Inception_V1, self).init_model()
         self.model = nl.Sequential()
 
         self.feature_sizes_ = [
@@ -76,18 +62,6 @@ class _Inception_V1(Estimator, NeuralModel, ImageClassifier):
             self._get_feature_shapes(self.feature_sizes_[1]),
         ]
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "dropout_rate": ("0,1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": ("0<,+inf", int),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -179,28 +153,8 @@ class _Inception_V1(Estimator, NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
-    @Tensor.force_shape(input_shape)
-    def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_Inception_V1, self).fit_nn(X, y)
 
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_Inception_V1, self).predict_nn(X, argmax)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self,
-        X: Tensor,
-        y: Matrix,
-        metric: Evaluator = Accuracy,
-        argmax: bool = True,
-    ) -> float:
-        return super(_Inception_V1, self).score_nn(X, y, metric, argmax)
-
-
-class _Inception_V2(Estimator, NeuralModel, ImageClassifier):
+class _Inception_V2(NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.ReLU,
@@ -226,7 +180,7 @@ class _Inception_V2(Estimator, NeuralModel, ImageClassifier):
         self.random_state = random_state
         self._fitted = False
 
-        super().__init__(
+        super(_Inception_V2, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -236,7 +190,7 @@ class _Inception_V2(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_Inception_V2, self).init_model()
         self.model = nl.Sequential()
 
         self.feature_sizes_ = [
@@ -250,18 +204,6 @@ class _Inception_V2(Estimator, NeuralModel, ImageClassifier):
             self._get_feature_shapes(sizes) for sizes in self.feature_sizes_
         ]
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "dropout_rate": ("0,1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": ("0<,+inf", int),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -389,28 +331,8 @@ class _Inception_V2(Estimator, NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, 299, 299)
 
-    @Tensor.force_shape(input_shape)
-    def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_Inception_V2, self).fit_nn(X, y)
 
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_Inception_V2, self).predict_nn(X, argmax)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self,
-        X: Tensor,
-        y: Matrix,
-        metric: Evaluator = Accuracy,
-        argmax: bool = True,
-    ) -> float:
-        return super(_Inception_V2, self).score_nn(X, y, metric, argmax)
-
-
-class _Inception_V3(Estimator, NeuralModel, ImageClassifier):
+class _Inception_V3(NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.ReLU,
@@ -438,7 +360,7 @@ class _Inception_V3(Estimator, NeuralModel, ImageClassifier):
         self.random_state = random_state
         self._fitted = False
 
-        super().__init__(
+        super(_Inception_V3, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -448,7 +370,7 @@ class _Inception_V3(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_Inception_V3, self).init_model()
         self.model = nl.Sequential()
 
         self.feature_sizes_ = [
@@ -462,19 +384,6 @@ class _Inception_V3(Estimator, NeuralModel, ImageClassifier):
             self._get_feature_shapes(sizes) for sizes in self.feature_sizes_
         ]
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "dropout_rate": ("0,1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": ("0<,+inf", int),
-                "smoothing": ("0,1", None),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -608,30 +517,13 @@ class _Inception_V3(Estimator, NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, 299, 299)
 
-    @Tensor.force_shape(input_shape)
     def fit(self, X: Tensor, y: Matrix) -> Self:
         ls = LabelSmoothing(smoothing=self.smoothing)
         y_ls = ls.fit_transform(y)
         return super(_Inception_V3, self).fit_nn(X, y_ls)
 
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_Inception_V3, self).predict_nn(X, argmax)
 
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self,
-        X: Tensor,
-        y: Matrix,
-        metric: Evaluator = Accuracy,
-        argmax: bool = True,
-    ) -> float:
-        return super(_Inception_V3, self).score_nn(X, y, metric, argmax)
-
-
-class _Inception_V4(Estimator, NeuralModel, ImageClassifier):
+class _Inception_V4(NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.ReLU,
@@ -659,7 +551,7 @@ class _Inception_V4(Estimator, NeuralModel, ImageClassifier):
         self.random_state = random_state
         self._fitted = False
 
-        super().__init__(
+        super(_Inception_V4, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -669,7 +561,7 @@ class _Inception_V4(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_Inception_V4, self).init_model()
         self.model = nl.Sequential()
 
         self.feature_sizes_ = []
@@ -677,19 +569,6 @@ class _Inception_V4(Estimator, NeuralModel, ImageClassifier):
             self._get_feature_shapes(sizes) for sizes in self.feature_sizes_
         ]
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "dropout_rate": ("0,1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": ("0<,+inf", int),
-                "smoothing": ("0,1", None),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -736,30 +615,13 @@ class _Inception_V4(Estimator, NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, 299, 299)
 
-    @Tensor.force_shape(input_shape)
     def fit(self, X: Tensor, y: Matrix) -> Self:
         ls = LabelSmoothing(smoothing=self.smoothing)
         y_ls = ls.fit_transform(y)
         return super(_Inception_V4, self).fit_nn(X, y_ls)
 
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_Inception_V4, self).predict_nn(X, argmax)
 
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self,
-        X: Tensor,
-        y: Matrix,
-        metric: Evaluator = Accuracy,
-        argmax: bool = True,
-    ) -> float:
-        return super(_Inception_V4, self).score_nn(X, y, metric, argmax)
-
-
-class _Inception_ResNet_V1(Estimator, NeuralModel, ImageClassifier):
+class _Inception_ResNet_V1(NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.ReLU,
@@ -787,7 +649,7 @@ class _Inception_ResNet_V1(Estimator, NeuralModel, ImageClassifier):
         self.random_state = random_state
         self._fitted = False
 
-        super().__init__(
+        super(_Inception_ResNet_V1, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -797,7 +659,7 @@ class _Inception_ResNet_V1(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_Inception_ResNet_V1, self).init_model()
         self.model = nl.Sequential()
 
         self.feature_sizes_ = []
@@ -805,19 +667,6 @@ class _Inception_ResNet_V1(Estimator, NeuralModel, ImageClassifier):
             self._get_feature_shapes(sizes) for sizes in self.feature_sizes_
         ]
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "dropout_rate": ("0,1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": ("0<,+inf", int),
-                "smoothing": ("0,1", None),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -863,30 +712,13 @@ class _Inception_ResNet_V1(Estimator, NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, 299, 299)
 
-    @Tensor.force_shape(input_shape)
     def fit(self, X: Tensor, y: Matrix) -> Self:
         ls = LabelSmoothing(smoothing=self.smoothing)
         y_ls = ls.fit_transform(y)
         return super(_Inception_ResNet_V1, self).fit_nn(X, y_ls)
 
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_Inception_ResNet_V1, self).predict_nn(X, argmax)
 
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self,
-        X: Tensor,
-        y: Matrix,
-        metric: Evaluator = Accuracy,
-        argmax: bool = True,
-    ) -> float:
-        return super(_Inception_ResNet_V1, self).score_nn(X, y, metric, argmax)
-
-
-class _Inception_ResNet_V2(Estimator, NeuralModel, ImageClassifier):
+class _Inception_ResNet_V2(NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.ReLU,
@@ -914,7 +746,7 @@ class _Inception_ResNet_V2(Estimator, NeuralModel, ImageClassifier):
         self.random_state = random_state
         self._fitted = False
 
-        super().__init__(
+        super(_Inception_ResNet_V2, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -924,7 +756,7 @@ class _Inception_ResNet_V2(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_Inception_ResNet_V2, self).init_model()
         self.model = nl.Sequential()
 
         self.feature_sizes_ = []
@@ -932,19 +764,6 @@ class _Inception_ResNet_V2(Estimator, NeuralModel, ImageClassifier):
             self._get_feature_shapes(sizes) for sizes in self.feature_sizes_
         ]
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "dropout_rate": ("0,1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": ("0<,+inf", int),
-                "smoothing": ("0,1", None),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -993,30 +812,13 @@ class _Inception_ResNet_V2(Estimator, NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, 299, 299)
 
-    @Tensor.force_shape(input_shape)
     def fit(self, X: Tensor, y: Matrix) -> Self:
         ls = LabelSmoothing(smoothing=self.smoothing)
         y_ls = ls.fit_transform(y)
         return super(_Inception_ResNet_V2, self).fit_nn(X, y_ls)
 
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_Inception_ResNet_V2, self).predict_nn(X, argmax)
 
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self,
-        X: Tensor,
-        y: Matrix,
-        metric: Evaluator = Accuracy,
-        argmax: bool = True,
-    ) -> float:
-        return super(_Inception_ResNet_V2, self).score_nn(X, y, metric, argmax)
-
-
-class _Xception(Estimator, NeuralModel, ImageClassifier):
+class _Xception(NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.ReLU,
@@ -1042,7 +844,7 @@ class _Xception(Estimator, NeuralModel, ImageClassifier):
         self.random_state = random_state
         self._fitted = False
 
-        super().__init__(
+        super(_Xception, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -1052,7 +854,7 @@ class _Xception(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_Xception, self).init_model()
         self.model = nl.Sequential()
 
         self.feature_sizes_ = []
@@ -1060,17 +862,6 @@ class _Xception(Estimator, NeuralModel, ImageClassifier):
             self._get_feature_shapes(sizes) for sizes in self.feature_sizes_
         ]
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": ("0<,+inf", int),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -1103,28 +894,8 @@ class _Xception(Estimator, NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, 299, 299)
 
-    @Tensor.force_shape(input_shape)
-    def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_Xception, self).fit_nn(X, y)
 
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_Xception, self).predict_nn(X, argmax)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self,
-        X: Tensor,
-        y: Matrix,
-        metric: Evaluator = Accuracy,
-        argmax: bool = True,
-    ) -> float:
-        return super(_Xception, self).score_nn(X, y, metric, argmax)
-
-
-class _SE_Inception_ResNet_V2(Estimator, NeuralModel, ImageClassifier):
+class _SE_Inception_ResNet_V2(NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.ReLU,
@@ -1152,7 +923,7 @@ class _SE_Inception_ResNet_V2(Estimator, NeuralModel, ImageClassifier):
         self.random_state = random_state
         self._fitted = False
 
-        super().__init__(
+        super(_SE_Inception_ResNet_V2, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -1162,7 +933,7 @@ class _SE_Inception_ResNet_V2(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_SE_Inception_ResNet_V2, self).init_model()
         self.model = nl.Sequential()
 
         self.feature_sizes_ = []
@@ -1170,19 +941,6 @@ class _SE_Inception_ResNet_V2(Estimator, NeuralModel, ImageClassifier):
             self._get_feature_shapes(sizes) for sizes in self.feature_sizes_
         ]
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "dropout_rate": ("0,1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": ("0<,+inf", int),
-                "smoothing": ("0,1", None),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -1266,24 +1024,7 @@ class _SE_Inception_ResNet_V2(Estimator, NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, 299, 299)
 
-    @Tensor.force_shape(input_shape)
     def fit(self, X: Tensor, y: Matrix) -> Self:
         ls = LabelSmoothing(smoothing=self.smoothing)
         y_ls = ls.fit_transform(y)
         return super(_SE_Inception_ResNet_V2, self).fit_nn(X, y_ls)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_SE_Inception_ResNet_V2, self).predict_nn(X, argmax)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self,
-        X: Tensor,
-        y: Matrix,
-        metric: Evaluator = Accuracy,
-        argmax: bool = True,
-    ) -> float:
-        return super(_SE_Inception_ResNet_V2, self).score_nn(X, y, metric, argmax)

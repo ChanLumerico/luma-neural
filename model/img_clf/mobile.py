@@ -1,9 +1,6 @@
-from typing import Self, override, ClassVar, List
+from typing import ClassVar, List
 
-from luma.core.super import Estimator, Evaluator
-from luma.interface.typing import Matrix, Tensor, Vector
 from luma.interface.util import InitUtil
-from luma.metric.classification import Accuracy
 
 from luma.neural.base import NeuralModel
 from luma.neural import layer as nl
@@ -12,19 +9,11 @@ from luma.neural import block as nb
 from ..types import ImageClassifier
 
 
-__all__ = (
-    "_Mobile_V1",
-    "_Mobile_V2",
-    "_MobileNet_V3_S",
-    "_MobileNet_V3_L",
-)
-
-
 InvRes = nb.MobileNetBlock.InvRes
 InvRes_SE = nb.MobileNetBlock.InvRes_SE
 
 
-class _Mobile_V1(Estimator, NeuralModel, ImageClassifier):
+class _MobileNet_V1(NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.ReLU,
@@ -52,7 +41,7 @@ class _Mobile_V1(Estimator, NeuralModel, ImageClassifier):
         self.random_state = random_state
         self._fitted = False
 
-        super().__init__(
+        super(_MobileNet_V1, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -62,7 +51,7 @@ class _Mobile_V1(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_MobileNet_V1, self).init_model()
         self.model = nl.Sequential()
 
         self.feature_sizes_ = [
@@ -75,18 +64,6 @@ class _Mobile_V1(Estimator, NeuralModel, ImageClassifier):
             self._get_feature_shapes(sizes) for sizes in self.feature_sizes_
         ]
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": ("0<,+inf", int),
-                "width_param": ("0<,1", None),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -139,28 +116,8 @@ class _Mobile_V1(Estimator, NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
-    @Tensor.force_shape(input_shape)
-    def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_Mobile_V1, self).fit_nn(X, y)
 
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_Mobile_V1, self).predict_nn(X, argmax)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self,
-        X: Tensor,
-        y: Matrix,
-        metric: Evaluator = Accuracy,
-        argmax: bool = True,
-    ) -> float:
-        return super(_Mobile_V1, self).score_nn(X, y, metric, argmax)
-
-
-class _Mobile_V2(Estimator, NeuralModel, ImageClassifier):
+class _MobileNet_V2(NeuralModel, ImageClassifier):
     def __init__(
         self,
         activation: callable = nl.Activation.ReLU6,
@@ -188,7 +145,7 @@ class _Mobile_V2(Estimator, NeuralModel, ImageClassifier):
         self.random_state = random_state
         self._fitted = False
 
-        super().__init__(
+        super(_MobileNet_V2, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -198,7 +155,7 @@ class _Mobile_V2(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_MobileNet_V2, self).init_model()
         self.model = nl.Sequential()
 
         self.feature_sizes_ = []
@@ -206,20 +163,6 @@ class _Mobile_V2(Estimator, NeuralModel, ImageClassifier):
             self._get_feature_shapes(sizes) for sizes in self.feature_sizes_
         ]
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "momentum": ("0,1", None),
-                "width_param": ("0<,1", None),
-                "dropout_rate": ("0,1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": ("0<,+inf", int),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -279,28 +222,8 @@ class _Mobile_V2(Estimator, NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
-    @Tensor.force_shape(input_shape)
-    def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_Mobile_V2, self).fit_nn(X, y)
 
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_Mobile_V2, self).predict_nn(X, argmax)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self,
-        X: Tensor,
-        y: Matrix,
-        metric: Evaluator = Accuracy,
-        argmax: bool = True,
-    ) -> float:
-        return super(_Mobile_V2, self).score_nn(X, y, metric, argmax)
-
-
-class _MobileNet_V3_S(Estimator, NeuralModel, ImageClassifier):
+class _MobileNet_V3_S(NeuralModel, ImageClassifier):
     def __init__(
         self,
         initializer: InitUtil.InitStr = None,
@@ -326,7 +249,7 @@ class _MobileNet_V3_S(Estimator, NeuralModel, ImageClassifier):
         self.random_state = random_state
         self._fitted = False
 
-        super().__init__(
+        super(_MobileNet_V3_S, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -336,7 +259,7 @@ class _MobileNet_V3_S(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_MobileNet_V3_S, self).init_model()
         self.model = nl.Sequential()
 
         self.feature_sizes_ = []
@@ -344,19 +267,6 @@ class _MobileNet_V3_S(Estimator, NeuralModel, ImageClassifier):
             self._get_feature_shapes(sizes) for sizes in self.feature_sizes_
         ]
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "momentum": ("0,1", None),
-                "dropout_rate": ("0,1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": ("0<,+inf", int),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -412,28 +322,8 @@ class _MobileNet_V3_S(Estimator, NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[int] = (-1, 3, 224, 224)
 
-    @Tensor.force_shape(input_shape)
-    def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_MobileNet_V3_S, self).fit_nn(X, y)
 
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_MobileNet_V3_S, self).predict_nn(X, argmax)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self,
-        X: Tensor,
-        y: Matrix,
-        metric: Evaluator = Accuracy,
-        argmax: bool = True,
-    ) -> float:
-        return super(_MobileNet_V3_S, self).score_nn(X, y, metric, argmax)
-
-
-class _MobileNet_V3_L(Estimator, NeuralModel, ImageClassifier):
+class _MobileNet_V3_L(NeuralModel, ImageClassifier):
     def __init__(
         self,
         initializer: InitUtil.InitStr = None,
@@ -459,7 +349,7 @@ class _MobileNet_V3_L(Estimator, NeuralModel, ImageClassifier):
         self.random_state = random_state
         self._fitted = False
 
-        super().__init__(
+        super(_MobileNet_V3_L, self).__init__(
             batch_size,
             n_epochs,
             valid_size,
@@ -469,7 +359,7 @@ class _MobileNet_V3_L(Estimator, NeuralModel, ImageClassifier):
             random_state,
             deep_verbose,
         )
-        super().init_model()
+        super(_MobileNet_V3_L, self).init_model()
         self.model = nl.Sequential()
 
         self.feature_sizes_ = []
@@ -477,19 +367,6 @@ class _MobileNet_V3_L(Estimator, NeuralModel, ImageClassifier):
             self._get_feature_shapes(sizes) for sizes in self.feature_sizes_
         ]
 
-        self.set_param_ranges(
-            {
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "momentum": ("0,1", None),
-                "dropout_rate": ("0,1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": ("0<,+inf", int),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -548,23 +425,3 @@ class _MobileNet_V3_L(Estimator, NeuralModel, ImageClassifier):
         )
 
     input_shape: ClassVar[int] = (-1, 3, 224, 224)
-
-    @Tensor.force_shape(input_shape)
-    def fit(self, X: Tensor, y: Matrix) -> Self:
-        return super(_MobileNet_V3_L, self).fit_nn(X, y)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(_MobileNet_V3_L, self).predict_nn(X, argmax)
-
-    @override
-    @Tensor.force_shape(input_shape)
-    def score(
-        self,
-        X: Tensor,
-        y: Matrix,
-        metric: Evaluator = Accuracy,
-        argmax: bool = True,
-    ) -> float:
-        return super(_MobileNet_V3_L, self).score_nn(X, y, metric, argmax)
