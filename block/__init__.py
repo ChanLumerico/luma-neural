@@ -1308,6 +1308,10 @@ class ConvNeXtBlock:
         IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR),
         2022, pp. 11976-11986.
 
+    `ConvNeXt-V2-(A, F, P, N, T, B, L, H)` :
+        [2] Zhou, Xinyu, et al. "ConvNeXt V2: Co-designing and Scaling ConvNets
+        with Masked Autoencoders." arXiv preprint arXiv:2301.00808 (2023).
+
     """
 
     class V1(convnext._V1):
@@ -1317,4 +1321,9 @@ class ConvNeXtBlock:
         Refer to the figures shown in the original paper[1].
         """
 
-    class V2(convnext._V2): ...
+    class V2(convnext._V2):
+        """
+        ConvNeXt block used in ConvNeXt-v2 architecture.
+
+        Refer to the figures shown in the original paper[2].
+        """

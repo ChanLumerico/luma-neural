@@ -374,9 +374,8 @@ class _GlobalResponseNorm(Layer):
         C = X.shape[1]
         self.axes = tuple(range(2, X.ndim))
 
-        self.mean = np.mean(X, axis=self.axes, keepdims=True)
-        self.std = np.std(X, axis=self.axes, keepdims=True)
-        self.X_norm = (X - self.mean) / (self.std + self.epsilon)
+        l2_norm = np.sqrt(np.sum(X**2, axis=self.axes, keepdims=True))
+        self.X_norm = X / (l2_norm + self.epsilon)
 
         n_spatial = X.ndim - 2
         shape = [1, C] + [1] * n_spatial
@@ -401,30 +400,15 @@ class _GlobalResponseNorm(Layer):
         gamma_reshape = self.weights_[0].reshape(shape)
         dX_norm = d_out * gamma_reshape
 
-        dvar = np.sum(
-            dX_norm
-            * (self.input_ - self.mean)
-            * -0.5
-            * (self.std + self.epsilon) ** -3,
-            axis=axes_reduce,
+        l2_norm = np.sqrt(np.sum(self.input_**2, axis=self.axes, keepdims=True))
+        dl2_norm = np.sum(
+            dX_norm * (-self.input_ / (l2_norm + self.epsilon) ** 2),
+            axis=self.axes,
             keepdims=True,
         )
 
-        mean = np.prod([x for x in self.input_.shape[2:]])
-        dmean = (
-            np.sum(
-                dX_norm * -1 / (self.std + self.epsilon), axis=self.axes, keepdims=True
-            )
-            + dvar
-            * np.sum(-2 * (self.input_ - self.mean), axis=self.axes, keepdims=True)
-            / mean
-        )
+        dX = (dX_norm / (l2_norm + self.epsilon)) + (dl2_norm * self.input_ / l2_norm)
 
-        dX = (
-            (dX_norm / (self.std + self.epsilon))
-            + (dvar * 2 * (self.input_ - self.mean) / mean)
-            + (dmean / mean)
-        )
         self.dX = dX
         return self.dX
 
