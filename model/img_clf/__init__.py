@@ -97,6 +97,14 @@ __all__ = (
     "ConvNeXt_B",
     "ConvNeXt_L",
     "ConvNeXt_XL",
+    "ConvNeXt_V2_A",
+    "ConvNeXt_V2_F",
+    "ConvNeXt_V2_P",
+    "ConvNeXt_V2_N",
+    "ConvNeXt_V2_T",
+    "ConvNeXt_V2_B",
+    "ConvNeXt_V2_L",
+    "ConvNeXt_V2_H",
 )
 
 
@@ -3867,3 +3875,27 @@ class ConvNeXt_XL(convnext._ConvNeXt_XL):
     2022, pp. 11976-11986.
 
     """
+
+
+class ConvNeXt_V2_A(convnext._ConvNeXt_V2_A): ...
+
+
+class ConvNeXt_V2_F(convnext._ConvNeXt_V2_F): ...
+
+
+class ConvNeXt_V2_P(convnext._ConvNeXt_V2_P): ...
+
+
+class ConvNeXt_V2_N(convnext._ConvNeXt_V2_N): ...
+
+
+class ConvNeXt_V2_T(convnext._ConvNeXt_V2_T): ...
+
+
+class ConvNeXt_V2_B(convnext._ConvNeXt_V2_B): ...
+
+
+class ConvNeXt_V2_L(convnext._ConvNeXt_V2_L): ...
+
+
+class ConvNeXt_V2_H(convnext._ConvNeXt_V2_H): ...
