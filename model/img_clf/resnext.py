@@ -1,6 +1,7 @@
 from dataclasses import asdict
 from typing import ClassVar
 
+from luma.core.super import Supervised
 from luma.interface.util import InitUtil
 
 from luma.neural.base import NeuralModel
@@ -15,7 +16,7 @@ Bottleneck_SE = nb.ResNetBlock.Bottleneck_SE
 Bottleneck_SK = nb.ResNetBlock.Bottleneck_SK
 
 
-class _ResNeXt_50(NeuralModel, ImageClassifier):
+class _ResNeXt_50(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         cardinality: int = 32,
@@ -124,7 +125,7 @@ class _ResNeXt_50(NeuralModel, ImageClassifier):
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
 
-class _ResNeXt_101(NeuralModel, ImageClassifier):
+class _ResNeXt_101(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         cardinality: int = 32,
@@ -233,7 +234,7 @@ class _ResNeXt_101(NeuralModel, ImageClassifier):
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
 
-class _SE_ResNeXt_50(NeuralModel, ImageClassifier):
+class _SE_ResNeXt_50(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         cardinality: int = 32,
@@ -342,7 +343,7 @@ class _SE_ResNeXt_50(NeuralModel, ImageClassifier):
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
 
-class _SE_ResNeXt_101(NeuralModel, ImageClassifier):
+class _SE_ResNeXt_101(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         cardinality: int = 32,
@@ -451,7 +452,7 @@ class _SE_ResNeXt_101(NeuralModel, ImageClassifier):
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
 
-class _SK_ResNeXt_50(NeuralModel, ImageClassifier):
+class _SK_ResNeXt_50(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         cardinality: int = 32,
@@ -560,7 +561,7 @@ class _SK_ResNeXt_50(NeuralModel, ImageClassifier):
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
 
-class _SK_ResNeXt_101(NeuralModel, ImageClassifier):
+class _SK_ResNeXt_101(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         cardinality: int = 32,

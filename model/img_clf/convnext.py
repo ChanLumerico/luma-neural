@@ -2,6 +2,7 @@ from typing import ClassVar
 
 from luma.interface.util import InitUtil
 
+from luma.core.super import Supervised
 from luma.neural.base import NeuralModel
 from luma.neural import block as nb
 from luma.neural import layer as nl
@@ -9,7 +10,7 @@ from luma.neural import layer as nl
 from ..types import ImageClassifier
 
 
-class _ConvNeXt_T(NeuralModel, ImageClassifier):
+class _ConvNeXt_T(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         activation: callable = nl.Activation.GELU,
@@ -82,7 +83,7 @@ class _ConvNeXt_T(NeuralModel, ImageClassifier):
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
 
-class _ConvNeXt_S(NeuralModel, ImageClassifier):
+class _ConvNeXt_S(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         activation: callable = nl.Activation.GELU,
@@ -155,7 +156,7 @@ class _ConvNeXt_S(NeuralModel, ImageClassifier):
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
 
-class _ConvNeXt_B(NeuralModel, ImageClassifier):
+class _ConvNeXt_B(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         activation: callable = nl.Activation.GELU,
@@ -228,7 +229,7 @@ class _ConvNeXt_B(NeuralModel, ImageClassifier):
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
 
-class _ConvNeXt_L(NeuralModel, ImageClassifier):
+class _ConvNeXt_L(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         activation: callable = nl.Activation.GELU,
@@ -301,7 +302,7 @@ class _ConvNeXt_L(NeuralModel, ImageClassifier):
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
 
-class _ConvNeXt_XL(NeuralModel, ImageClassifier):
+class _ConvNeXt_XL(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         activation: callable = nl.Activation.GELU,
@@ -374,7 +375,7 @@ class _ConvNeXt_XL(NeuralModel, ImageClassifier):
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
 
-class _ConvNeXt_V2_A(NeuralModel, ImageClassifier):
+class _ConvNeXt_V2_A(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         activation: callable = nl.Activation.GELU,
@@ -449,7 +450,7 @@ class _ConvNeXt_V2_A(NeuralModel, ImageClassifier):
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
 
-class _ConvNeXt_V2_F(NeuralModel, ImageClassifier):
+class _ConvNeXt_V2_F(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         activation: callable = nl.Activation.GELU,
@@ -524,7 +525,7 @@ class _ConvNeXt_V2_F(NeuralModel, ImageClassifier):
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
 
-class _ConvNeXt_V2_P(NeuralModel, ImageClassifier):
+class _ConvNeXt_V2_P(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         activation: callable = nl.Activation.GELU,
@@ -599,7 +600,7 @@ class _ConvNeXt_V2_P(NeuralModel, ImageClassifier):
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
 
-class _ConvNeXt_V2_N(NeuralModel, ImageClassifier):
+class _ConvNeXt_V2_N(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         activation: callable = nl.Activation.GELU,
@@ -674,7 +675,7 @@ class _ConvNeXt_V2_N(NeuralModel, ImageClassifier):
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
 
-class _ConvNeXt_V2_T(NeuralModel, ImageClassifier):
+class _ConvNeXt_V2_T(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         activation: callable = nl.Activation.GELU,
@@ -749,7 +750,7 @@ class _ConvNeXt_V2_T(NeuralModel, ImageClassifier):
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
 
-class _ConvNeXt_V2_B(NeuralModel, ImageClassifier):
+class _ConvNeXt_V2_B(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         activation: callable = nl.Activation.GELU,
@@ -824,7 +825,7 @@ class _ConvNeXt_V2_B(NeuralModel, ImageClassifier):
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
 
-class _ConvNeXt_V2_L(NeuralModel, ImageClassifier):
+class _ConvNeXt_V2_L(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         activation: callable = nl.Activation.GELU,
@@ -899,7 +900,7 @@ class _ConvNeXt_V2_L(NeuralModel, ImageClassifier):
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
 
-class _ConvNeXt_V2_H(NeuralModel, ImageClassifier):
+class _ConvNeXt_V2_H(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         activation: callable = nl.Activation.GELU,

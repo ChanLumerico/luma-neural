@@ -1,6 +1,7 @@
 from typing import ClassVar
 from dataclasses import asdict
 
+from luma.core.super import Supervised
 from luma.interface.util import InitUtil
 
 from luma.neural.base import NeuralModel
@@ -10,7 +11,7 @@ from luma.neural import layer as nl
 from ..types import ImageClassifier
 
 
-class _VGGNet_11(NeuralModel, ImageClassifier):
+class _VGGNet_11(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         activation: callable = nl.Activation.ReLU,
@@ -145,7 +146,7 @@ class _VGGNet_11(NeuralModel, ImageClassifier):
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
 
-class _VGGNet_13(NeuralModel, ImageClassifier):
+class _VGGNet_13(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         activation: callable = nl.Activation.ReLU,
@@ -292,7 +293,7 @@ class _VGGNet_13(NeuralModel, ImageClassifier):
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
 
-class _VGGNet_16(NeuralModel, ImageClassifier):
+class _VGGNet_16(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         activation: callable = nl.Activation.ReLU,
@@ -451,7 +452,7 @@ class _VGGNet_16(NeuralModel, ImageClassifier):
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
 
-class _VGGNet_19(NeuralModel, ImageClassifier):
+class _VGGNet_19(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         activation: callable = nl.Activation.ReLU,

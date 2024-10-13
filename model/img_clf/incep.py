@@ -1,10 +1,11 @@
-from typing import Self, ClassVar
+from typing import Self, ClassVar, override
 from dataclasses import asdict
 
 from luma.interface.typing import Matrix, Tensor
 from luma.interface.util import InitUtil
 from luma.preprocessing.encoder import LabelSmoothing
 
+from luma.core.super import Supervised
 from luma.neural.base import NeuralModel
 from luma.neural import functional as F
 from luma.neural import block as nb
@@ -13,7 +14,7 @@ from luma.neural import layer as nl
 from ..types import ImageClassifier
 
 
-class _Inception_V1(NeuralModel, ImageClassifier):
+class _Inception_V1(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         activation: callable = nl.Activation.ReLU,
@@ -154,7 +155,7 @@ class _Inception_V1(NeuralModel, ImageClassifier):
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
 
-class _Inception_V2(NeuralModel, ImageClassifier):
+class _Inception_V2(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         activation: callable = nl.Activation.ReLU,
@@ -332,7 +333,7 @@ class _Inception_V2(NeuralModel, ImageClassifier):
     input_shape: ClassVar[tuple] = (-1, 3, 299, 299)
 
 
-class _Inception_V3(NeuralModel, ImageClassifier):
+class _Inception_V3(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         activation: callable = nl.Activation.ReLU,
@@ -517,13 +518,14 @@ class _Inception_V3(NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, 299, 299)
 
+    @override
     def fit(self, X: Tensor, y: Matrix) -> Self:
         ls = LabelSmoothing(smoothing=self.smoothing)
         y_ls = ls.fit_transform(y)
         return super(_Inception_V3, self).fit_nn(X, y_ls)
 
 
-class _Inception_V4(NeuralModel, ImageClassifier):
+class _Inception_V4(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         activation: callable = nl.Activation.ReLU,
@@ -615,13 +617,14 @@ class _Inception_V4(NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, 299, 299)
 
+    @override
     def fit(self, X: Tensor, y: Matrix) -> Self:
         ls = LabelSmoothing(smoothing=self.smoothing)
         y_ls = ls.fit_transform(y)
         return super(_Inception_V4, self).fit_nn(X, y_ls)
 
 
-class _Inception_ResNet_V1(NeuralModel, ImageClassifier):
+class _Inception_ResNet_V1(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         activation: callable = nl.Activation.ReLU,
@@ -712,13 +715,14 @@ class _Inception_ResNet_V1(NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, 299, 299)
 
+    @override
     def fit(self, X: Tensor, y: Matrix) -> Self:
         ls = LabelSmoothing(smoothing=self.smoothing)
         y_ls = ls.fit_transform(y)
         return super(_Inception_ResNet_V1, self).fit_nn(X, y_ls)
 
 
-class _Inception_ResNet_V2(NeuralModel, ImageClassifier):
+class _Inception_ResNet_V2(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         activation: callable = nl.Activation.ReLU,
@@ -812,13 +816,14 @@ class _Inception_ResNet_V2(NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, 299, 299)
 
+    @override
     def fit(self, X: Tensor, y: Matrix) -> Self:
         ls = LabelSmoothing(smoothing=self.smoothing)
         y_ls = ls.fit_transform(y)
         return super(_Inception_ResNet_V2, self).fit_nn(X, y_ls)
 
 
-class _Xception(NeuralModel, ImageClassifier):
+class _Xception(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         activation: callable = nl.Activation.ReLU,
@@ -895,7 +900,7 @@ class _Xception(NeuralModel, ImageClassifier):
     input_shape: ClassVar[tuple] = (-1, 3, 299, 299)
 
 
-class _SE_Inception_ResNet_V2(NeuralModel, ImageClassifier):
+class _SE_Inception_ResNet_V2(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         activation: callable = nl.Activation.ReLU,
@@ -1024,6 +1029,7 @@ class _SE_Inception_ResNet_V2(NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, 299, 299)
 
+    @override
     def fit(self, X: Tensor, y: Matrix) -> Self:
         ls = LabelSmoothing(smoothing=self.smoothing)
         y_ls = ls.fit_transform(y)

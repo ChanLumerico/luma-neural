@@ -2,6 +2,7 @@ from typing import ClassVar
 
 from luma.interface.util import InitUtil
 
+from luma.core.super import Supervised
 from luma.neural.base import NeuralModel
 from luma.neural import block as nb
 from luma.neural import layer as nl
@@ -14,7 +15,7 @@ DenseUnit = nb.DenseNetBlock.DenseUnit
 Transition = nb.DenseNetBlock.Transition
 
 
-class _DenseNet_121(NeuralModel, ImageClassifier):
+class _DenseNet_121(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         activation: callable = nl.Activation.ReLU,
@@ -105,7 +106,7 @@ class _DenseNet_121(NeuralModel, ImageClassifier):
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
 
-class _DenseNet_169(NeuralModel, ImageClassifier):
+class _DenseNet_169(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         activation: callable = nl.Activation.ReLU,
@@ -196,7 +197,7 @@ class _DenseNet_169(NeuralModel, ImageClassifier):
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
 
-class _DenseNet_201(NeuralModel, ImageClassifier):
+class _DenseNet_201(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         activation: callable = nl.Activation.ReLU,
@@ -287,7 +288,7 @@ class _DenseNet_201(NeuralModel, ImageClassifier):
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
 
-class _DenseNet_264(NeuralModel, ImageClassifier):
+class _DenseNet_264(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         activation: callable = nl.Activation.ReLU,
@@ -378,7 +379,7 @@ class _DenseNet_264(NeuralModel, ImageClassifier):
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
 
-class _SE_DenseNet_121(NeuralModel, ImageClassifier):
+class _SE_DenseNet_121(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         activation: callable = nl.Activation.ReLU,
@@ -482,7 +483,7 @@ class _SE_DenseNet_121(NeuralModel, ImageClassifier):
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
 
-class _SE_DenseNet_169(NeuralModel, ImageClassifier):
+class _SE_DenseNet_169(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         activation: callable = nl.Activation.ReLU,

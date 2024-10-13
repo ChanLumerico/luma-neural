@@ -2,6 +2,7 @@ from typing import ClassVar, List
 
 from luma.interface.util import InitUtil
 
+from luma.core.super import Supervised
 from luma.neural.base import NeuralModel
 from luma.neural import layer as nl
 from luma.neural import block as nb
@@ -13,7 +14,7 @@ InvRes = nb.MobileNetBlock.InvRes
 InvRes_SE = nb.MobileNetBlock.InvRes_SE
 
 
-class _MobileNet_V1(NeuralModel, ImageClassifier):
+class _MobileNet_V1(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         activation: callable = nl.Activation.ReLU,
@@ -117,7 +118,7 @@ class _MobileNet_V1(NeuralModel, ImageClassifier):
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
 
-class _MobileNet_V2(NeuralModel, ImageClassifier):
+class _MobileNet_V2(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         activation: callable = nl.Activation.ReLU6,
@@ -223,7 +224,7 @@ class _MobileNet_V2(NeuralModel, ImageClassifier):
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
 
-class _MobileNet_V3_S(NeuralModel, ImageClassifier):
+class _MobileNet_V3_S(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         initializer: InitUtil.InitStr = None,
@@ -323,7 +324,7 @@ class _MobileNet_V3_S(NeuralModel, ImageClassifier):
     input_shape: ClassVar[int] = (-1, 3, 224, 224)
 
 
-class _MobileNet_V3_L(NeuralModel, ImageClassifier):
+class _MobileNet_V3_L(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         initializer: InitUtil.InitStr = None,

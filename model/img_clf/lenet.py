@@ -2,6 +2,7 @@ from typing import ClassVar
 
 from luma.interface.util import InitUtil
 
+from luma.core.super import Supervised
 from luma.neural.base import NeuralModel
 from luma.neural import block as nb
 from luma.neural import layer as nl
@@ -9,7 +10,7 @@ from luma.neural import layer as nl
 from ..types import ImageClassifier
 
 
-class _LeNet_1(NeuralModel, ImageClassifier):
+class _LeNet_1(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         activation: callable = nl.Activation.Tanh,
@@ -100,7 +101,7 @@ class _LeNet_1(NeuralModel, ImageClassifier):
     input_shape: ClassVar[tuple] = (-1, 1, 28, 28)
 
 
-class _LeNet_4(NeuralModel, ImageClassifier):
+class _LeNet_4(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         activation: callable = nl.Activation.Tanh,
@@ -202,7 +203,7 @@ class _LeNet_4(NeuralModel, ImageClassifier):
     input_shape: ClassVar[tuple] = (-1, 1, 32, 32)
 
 
-class _LeNet_5(NeuralModel, ImageClassifier):
+class _LeNet_5(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         activation: callable = nl.Activation.Tanh,

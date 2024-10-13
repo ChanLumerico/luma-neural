@@ -1,5 +1,6 @@
-from typing import Self, ClassVar
+from typing import Self, ClassVar, override
 
+from luma.core.super import Supervised
 from luma.interface.typing import Matrix, Tensor
 from luma.interface.util import InitUtil
 from luma.preprocessing.encoder import LabelSmoothing
@@ -11,7 +12,7 @@ from luma.neural import layer as nl
 from ..types import ImageClassifier
 
 
-class _ResNeSt_50(NeuralModel, ImageClassifier):
+class _ResNeSt_50(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         radix: int = 2,
@@ -118,13 +119,14 @@ class _ResNeSt_50(NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
+    @override
     def fit(self, X: Tensor, y: Matrix) -> Self:
         ls = LabelSmoothing(smoothing=self.smoothing)
         y_ls = ls.fit_transform(y)
         return super(_ResNeSt_50, self).fit_nn(X, y_ls)
 
 
-class _ResNeSt_101(NeuralModel, ImageClassifier):
+class _ResNeSt_101(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         radix: int = 2,
@@ -231,13 +233,14 @@ class _ResNeSt_101(NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
+    @override
     def fit(self, X: Tensor, y: Matrix) -> Self:
         ls = LabelSmoothing(smoothing=self.smoothing)
         y_ls = ls.fit_transform(y)
         return super(_ResNeSt_101, self).fit_nn(X, y_ls)
 
 
-class _ResNeSt_200(NeuralModel, ImageClassifier):
+class _ResNeSt_200(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         radix: int = 2,
@@ -344,13 +347,14 @@ class _ResNeSt_200(NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
+    @override
     def fit(self, X: Tensor, y: Matrix) -> Self:
         ls = LabelSmoothing(smoothing=self.smoothing)
         y_ls = ls.fit_transform(y)
         return super(_ResNeSt_200, self).fit_nn(X, y_ls)
 
 
-class _ResNeSt_269(NeuralModel, ImageClassifier):
+class _ResNeSt_269(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         radix: int = 2,
@@ -457,6 +461,7 @@ class _ResNeSt_269(NeuralModel, ImageClassifier):
 
     input_shape: ClassVar[tuple] = (-1, 3, 224, 224)
 
+    @override
     def fit(self, X: Tensor, y: Matrix) -> Self:
         ls = LabelSmoothing(smoothing=self.smoothing)
         y_ls = ls.fit_transform(y)

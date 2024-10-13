@@ -3,6 +3,7 @@ from dataclasses import asdict
 
 from luma.interface.util import InitUtil
 
+from luma.core.super import Supervised
 from luma.neural.base import NeuralModel
 from luma.neural import block as nb
 from luma.neural import layer as nl
@@ -10,7 +11,7 @@ from luma.neural import layer as nl
 from ..types import ImageClassifier
 
 
-class _AlexNet(NeuralModel, ImageClassifier):
+class _AlexNet(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         activation: callable = nl.Activation.ReLU,
@@ -186,7 +187,7 @@ class _AlexNet(NeuralModel, ImageClassifier):
     input_shape: ClassVar[tuple] = (-1, 3, 227, 227)
 
 
-class _ZFNet(NeuralModel, ImageClassifier):
+class _ZFNet(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         activation: callable = nl.Activation.ReLU,

@@ -4,6 +4,7 @@ from luma.interface.typing import TensorLike
 from luma.interface.util import InitUtil
 from luma.preprocessing.image import Resize
 
+from luma.core.super import Supervised
 from luma.neural.base import NeuralModel
 from luma.neural import block as nb
 from luma.neural import layer as nl
@@ -38,7 +39,7 @@ multipliers = [
 input_sizes = [224, 240, 260, 300, 380, 456, 528, 600]
 
 
-class _EfficientNet_B0(NeuralModel, ImageClassifier):
+class _EfficientNet_B0(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         activation: callable = nl.Activation.Swish,
@@ -127,7 +128,7 @@ class _EfficientNet_B0(NeuralModel, ImageClassifier):
     input_shape: ClassVar[tuple] = (-1, 3, input_sizes[0], input_sizes[0])
 
 
-class _EfficientNet_B1(NeuralModel, ImageClassifier):
+class _EfficientNet_B1(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         activation: callable = nl.Activation.Swish,
@@ -216,7 +217,7 @@ class _EfficientNet_B1(NeuralModel, ImageClassifier):
     input_shape: ClassVar[tuple] = (-1, 3, input_sizes[1], input_sizes[1])
 
 
-class _EfficientNet_B2(NeuralModel, ImageClassifier):
+class _EfficientNet_B2(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         activation: callable = nl.Activation.Swish,
@@ -305,7 +306,7 @@ class _EfficientNet_B2(NeuralModel, ImageClassifier):
     input_shape: ClassVar[tuple] = (-1, 3, input_sizes[2], input_sizes[2])
 
 
-class _EfficientNet_B3(NeuralModel, ImageClassifier):
+class _EfficientNet_B3(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         activation: callable = nl.Activation.Swish,
@@ -394,7 +395,7 @@ class _EfficientNet_B3(NeuralModel, ImageClassifier):
     input_shape: ClassVar[tuple] = (-1, 3, input_sizes[3], input_sizes[3])
 
 
-class _EfficientNet_B4(NeuralModel, ImageClassifier):
+class _EfficientNet_B4(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         activation: callable = nl.Activation.Swish,
@@ -483,7 +484,7 @@ class _EfficientNet_B4(NeuralModel, ImageClassifier):
     input_shape: ClassVar[tuple] = (-1, 3, input_sizes[4], input_sizes[4])
 
 
-class _EfficientNet_B5(NeuralModel, ImageClassifier):
+class _EfficientNet_B5(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         activation: callable = nl.Activation.Swish,
@@ -572,7 +573,7 @@ class _EfficientNet_B5(NeuralModel, ImageClassifier):
     input_shape: ClassVar[tuple] = (-1, 3, input_sizes[5], input_sizes[5])
 
 
-class _EfficientNet_B6(NeuralModel, ImageClassifier):
+class _EfficientNet_B6(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         activation: callable = nl.Activation.Swish,
@@ -661,7 +662,7 @@ class _EfficientNet_B6(NeuralModel, ImageClassifier):
     input_shape: ClassVar[tuple] = (-1, 3, input_sizes[6], input_sizes[6])
 
 
-class _EfficientNet_B7(NeuralModel, ImageClassifier):
+class _EfficientNet_B7(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         activation: callable = nl.Activation.Swish,
@@ -750,7 +751,7 @@ class _EfficientNet_B7(NeuralModel, ImageClassifier):
     input_shape: ClassVar[tuple] = (-1, 3, input_sizes[7], input_sizes[7])
 
 
-class _EfficientNet_V2_S(NeuralModel, ImageClassifier):
+class _EfficientNet_V2_S(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         activation: callable = nl.Activation.Swish,
@@ -870,7 +871,7 @@ class _EfficientNet_V2_S(NeuralModel, ImageClassifier):
         return res_arr[stage], drop_rate_arr[stage]
 
 
-class _EfficientNet_V2_M(NeuralModel, ImageClassifier):
+class _EfficientNet_V2_M(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         activation: callable = nl.Activation.Swish,
@@ -990,7 +991,7 @@ class _EfficientNet_V2_M(NeuralModel, ImageClassifier):
         return res_arr[stage], drop_rate_arr[stage]
 
 
-class _EfficientNet_V2_L(NeuralModel, ImageClassifier):
+class _EfficientNet_V2_L(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         activation: callable = nl.Activation.Swish,
@@ -1110,7 +1111,7 @@ class _EfficientNet_V2_L(NeuralModel, ImageClassifier):
         return res_arr[stage], drop_rate_arr[stage]
 
 
-class _EfficientNet_V2_XL(NeuralModel, ImageClassifier):
+class _EfficientNet_V2_XL(NeuralModel, ImageClassifier, Supervised):
     def __init__(
         self,
         activation: callable = nl.Activation.Swish,
