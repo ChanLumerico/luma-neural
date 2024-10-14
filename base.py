@@ -326,6 +326,8 @@ class NeuralModel(ABC, NeuralBase):
     @abstractmethod
     def build_model(self) -> None: ...
 
+    input_shape: ClassVar[tuple | None] = None
+
     def _get_feature_shapes(self, sizes: list) -> list[tuple]:
         return [(i, j) for i, j in zip(sizes[:-1], sizes[1:])]
 
@@ -342,6 +344,7 @@ class NeuralModel(ABC, NeuralBase):
                 + f" Call 'set_loss()' to assign a loss function.",
             )
 
+    @Tensor.force_shape(input_shape)
     def fit_nn(self, X: TensorLike, y: TensorLike) -> Self:
         X_train, X_val, y_train, y_val = TrainTestSplit(
             X,
@@ -388,12 +391,15 @@ class NeuralModel(ABC, NeuralBase):
         self.fitted_ = True
         return self
 
+    @Tensor.force_shape(input_shape)
     def predict_nn(self, X: TensorLike, argmax: bool = True) -> TensorLike:
         if not self.fitted_:
             raise NotFittedError
         out = self.model(X, is_train=False)
+
         return np.argmax(out, axis=1) if argmax else out
 
+    @Tensor.force_shape(input_shape)
     def score_nn(
         self, X: TensorLike, y: TensorLike, metric: Evaluator, argmax: bool = True
     ) -> float:

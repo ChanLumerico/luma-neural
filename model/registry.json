@@ -804,8 +804,8 @@
         "family": "ConvNeXt",
         "layers": 137,
         "accuracy": {
-            "imagenet-1k": 98.1,
-            "imagenet-21k": 84.1
+            "imagenet-1k": 94.1,
+            "imagenet-21k": 81.0
         }
     },
     {
@@ -816,8 +816,8 @@
         "family": "ConvNeXt",
         "layers": 263,
         "accuracy": {
-            "imagenet-1k": 98.4,
-            "imagenet-21k": 85.8
+            "imagenet-1k": 96.4,
+            "imagenet-21k": 83.3
         }
     },
     {
@@ -828,8 +828,8 @@
         "family": "ConvNeXt",
         "layers": 263,
         "accuracy": {
-            "imagenet-1k": 98.6,
-            "imagenet-21k": 86.8
+            "imagenet-1k": 97.6,
+            "imagenet-21k": 85.7
         }
     },
     {
@@ -840,8 +840,8 @@
         "layers": 263,
         "family": "ConvNeXt",
         "accuracy": {
-            "imagenet-1k": 98.7,
-            "imagenet-21k": 87.5
+            "imagenet-1k": 98.5,
+            "imagenet-21k": 86.8
         }
     },
     {
@@ -853,7 +853,103 @@
         "family": "ConvNeXt",
         "accuracy": {
             "imagenet-1k": 98.8,
-            "imagenet-21k": 87.8
+            "imagenet-21k": 87.3
+        }
+    },
+    {
+        "name": "ConvNeXt_V2_A",
+        "weights": 3690800,
+        "biases": 12640,
+        "params": 3703440,
+        "layers": 108,
+        "family": "ConvNeXt-V2",
+        "accuracy": {
+            "imagenet-1k": 89.7,
+            "imagenet-21k": 72.4
+        }
+    },
+    {
+        "name": "ConvNeXt_V2_F",
+        "weights": 5212320,
+        "biases": 14968,
+        "params": 5227288,
+        "layers": 108,
+        "family": "ConvNeXt-V2",
+        "accuracy": {
+            "imagenet-1k": 91.5,
+            "imagenet-21k": 76.4
+        }
+    },
+    {
+        "name": "ConvNeXt_V2_P",
+        "weights": 9038720,
+        "biases": 19624,
+        "params": 9058344,
+        "layers": 108,
+        "family": "ConvNeXt-V2",
+        "accuracy": {
+            "imagenet-1k": 93.3,
+            "imagenet-21k": 79.8
+        }
+    },
+    {
+        "name": "ConvNeXt_V2_N",
+        "weights": 15584480,
+        "biases": 28120,
+        "params": 15612600,
+        "layers": 124,
+        "family": "ConvNeXt-V2",
+        "accuracy": {
+            "imagenet-1k": 94.9,
+            "imagenet-21k": 82.1
+        }
+    },
+    {
+        "name": "ConvNeXt_V2_T",
+        "weights": 28576992,
+        "biases": 42184,
+        "params": 28619176,
+        "layers": 156,
+        "family": "ConvNeXt-V2",
+        "accuracy": {
+            "imagenet-1k": 96.0,
+            "imagenet-21k": 83.9
+        }
+    },
+    {
+        "name": "ConvNeXt_V2_B",
+        "weights": 88566400,
+        "biases": 111208,
+        "params": 88677608,
+        "layers": 300,
+        "family": "ConvNeXt-V2",
+        "accuracy": {
+            "imagenet-1k": 97.9,
+            "imagenet-21k": 86.8
+        }
+    },
+    {
+        "name": "ConvNeXt_V2_L",
+        "weights": 197730240,
+        "biases": 166312,
+        "params": 197896552,
+        "layers": 300,
+        "family": "ConvNeXt-V2",
+        "accuracy": {
+            "imagenet-1k": 98.8,
+            "imagenet-21k": 87.3
+        }
+    },
+    {
+        "name": "ConvNeXt_V2_H",
+        "weights": 659875040,
+        "biases": 304072,
+        "params": 660179112,
+        "layers": 300,
+        "family": "ConvNeXt-V2",
+        "accuracy": {
+            "imagenet-1k": 99.3,
+            "imagenet-21k": 88.7
         }
     }
 ]
