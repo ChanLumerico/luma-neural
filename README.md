@@ -66,6 +66,7 @@ Deep learning models and neural network utilities of Luma
 | `BatchNorm2D` | $(N,C,H,W)$ | $(N,C,H,W)$ |
 | `BatchNorm3D` | $(N,C,D,H,W)$ | $(N,C,D,H,W)$ |
 | `LocalResponseNorm` | $(N,C,*)$ | $(N,C,*)$ |
+| `GlobalResponseNorm` | $(N,C,*)$ | $(N,C,*)$ |
 | `LayerNorm` | $(N,*)$ | $(N,*)$ |
 
 ### Utility
@@ -182,11 +183,12 @@ Deep learning models and neural network utilities of Luma
 | --- | --- | --- | --- |
 | `ResNeStBlock` | $22\sim 24+8r$ | $(N,C_{in},H_{in},W_{in})$ | $(N,C_{out},H_{out},W_{out})$ |
 
-### ConvNeXt Block
+### ConvNeXt Blocks
 
 | Class | # of Layers | Input Shape | Output Shape |
 | --- | --- | --- | --- |
-| `ConvNeXtBlock` | 7 | $(N,C,H,W)$ | $(N,C,H,W)$ |
+| `ConvNeXtBlock.V1` | 7 | $(N,C,H,W)$ | $(N,C,H,W)$ |
+| `ConvNeXtBlock.V2` | 8 | $(N,C,H,W)$ | $(N,C,H,W)$ |
 
 *Waiting for future updates…🔮*
 
@@ -407,7 +409,14 @@ Information Processing Systems, 2012.
 
 #### ConvNeXt Series
 
+*ConvNeXt-v1*
+
 >Liu, Zhuang, et al. "A ConvNet for the 2020s." Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), 2022, pp. 11976-11986.
+>
+
+*ConvNeXt-v2*
+
+>Zhou, Xinyu, et al. "ConvNeXt V2: Co-designing and Scaling ConvNets with Masked Autoencoders." arXiv preprint arXiv:2301.00808 (2023).
 >
 
 | Class | # of Layers | Input Shape | Weights | Biases | Total Param. | Implemented |
@@ -417,6 +426,16 @@ Information Processing Systems, 2012.
 | `ConvNeXt_B` | 263 | $(N,3,224,224)$ | 88,422,016 | 111,208 | 88,533,224 | ✅ |
 | `ConvNeXt_L` | 263 | $(N,3,224,224)$ | 197,513,664 | 166,312 | 197,679,976 | ✅ |
 | `ConvNeXt_XL` | 263 | $(N,3,224,224)$ | 349,859,072 | 221,416 | 350,080,488 | ✅ |
+| `ConvNeXt_V2_A` | 108 | $(N,3,224,224)$ | 3,690,800 | 12,640 | 3,703,440 | ✅ |
+| `ConvNeXt_V2_F` | 108 | $(N,3,224,224)$ | 5,212,320 | 14,968 | 5,227,288 | ✅ |
+| `ConvNeXt_V2_P` | 108 | $(N,3,224,224)$ | 9,038,720 | 19,624 | 9,058,344 | ✅ |
+| `ConvNeXt_V2_N` | 124 | $(N,3,224,224)$ | 15,584,480 | 28,120 | 15,612,600 | ✅ |
+| `ConvNeXt_V2_T` | 156 | $(N,3,224,224)$ | 28,576,992 | 42,184 | 28,619,176 | ✅ |
+| `ConvNeXt_V2_B` | 300 | $(N,3,224,224)$ | 88,566,400 | 111,208 | 88,677,608 | ✅ |
+| `ConvNeXt_V2_L` | 300 | $(N,3,224,224)$ | 197,730,240 | 166,312 | 197,896,552 | ✅ |
+| `ConvNeXt_V2_H` | 300 | $(N,3,224,224)$ | 659,875,040 | 304,072 | 660,179,112 | ✅ |
+
+#### CoAtNet Series
 
 *Waiting for future updates…🔮*
 

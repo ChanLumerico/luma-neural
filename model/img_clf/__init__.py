@@ -17,6 +17,7 @@ and Inception mechanisms, ensuring flexibility for various use cases.
 
 from . import (
     alex,
+    coatnet,
     convnext,
     dense,
     efficient,
