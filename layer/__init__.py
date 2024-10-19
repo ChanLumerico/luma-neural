@@ -17,7 +17,7 @@ from luma.interface.typing import TensorLike, LayerLike
 from luma.interface.util import InitUtil, Clone
 from luma.neural.base import Layer
 
-from luma.neural.layer import act, conv, drop, linear, norm, pool, util
+from luma.neural.layer import act, attention, conv, drop, linear, norm, pool, util
 
 
 __all__ = (
@@ -57,6 +57,8 @@ __all__ = (
     "LocalResponseNorm",
     "GlobalResponseNorm",
     "LayerNorm",
+    "ScaledDotProductAttention",
+    "MultiHeadAttention",
     "Slice",
     "Identity",
     "Sequential",
@@ -1341,6 +1343,14 @@ class LayerNorm(norm._LayerNorm):
         epsilon: float = 1e-5,
     ) -> None:
         super().__init__(in_shape, epsilon)
+
+
+class ScaledDotProductAttention(attention._ScaledDotProductAttention):
+    def __init__(self, mask: TensorLike | None = None) -> None:
+        super().__init__(mask)
+
+
+class MultiHeadAttention(attention._MultiheadAttention): ...
 
 
 class Slice(util._Slice):
