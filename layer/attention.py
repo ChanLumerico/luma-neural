@@ -14,7 +14,12 @@ class _ScaledDotProductAttention(Layer):
         self.V = None
 
     def forward(
-        self, Q: Tensor, K: Tensor, V: Tensor, is_train: bool = False
+        self,
+        Q: Tensor,
+        K: Tensor,
+        V: Tensor,
+        is_train: bool = False,
+        # How can resolve this multi-input Q, K, V with the Luma-neural system?
     ) -> Tensor:
         _ = is_train
         self.Q = Q
@@ -72,44 +77,88 @@ class _MultiheadAttention(Layer):
         self.d_v = d_model // n_heads
 
         rng_ = np.random.RandomState(random_state)
-        self.WQ = rng_.randn(d_model, d_model) * (1.0 / np.sqrt(d_model))
-        self.bQ = np.zeros(d_model)
+        WQ = rng_.randn(d_model, d_model) * (1.0 / np.sqrt(d_model))
+        bQ = np.zeros(d_model)
 
-        self.WK = rng_.randn(d_model, d_model) * (1.0 / np.sqrt(d_model))
-        self.bK = np.zeros(d_model)
+        WK = rng_.randn(d_model, d_model) * (1.0 / np.sqrt(d_model))
+        bK = np.zeros(d_model)
 
-        self.WV = rng_.randn(d_model, d_model) * (1.0 / np.sqrt(d_model))
-        self.bV = np.zeros(d_model)
+        WV = rng_.randn(d_model, d_model) * (1.0 / np.sqrt(d_model))
+        bV = np.zeros(d_model)
 
-        self.W_out = rng_.randn(d_model, d_model) / (1.0 / np.sqrt(d_model))
-        self.b_out = np.zeros(d_model)
+        W_out = rng_.randn(d_model, d_model) / (1.0 / np.sqrt(d_model))
+        b_out = np.zeros(d_model)
 
-        self.weights_ = [self.WQ, self.WK, self.WV, self.W_out]
-        self.biases_ = [self.bQ, self.bK, self.bV, self.b_out]
+        self.weights_ = [WQ, WK, WV, W_out]
+        self.biases_ = [bQ, bK, bV, b_out]
 
         self.attention = _ScaledDotProductAttention(mask=mask)
 
     def forward(self, X: Tensor, is_train: bool = False) -> Tensor:
+        self.input_ = X
         N, L, _ = X.shape
 
-        Q = np.matmul(X, self.WQ) + self.bQ
-        K = np.matmul(X, self.WK) + self.bK
-        V = np.matmul(X, self.WV) + self.bV
+        Q = np.matmul(X, self.weights_[0]) + self.biases_[0]
+        K = np.matmul(X, self.weights_[1]) + self.biases_[1]
+        V = np.matmul(X, self.weights_[2]) + self.biases_[2]
 
         Q = Q.reshape(N, L, self.n_heads, self.d_k).transpose(0, 2, 1, 3)
         K = K.reshape(N, L, self.n_heads, self.d_k).transpose(0, 2, 1, 3)
         V = V.reshape(N, L, self.n_heads, self.d_k).transpose(0, 2, 1, 3)
 
-        attention_output = self.attention.forward(Q, K, V, is_train=is_train)
-        attention_output = attention_output.transpose(0, 2, 1, 3).reshape(
-            N, L, self.n_heads * self.d_v
-        )
+        att_out = self.attention.forward(Q, K, V, is_train=is_train)
+        att_out = att_out.transpose(0, 2, 1, 3).reshape(N, L, self.n_heads * self.d_v)
+        self.att_out = att_out
 
-        output = np.matmul(attention_output, self.W_out) + self.b_out
-        return output
+        self.output_ = np.matmul(att_out, self.weights_[3]) + self.biases_[3]
+        return self.output_
 
     def backward(self, d_out: Tensor) -> Tensor:
-        return super().backward(d_out)
+        N, L, _ = d_out.shape
+
+        d_att_out = np.matmul(d_out, self.weights_[3].T)
+        dW_out = np.matmul(
+            self.att_out.reshape(N * L, self.d_model).T,
+            d_out.reshape(N * L, self.d_model),
+        )
+        db_out = np.sum(d_out, axis=(0, 1))
+
+        d_att_out = d_att_out.reshape(N, L, self.n_heads, self.d_v)
+        d_att_out = d_att_out.transpose(0, 2, 1, 3)
+
+        dQ, dK, dV = self.attention.backward(d_att_out)
+        dQ = dQ.transpose(0, 2, 1, 3).reshape(N, L, self.n_heads * self.d_k)
+        dK = dK.transpose(0, 2, 1, 3).reshape(N, L, self.n_heads * self.d_k)
+        dV = dV.transpose(0, 2, 1, 3).reshape(N, L, self.n_heads * self.d_v)
+
+        dWQ = np.matmul(
+            self.input_.reshape(N * L, self.d_model).T,
+            dQ.reshape(N * L, self.d_model),
+        )
+        dbQ = np.sum(dQ, axis=(0, 1))
+
+        dWK = np.matmul(
+            self.input_.reshape(N * L, self.d_model).T,
+            dK.reshape(N * L, self.d_model),
+        )
+        dbK = np.sum(dK, axis=(0, 1))
+
+        dWV = np.matmul(
+            self.input_.reshape(N * L, self.d_model).T,
+            dV.reshape(N * L, self.d_model),
+        )
+        dbV = np.sum(dV, axis=(0, 1))
+
+        self.dW = [dWQ, dWK, dWV, dW_out]
+        self.dB = [dbQ, dbK, dbV, db_out]
+
+        dX_Q = np.matmul(dQ, self.weights_[0].T)
+        dX_K = np.matmul(dK, self.weights_[1].T)
+        dX_V = np.matmul(dV, self.weights_[2].T)
+
+        dX = dX_Q + dX_K + dX_V
+        self.dX = dX
+        return self.dX
 
     def out_shape(self, in_shape: Tuple[int]) -> Tuple[int]:
-        return super().out_shape(in_shape)
+        return in_shape

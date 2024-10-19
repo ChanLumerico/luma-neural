@@ -1350,7 +1350,15 @@ class ScaledDotProductAttention(attention._ScaledDotProductAttention):
         super().__init__(mask)
 
 
-class MultiHeadAttention(attention._MultiheadAttention): ...
+class MultiHeadAttention(attention._MultiheadAttention):
+    def __init__(
+        self,
+        d_model: int,
+        n_heads: int,
+        mask: TensorLike | None = None,
+        random_state: int | None = None,
+    ) -> None:
+        super().__init__(d_model, n_heads, mask, random_state)
 
 
 class Slice(util._Slice):
