@@ -1356,11 +1356,9 @@ class MultiHeadAttention(attention._MultiheadAttention):
         d_model: int,
         n_heads: int,
         mask: TensorLike | None = None,
-        optimizer: Optimizer | None = None,
-        lambda_: float = 0,
         random_state: int | None = None,
     ) -> None:
-        super().__init__(d_model, n_heads, mask, optimizer, lambda_, random_state)
+        super().__init__(d_model, n_heads, mask, random_state)
 
 
 class CrossMultiHeadAttention(attention._CrossMultiHeadAttention):
@@ -1370,13 +1368,9 @@ class CrossMultiHeadAttention(attention._CrossMultiHeadAttention):
         n_heads: int,
         encoder_out: TensorLike,
         mask: TensorLike | None = None,
-        optimizer: Optimizer | None = None,
-        lambda_: float = 0,
         random_state: int | None = None,
     ) -> None:
-        super().__init__(
-            d_model, n_heads, encoder_out, mask, optimizer, lambda_, random_state
-        )
+        super().__init__(d_model, n_heads, encoder_out, mask, random_state)
 
 
 class Slice(util._Slice):

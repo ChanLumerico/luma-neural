@@ -1,7 +1,6 @@
 from typing import Optional, Tuple
 import numpy as np
 
-from luma.core.super import Optimizer
 from luma.interface.typing import Tensor
 from luma.neural.base import Layer
 
@@ -80,14 +79,10 @@ class _MultiheadAttention(Layer):
         d_model: int,
         n_heads: int,
         mask: Optional[Tensor] = None,
-        optimizer: Optional[Optimizer] = None,
-        lambda_: float = 0.0,
         random_state: Optional[int] = None,
     ) -> None:
         super().__init__()
         assert d_model % n_heads == 0, "d_model must be divisible by n_heads."
-        self.optimizer = optimizer
-        self.lambda_ = lambda_
 
         self.d_model = d_model
         self.n_heads = n_heads
@@ -197,14 +192,9 @@ class _CrossMultiHeadAttention(Layer):
         n_heads: int,
         encoder_out: Tensor,
         mask: Optional[Tensor] = None,
-        optimizer: Optional[Optimizer] = None,
-        lambda_: float = 0.0,
         random_state: Optional[int] = None,
     ) -> None:
         super().__init__()
-        self.optimizer = optimizer
-        self.lambda_ = lambda_
-
         self.mha = _MultiheadAttention(d_model, n_heads, mask, random_state)
         self.encoder_out = encoder_out
 
