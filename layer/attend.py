@@ -204,8 +204,9 @@ class _CrossMultiHeadAttention(Layer):
         return self.output_
 
     def backward(self, d_out: Tensor) -> Tensor:
-        dX = self.mha.backward(d_out)
-        self.dX = dX
+        # how to handle remaining dX_K, dX_V?
+        dX_Q, dX_K, dX_V = self.mha.backward_qkv(d_out)
+        self.dX = dX_Q
         return self.dX
 
     def out_shape(self, in_shape: Tuple[int]) -> Tuple[int]:

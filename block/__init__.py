@@ -28,6 +28,7 @@ from luma.neural.block import (
     se,
     sk,
     standard,
+    transformer,
     xception,
 )
 
@@ -55,6 +56,7 @@ __all__ = (
     "EfficientBlock",
     "ResNeStBlock",
     "ConvNeXtBlock",
+    "TransformerBlock",
 )
 
 
@@ -1327,3 +1329,13 @@ class ConvNeXtBlock:
 
         Refer to the figures shown in the original paper[2].
         """
+
+
+@ClassType.non_instantiable()
+class TransformerBlock:
+
+    class PositionwiseFeedForward(transformer._PositionwiseFeedForward): ...
+
+    class Encoder(transformer._Encoder): ...
+
+    class Decoder(transformer._Decoder): ...

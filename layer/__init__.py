@@ -17,7 +17,7 @@ from luma.interface.typing import TensorLike, LayerLike
 from luma.interface.util import InitUtil, Clone
 from luma.neural.base import Layer
 
-from luma.neural.layer import act, attention, conv, drop, linear, norm, pool, util
+from luma.neural.layer import act, attend, conv, drop, encode, linear, norm, pool, util
 
 
 __all__ = (
@@ -1345,12 +1345,12 @@ class LayerNorm(norm._LayerNorm):
         super().__init__(in_shape, epsilon)
 
 
-class ScaledDotProductAttention(attention._ScaledDotProductAttention):
+class ScaledDotProductAttention(attend._ScaledDotProductAttention):
     def __init__(self, mask: TensorLike | None = None) -> None:
         super().__init__(mask)
 
 
-class MultiHeadAttention(attention._MultiheadAttention):
+class MultiHeadAttention(attend._MultiheadAttention):
     def __init__(
         self,
         d_model: int,
@@ -1361,7 +1361,7 @@ class MultiHeadAttention(attention._MultiheadAttention):
         super().__init__(d_model, n_heads, mask, random_state)
 
 
-class CrossMultiHeadAttention(attention._CrossMultiHeadAttention):
+class CrossMultiHeadAttention(attend._CrossMultiHeadAttention):
     def __init__(
         self,
         d_model: int,
@@ -1371,6 +1371,11 @@ class CrossMultiHeadAttention(attention._CrossMultiHeadAttention):
         random_state: int | None = None,
     ) -> None:
         super().__init__(d_model, n_heads, encoder_out, mask, random_state)
+
+
+class PositionalEncoding(encode._PositionalEncoding):
+    def __init__(self, d_model: int, max_length: int = 5000) -> None:
+        super().__init__(d_model, max_length)
 
 
 class Slice(util._Slice):
