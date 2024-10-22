@@ -190,7 +190,7 @@ class _Decoder(LayerGraph):
         )
         self.ln_1 = LayerNode(nl.LayerNorm(), MergeMode.SUM, name="ln_1")
 
-        self.mha_enc_dec = SequentialNode(
+        self.mha_enc_dec = SequentialNode(  # split this Seq into two separate nodes
             nl.CrossMultiHeadAttention(
                 self.d_model,
                 self.n_heads,
