@@ -1,10 +1,10 @@
-from typing import Tuple
+from typing import Tuple, override
+
 from luma.core.super import Optimizer
-from luma.interface.typing import Tensor
+from luma.interface.typing import Tensor, TensorLike
 from luma.interface.util import InitUtil
 
 from luma.neural import layer as nl
-
 from luma.neural.autoprop import LayerNode, SequentialNode, LayerGraph, MergeMode
 
 
@@ -49,6 +49,7 @@ class _Encoder(LayerGraph):
         initializer: InitUtil.InitStr = None,
         lambda_: float = 0.0,
         dropout_rate: float = 0.1,
+        do_buffer: bool = False,
         random_state: int | None = None,
     ) -> None:
         self.d_model = d_model
@@ -60,6 +61,7 @@ class _Encoder(LayerGraph):
         self.initializer = initializer
         self.lambda_ = lambda_
         self.dropout_rate = dropout_rate
+        self.do_buffer = do_buffer
         self.random_state = random_state
 
         self.basic_args = dict(
@@ -77,7 +79,8 @@ class _Encoder(LayerGraph):
                 self.mha_: [self.ln_1],
                 self.ln_1: [self.ffn_, self.ln_2],
                 self.ffn_: [self.ln_2],
-                self.ln_2: [self.tm_],
+                self.ln_2: [self.buffer_],
+                self.buffer_: [self.tm_],
             },
             root=self.rt_,
             term=self.tm_,
@@ -105,6 +108,9 @@ class _Encoder(LayerGraph):
             name="ffn_",
         )
         self.ln_2 = LayerNode(nl.LayerNorm(), MergeMode.SUM, name="ln_2")
+        self.buffer_ = LayerNode(
+            nl.Buffer() if self.do_buffer else nl.Identity(), name="buffer_"
+        )
 
     def out_shape(self, in_shape: Tuple[int]) -> Tuple[int]:
         return in_shape
@@ -116,7 +122,7 @@ class _Decoder(LayerGraph):
         d_model: int,
         d_ff: int,
         n_heads: int,
-        encoder_out: Tensor,
+        encoder: _Encoder | None = None,
         mask_self: Tensor | None = None,
         mask_enc_dec: Tensor | None = None,
         activation: callable = nl.Activation.ReLU,
@@ -129,7 +135,6 @@ class _Decoder(LayerGraph):
         self.d_model = d_model
         self.d_ff = d_ff
         self.n_heads = n_heads
-        self.encoder_out = encoder_out
         self.mask_self = mask_self
         self.mask_enc_dec = mask_enc_dec
         self.activation = activation
@@ -138,6 +143,13 @@ class _Decoder(LayerGraph):
         self.lambda_ = lambda_
         self.dropout_rate = dropout_rate
         self.random_state = random_state
+
+        if encoder is not None:
+            if not hasattr(encoder, "buffer_"):
+                raise ValueError("The given encoder has no 'Buffer' layer!")
+            self.enc_buf: nl.Buffer = encoder.buffer_.layer
+        else:
+            self.enc_buf = None
 
         self.basic_args = dict(
             activation=activation,
@@ -178,11 +190,10 @@ class _Decoder(LayerGraph):
         )
         self.ln_1 = LayerNode(nl.LayerNorm(), MergeMode.SUM, name="ln_1")
 
-        self.mha_enc_dec = SequentialNode(  # Need more care for this part!
-            nl.CrossMultiHeadAttention(  # Only for the first Decoder
+        self.mha_enc_dec = SequentialNode(
+            nl.CrossMultiHeadAttention(
                 self.d_model,
                 self.n_heads,
-                self.encoder_out,
                 self.mask_enc_dec,
                 self.random_state,
             ),
@@ -197,6 +208,26 @@ class _Decoder(LayerGraph):
             name="ffn_",
         )
         self.ln_3 = LayerNode(nl.LayerNorm(), MergeMode.SUM, name="ln_3")
+
+    @override
+    def forward(self, X: TensorLike, is_train: bool = False) -> TensorLike:
+        if self.enc_buf is not None:
+            self.mha_enc_dec.layer.extern_key_val = self.enc_buf.output_
+
+        return super().forward(X, is_train)
+
+    @override
+    def backward(self, d_out: TensorLike) -> TensorLike:
+        d_out = super().backward(d_out)
+
+        if self.enc_buf is not None:
+            xmha_layer: nl.CrossMultiHeadAttention = self.mha_enc_dec.layer
+            dX_K, dX_V = xmha_layer.dX_K, xmha_layer.dX_V
+
+            self.enc_buf.add_back_buffer(dX_K)
+            self.enc_buf.add_back_buffer(dX_V)
+
+        return d_out
 
     def out_shape(self, in_shape: Tuple[int]) -> Tuple[int]:
         return in_shape

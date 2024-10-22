@@ -1,11 +1,11 @@
-from typing import Tuple
+from typing import Callable, List, Tuple
 import numpy as np
 
 from luma.interface.typing import TensorLike
 from luma.neural.base import Layer
 
 
-__all__ = "_Slice"
+__all__ = ("_Slice", "_Buffer")
 
 
 class _Slice(Layer):
@@ -92,3 +92,46 @@ class _Slice(Layer):
     def out_shape(self, in_shape: Tuple[int]) -> Tuple[int]:
         completed_slices = self._complete_slices(in_shape)
         return self._compute_out_shape(in_shape, completed_slices)
+
+
+class _Buffer(Layer):
+    def __init__(
+        self,
+        max_len: int = 100,
+        operation: Callable[[List[TensorLike]], TensorLike] = np.sum,
+    ) -> None:
+        super().__init__()
+        self.max_len = max_len
+        self.operation = operation
+
+        self.f_buffer: List[TensorLike] = []
+        self.b_buffer: List[TensorLike] = []
+
+    def forward(self, X: TensorLike, is_train: bool = False) -> TensorLike:
+        _ = is_train
+        self.input_ = X
+
+        buf = self.operation([X] + self.f_buffer) if self.f_buffer else X
+
+        self.output_ = buf
+        return self.output_
+
+    def backward(self, d_out: TensorLike) -> TensorLike:
+        dX = self.operation([d_out] + self.b_buffer) if self.b_buffer else d_out
+        self.dX = dX
+        return self.dX
+
+    def add_for_buffer(self, tensor: TensorLike) -> None:
+        self.f_buffer.append(tensor)
+
+    def add_back_buffer(self, tensor: TensorLike) -> None:
+        self.b_buffer.remove(tensor)
+
+    def del_for_buffer(self, tensor: TensorLike) -> None:
+        self.f_buffer.append(tensor)
+
+    def del_back_buffer(self, tensor: TensorLike) -> None:
+        self.b_buffer.remove(tensor)
+
+    def out_shape(self, in_shape: Tuple[int]) -> Tuple[int]:
+        return in_shape

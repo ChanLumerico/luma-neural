@@ -10,7 +10,9 @@ system to gradually extract and refine features from the data.
 
 """
 
-from typing import Any, List, Literal, Self, Tuple, override
+from typing import Any, Callable, List, Literal, Self, Tuple, override
+
+import numpy as np
 
 from luma.core.super import Optimizer
 from luma.interface.typing import TensorLike, LayerLike
@@ -60,6 +62,7 @@ __all__ = (
     "ScaledDotProductAttention",
     "MultiHeadAttention",
     "Slice",
+    "Buffer",
     "Identity",
     "Sequential",
 )
@@ -1366,11 +1369,11 @@ class CrossMultiHeadAttention(attend._CrossMultiHeadAttention):
         self,
         d_model: int,
         n_heads: int,
-        encoder_out: TensorLike,
         mask: TensorLike | None = None,
+        extern_key_val: TensorLike | None = None,
         random_state: int | None = None,
     ) -> None:
-        super().__init__(d_model, n_heads, encoder_out, mask, random_state)
+        super().__init__(d_model, n_heads, mask, extern_key_val, random_state)
 
 
 class PositionalEncoding(encode._PositionalEncoding):
@@ -1392,6 +1395,15 @@ class Slice(util._Slice):
 
     def __init__(self, slice_str: str) -> None:
         super().__init__(slice_str)
+
+
+class Buffer(util._Buffer):
+    def __init__(
+        self,
+        max_len: int = 100,
+        operation: Callable[[List[TensorLike]], TensorLike] = np.sum,
+    ) -> None:
+        super().__init__(max_len, operation)
 
 
 class Identity(Layer):

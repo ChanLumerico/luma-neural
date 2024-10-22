@@ -1,4 +1,4 @@
-from typing import Optional, Tuple
+from typing import List, Optional, Tuple
 import numpy as np
 
 from luma.interface.typing import Tensor
@@ -190,23 +190,38 @@ class _CrossMultiHeadAttention(Layer):
         self,
         d_model: int,
         n_heads: int,
-        encoder_out: Tensor,
         mask: Optional[Tensor] = None,
+        extern_key_val: Tensor | None = None,
         random_state: Optional[int] = None,
     ) -> None:
         super().__init__()
         self.mha = _MultiheadAttention(d_model, n_heads, mask, random_state)
-        self.encoder_out = encoder_out
+        self.extern_key_val = extern_key_val
+
+        self.dX_K = None
+        self.dX_V = None
 
     def forward(self, X: Tensor, is_train: bool = False) -> Tensor:
-        out = self.mha.forward_qkv(X, self.encoder_out, self.encoder_out, is_train)
+        if self.extern_key_val is None:
+            out = self.mha.forward(X, is_train)
+        else:
+            out = self.mha.forward_qkv(
+                X, self.extern_key_val, self.extern_key_val, is_train
+            )
+
         self.output_ = out
         return self.output_
 
     def backward(self, d_out: Tensor) -> Tensor:
-        # how to handle remaining dX_K, dX_V?
-        dX_Q, dX_K, dX_V = self.mha.backward_qkv(d_out)
-        self.dX = dX_Q
+        if self.extern_key_val is None:
+            dX = self.mha.backward(d_out)
+            self.dX = dX
+        else:
+            dX_Q, dX_K, dX_V = self.mha.backward_qkv(d_out)
+            self.dX = dX_Q
+            self.dX_K = dX_K
+            self.dX_V = dX_V
+
         return self.dX
 
     def out_shape(self, in_shape: Tuple[int]) -> Tuple[int]:
