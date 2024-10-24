@@ -110,14 +110,16 @@ class _Buffer(Layer):
     def forward(self, X: TensorLike, is_train: bool = False) -> TensorLike:
         _ = is_train
         self.input_ = X
-
         buf = self.operation([X] + self.f_buffer) if self.f_buffer else X
 
+        self.f_buffer.clear()
         self.output_ = buf
         return self.output_
 
     def backward(self, d_out: TensorLike) -> TensorLike:
         dX = self.operation([d_out] + self.b_buffer) if self.b_buffer else d_out
+
+        self.b_buffer.clear()
         self.dX = dX
         return self.dX
 
@@ -125,10 +127,10 @@ class _Buffer(Layer):
         self.f_buffer.append(tensor)
 
     def add_back_buffer(self, tensor: TensorLike) -> None:
-        self.b_buffer.append(tensor)
+        self.b_buffer.remove(tensor)
 
     def del_for_buffer(self, tensor: TensorLike) -> None:
-        self.f_buffer.remove(tensor)
+        self.f_buffer.append(tensor)
 
     def del_back_buffer(self, tensor: TensorLike) -> None:
         self.b_buffer.remove(tensor)

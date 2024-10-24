@@ -165,7 +165,8 @@ class _Decoder(LayerGraph):
                 self.rt_: [self.mha_self, self.ln_1],
                 self.mha_self: [self.ln_1],
                 self.ln_1: [self.mha_enc_dec, self.ln_2],
-                self.mha_enc_dec: [self.ln_2],
+                self.mha_enc_dec: [self.drop_enc_dec],
+                self.drop_enc_dec: [self.ln_2],
                 self.ln_2: [self.ffn_, self.ln_3],
                 self.ffn_: [self.ln_3],
                 self.ln_3: [self.tm_],
@@ -190,15 +191,14 @@ class _Decoder(LayerGraph):
         )
         self.ln_1 = LayerNode(nl.LayerNorm(), MergeMode.SUM, name="ln_1")
 
-        self.mha_enc_dec = SequentialNode(  # split this Seq into two separate nodes
+        self.mha_enc_dec = LayerNode(
             nl.CrossMultiHeadAttention(
-                self.d_model,
-                self.n_heads,
-                self.mask_enc_dec,
-                self.random_state,
+                self.d_model, self.n_heads, self.mask_enc_dec, self.random_state
             ),
-            nl.Dropout(self.dropout_rate, self.random_state),
             name="mha_enc_dec",
+        )
+        self.drop_enc_dec = LayerNode(
+            nl.Dropout(self.dropout_rate, self.random_state), name="drop_enc_dec"
         )
         self.ln_2 = LayerNode(nl.LayerNorm(), MergeMode.SUM, name="ln_2")
 
