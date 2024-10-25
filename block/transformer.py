@@ -1,7 +1,7 @@
-from typing import Tuple, override
+from typing import Tuple, Type, override
 
 from luma.core.super import Optimizer
-from luma.interface.typing import Tensor, TensorLike
+from luma.interface.typing import Tensor, TensorLike, LayerLike
 from luma.interface.util import InitUtil
 
 from luma.neural import layer as nl
@@ -23,7 +23,11 @@ class _PositionwiseFeedForward(nl.Sequential):
             initializer=initializer, lambda_=lambda_, random_state=random_state
         )
         self.set_param_ranges(
-            {"in_channels": ("0<,+inf", int), "lambda_": ("0,+inf", None)}
+            {
+                "d_model": ("0<,+inf", int),
+                "d_ff": ("0<,+inf", int),
+                "lambda_": ("0,+inf", None),
+            }
         )
         self.check_param_ranges()
 
@@ -231,3 +235,119 @@ class _Decoder(LayerGraph):
 
     def out_shape(self, in_shape: Tuple[int]) -> Tuple[int]:
         return in_shape
+
+
+class _EncoderStack(nl.Sequential):
+    def __init__(
+        self,
+        n_encoders: int,
+        d_model: int,
+        d_ff: int,
+        n_heads: int,
+        mask: Tensor | None = None,
+        base_encoder: Type[LayerLike | _Encoder] = _Encoder,
+        activation: callable = nl.Activation.ReLU,
+        optimizer: Optimizer | None = None,
+        initializer: InitUtil.InitStr = None,
+        lambda_: float = 0.0,
+        dropout_rate: float = 0.1,
+        do_buffer: bool = True,
+        do_pos_encoding: bool = True,
+        pos_max_length: int = 500,
+        random_state: int | None = None,
+    ) -> None:
+        basic_args = dict(
+            activation=activation,
+            optimizer=optimizer,
+            initializer=initializer,
+            lambda_=lambda_,
+            dropout_rate=dropout_rate,
+            random_state=random_state,
+        )
+        self.set_param_ranges(
+            {
+                "d_model": ("0<,+inf", int),
+                "d_ff": ("0<,+inf", int),
+                "lambda_": ("0,+inf", None),
+            }
+        )
+        self.check_param_ranges()
+
+        if not isinstance(base_encoder, type):
+            raise ValueError(
+                f"'base_encoder' must be a 'LayerLike' type, not an instance!"
+            )
+
+        layers = []
+        if do_pos_encoding:
+            layers.append(nl.PositionalEncoding(d_model, pos_max_length))
+
+        for i in range(n_encoders):
+            enc = base_encoder(d_model, d_ff, n_heads, mask, **basic_args)
+            if i == n_encoders - 1 and do_buffer:
+                enc.do_buffer = True
+            layers.append(enc)
+
+        super(_EncoderStack, self).__init__(*layers)
+
+        if optimizer is not None:
+            self.set_optimizer(optimizer)
+
+
+class _DecoderStack(nl.Sequential):
+    def __init__(
+        self,
+        n_decoders: int,
+        d_model: int,
+        d_ff: int,
+        n_heads: int,
+        encoder: _Encoder | None = None,
+        mask_self: Tensor | None = None,
+        mask_enc_dec: Tensor | None = None,
+        base_decoder: Type[LayerLike | _Decoder] = _Decoder,
+        activation: callable = nl.Activation.ReLU,
+        optimizer: Optimizer | None = None,
+        initializer: InitUtil.InitStr = None,
+        lambda_: float = 0.0,
+        dropout_rate: float = 0.1,
+        random_state: int | None = None,
+    ) -> None:
+        basic_args = dict(
+            activation=activation,
+            optimizer=optimizer,
+            initializer=initializer,
+            lambda_=lambda_,
+            dropout_rate=dropout_rate,
+            random_state=random_state,
+        )
+        self.set_param_ranges(
+            {
+                "d_model": ("0<,+inf", int),
+                "d_ff": ("0<,+inf", int),
+                "lambda_": ("0,+inf", None),
+            }
+        )
+        self.check_param_ranges()
+
+        if not isinstance(base_decoder, type):
+            raise ValueError(
+                f"'base_decoder' must be a 'LayerLike' type, not an instance!"
+            )
+
+        layers = []
+        for _ in range(n_decoders):
+            enc = _Decoder(
+                d_model,
+                d_ff,
+                n_heads,
+                encoder,
+                mask_self,
+                mask_enc_dec,
+                **basic_args,
+            )
+            layers.append(enc)
+
+        super(_DecoderStack, self).__init__(*layers)
+
+        if optimizer is not None:
+            self.set_optimizer(optimizer)
