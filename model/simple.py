@@ -1,15 +1,15 @@
 from typing import ClassVar, Literal, Self, override
 
-from luma.core.super import Estimator, Evaluator, Supervised
+from luma.core.super import Estimator, Evaluator
 from luma.interface.typing import Matrix, Tensor, Vector
 from luma.interface.util import InitUtil
 
 from luma.neural.base import NeuralModel
-from luma.neural.block import ConvBlock2D, DenseBlock
-from luma.neural.layer import Dense, Dropout, Flatten, Sequential
+from luma.neural import layer as nl
+from luma.neural import block as nb
 
 
-__all__ = ("SimpleMLP", "SimpleCNN")
+__all__ = ("SimpleMLP", "SimpleCNN", "SimpleTransformer")
 
 
 class SimpleMLP(Estimator, NeuralModel):
@@ -27,7 +27,7 @@ class SimpleMLP(Estimator, NeuralModel):
     Structure
     ---------
     ```py
-    (Dense -> Activation -> Dropout) -> ... -> Dense
+    (nl.Dense -> Activation -> nl.Dropout) -> ... -> nl.Dense
     ```
     Parameters
     ----------
@@ -48,7 +48,7 @@ class SimpleMLP(Estimator, NeuralModel):
     `activation` : callable
         Type of activation function
     `dropout_rate` : float, default=0.5
-        Dropout rate
+        nl.Dropout rate
     `lambda_` : float, default=0.0
         L2 regularization strength
     `early_stopping` : bool, default=False
@@ -112,7 +112,7 @@ class SimpleMLP(Estimator, NeuralModel):
             deep_verbose,
         )
         super().init_model()
-        self.model = Sequential()
+        self.model = nl.Sequential()
 
         if isinstance(self.hidden_layers, int):
             self.hidden_layers = [self.hidden_layers]
@@ -141,7 +141,7 @@ class SimpleMLP(Estimator, NeuralModel):
 
     def build_model(self) -> None:
         for i, (in_, out_) in enumerate(self.feature_shapes_):
-            self.model += Dense(
+            self.model += nl.Dense(
                 in_,
                 out_,
                 initializer=self.initializer,
@@ -150,7 +150,7 @@ class SimpleMLP(Estimator, NeuralModel):
             )
             if i < len(self.feature_shapes_) - 1:
                 self.model += self.activation()
-                self.model += Dropout(
+                self.model += nl.Dropout(
                     dropout_rate=self.dropout_rate,
                     random_state=self.random_state,
                 )
@@ -183,7 +183,7 @@ class SimpleCNN(Estimator, NeuralModel):
     Structure
     ---------
     ```py
-    ConvBlock2D -> ... -> Flatten -> DenseBlock -> ... -> Dense
+    nb.ConvBlock2D -> ... -> nl.Flatten -> nb.DenseBlock -> ... -> nl.Dense
     ```
     Parameters
     ----------
@@ -220,7 +220,7 @@ class SimpleCNN(Estimator, NeuralModel):
     `do_dropout` : bool, default=True
         Whether to perform dropout
     `dropout_rate` : float, default=0.5
-        Dropout rate
+        nl.Dropout rate
     `batch_size` : int, default=100
         Size of a single mini-batch
     `n_epochs` : int, default=100
@@ -311,7 +311,7 @@ class SimpleCNN(Estimator, NeuralModel):
             deep_verbose,
         )
         super().init_model()
-        self.model = Sequential()
+        self.model = nl.Sequential()
 
         if isinstance(self.in_channels_list, int):
             self.in_channels_list = [self.in_channels_list]
@@ -350,7 +350,7 @@ class SimpleCNN(Estimator, NeuralModel):
 
     def build_model(self) -> None:
         for in_, out_ in self.feature_shapes_[0]:
-            self.model += ConvBlock2D(
+            self.model += nb.ConvBlock2D(
                 in_,
                 out_,
                 self.filter_size,
@@ -368,10 +368,10 @@ class SimpleCNN(Estimator, NeuralModel):
                 random_state=self.random_state,
             )
 
-        self.model += Flatten()
+        self.model += nl.Flatten()
         for i, (in_, out_) in enumerate(self.feature_shapes_[1]):
             if i < len(self.feature_shapes_[1]) - 1:
-                self.model += DenseBlock(
+                self.model += nb.DenseBlock(
                     in_,
                     out_,
                     activation=self.activation,
@@ -381,7 +381,7 @@ class SimpleCNN(Estimator, NeuralModel):
                     random_state=self.random_state,
                 )
             else:
-                self.model += Dense(
+                self.model += nl.Dense(
                     in_,
                     out_,
                     lambda_=self.lambda_,
@@ -403,3 +403,112 @@ class SimpleCNN(Estimator, NeuralModel):
         self, X: Tensor, y: Matrix, metric: Evaluator, argmax: bool = True
     ) -> float:
         return super(SimpleCNN, self).score_nn(X, y, metric, argmax)
+
+
+class SimpleTransformer(Estimator, NeuralModel):
+    def __init__(
+        self,
+        n_encoders: int,
+        n_decoders: int,
+        d_model: int,
+        d_ff: int,
+        n_heads: int,
+        out_features: int,
+        encoder_mask: Tensor | None = None,
+        decoder_mask_self: Tensor | None = None,
+        decoder_mask_cross: Tensor | None = None,
+        pos_max_length: int = 500,
+        activation: callable = nl.Activation.ReLU,
+        initializer: InitUtil.InitStr = None,
+        batch_size: int = 100,
+        n_epochs: int = 100,
+        valid_size: float = 0.1,
+        lambda_: float = 0.0,
+        dropout_rate: float = 0.1,
+        early_stopping: bool = False,
+        patience: int = 10,
+        shuffle: bool = True,
+        random_state: int = None,
+        deep_verbose: bool = False,
+    ) -> None:
+        self.n_encoders = n_encoders
+        self.n_decoders = n_decoders
+        self.d_model = d_model
+        self.d_ff = d_ff
+        self.n_heads = n_heads
+        self.out_features = out_features
+        self.encoder_mask = encoder_mask
+        self.decoder_mask_self = decoder_mask_self
+        self.decoder_mask_cross = decoder_mask_cross
+        self.pos_max_length = pos_max_length
+        self.activation = activation
+        self.initializer = initializer
+        self.batch_size = batch_size
+        self.n_epochs = n_epochs
+        self.valid_size = valid_size
+        self.lambda_ = lambda_
+        self.dropout_rate = dropout_rate
+        self.early_stopping = early_stopping
+        self.patience = patience
+        self.shuffle = shuffle
+        self.random_state = random_state
+        self._fitted = False
+
+        super().__init__(
+            batch_size,
+            n_epochs,
+            valid_size,
+            early_stopping,
+            patience,
+            shuffle,
+            random_state,
+            deep_verbose,
+        )
+        super().init_model()
+        self.model = nl.Sequential()
+
+        self.set_param_ranges(
+            {
+                "n_encoders": ("0<,+inf", int),
+                "n_decoders": ("0<,+inf", int),
+                "d_model": ("0<,+inf", int),
+                "d_ff": ("0<,+inf", int),
+                "n_heads": ("0<,+inf", int),
+                "out_features": ("0<,+inf", int),
+                "batch_size": ("0<,+inf", int),
+                "n_epochs": ("0<,+inf", int),
+                "valid_size": ("0<,<1", None),
+                "dropout_rate": ("0,1", None),
+                "lambda_": ("0,+inf", None),
+                "patience": (f"0<,+inf", int),
+            }
+        )
+        self.check_param_ranges()
+        self.build_model()
+
+    def build_model(self) -> None:
+        base_args = dict(
+            d_model=self.d_model,
+            d_ff=self.d_ff,
+            n_heads=self.n_heads,
+            activation=self.activation,
+            initializer=self.initializer,
+            dropout_rate=self.dropout_rate,
+            lambda_=self.lambda_,
+            random_state=self.random_state,
+        )
+
+        self.model += nb.TransformerBlock.EncoderStack(
+            n_encoders=self.n_encoders,
+            mask=self.encoder_mask,
+            pos_max_length=self.pos_max_length,
+            **base_args,
+        )
+        self.model += nb.TransformerBlock.DecoderStack(
+            n_decoders=self.n_decoders,
+            mask_self=self.decoder_mask_self,
+            mask_enc_dec=self.decoder_mask_cross,
+            **base_args,
+        )
+
+        # TODO: Further implementation begins from here

@@ -286,7 +286,7 @@ class _EncoderStack(nl.Sequential):
             enc = base_encoder(d_model, d_ff, n_heads, mask, **basic_args)
             if i == n_encoders - 1 and do_buffer:
                 enc.do_buffer = True
-            layers.append(enc)
+            layers.append((f"Encoder_{i + 1}", enc))
 
         super(_EncoderStack, self).__init__(*layers)
 
@@ -335,8 +335,8 @@ class _DecoderStack(nl.Sequential):
             )
 
         layers = []
-        for _ in range(n_decoders):
-            enc = _Decoder(
+        for i in range(n_decoders):
+            dec = _Decoder(
                 d_model,
                 d_ff,
                 n_heads,
@@ -345,7 +345,7 @@ class _DecoderStack(nl.Sequential):
                 mask_enc_dec,
                 **basic_args,
             )
-            layers.append(enc)
+            layers.append((f"Decoder_{i + 1}", dec))
 
         super(_DecoderStack, self).__init__(*layers)
 
