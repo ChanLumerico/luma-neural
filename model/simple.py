@@ -449,18 +449,22 @@ class SimpleTransformer(NeuralModel):
             random_state=self.random_state,
         )
 
-        self.model += nb.TransformerBlock.EncoderStack(
+        self.encoder = nb.TransformerBlock.EncoderStack(
             n_encoders=self.n_encoders,
             mask=self.encoder_mask,
             pos_max_length=self.pos_max_length,
             **base_args,
         )
-        self.model += nb.TransformerBlock.DecoderStack(
+        self.decoder = nb.TransformerBlock.DecoderStack(
             n_decoders=self.n_decoders,
+            encoder=self.encoder.layers[-1][1],
             mask_self=self.decoder_mask_self,
             mask_enc_dec=self.decoder_mask_cross,
             **base_args,
         )
+        
+        self.model += self.encoder
+        self.model += self.decoder
 
         self.model.extend(
             nl.DenseND(
