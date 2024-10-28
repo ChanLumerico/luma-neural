@@ -42,6 +42,7 @@ __all__ = (
     "LpPool2D",
     "LpPool3D",
     "Dense",
+    "DenseND",
     "Dropout",
     "Dropout1D",
     "Dropout2D",
@@ -876,6 +877,28 @@ class Dense(linear._Dense):
         super().__init__(
             in_features,
             out_features,
+            initializer,
+            optimizer,
+            lambda_,
+            random_state,
+        )
+
+
+class DenseND(linear._DenseND):
+    def __init__(
+        self,
+        in_features: int,
+        out_features: int,
+        axis: int = -1,
+        initializer: InitUtil.InitStr = None,
+        optimizer: Optimizer = None,
+        lambda_: float = 0,
+        random_state: int = None,
+    ) -> None:
+        super().__init__(
+            in_features,
+            out_features,
+            axis,
             initializer,
             optimizer,
             lambda_,

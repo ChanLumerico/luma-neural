@@ -15,7 +15,7 @@ __all__ = (
     "_Reshape",
     "_Transpose",
     "_Dense",
-    "_DenseND",  # For future use
+    "_DenseND",
 )
 
 
@@ -175,4 +175,69 @@ class _Dense(Layer):
         return (batch_size, self.out_features)
 
 
-class _DenseND(Layer): ...
+class _DenseND(Layer):
+    def __init__(
+        self,
+        in_features: int,
+        out_features: int,
+        axis: int = -1,
+        initializer: InitUtil.InitStr = None,
+        optimizer: Optimizer = None,
+        lambda_: float = 0.0,
+        random_state: int = None,
+    ) -> None:
+        super().__init__()
+        self.in_features = in_features
+        self.out_features = out_features
+        self.axis = axis
+        self.initializer = initializer
+        self.optimizer = optimizer
+        self.lambda_ = lambda_
+        self.random_state = random_state
+        self.rs_ = np.random.RandomState(self.random_state)
+
+        self.init_params(
+            w_shape=(self.in_features, self.out_features),
+            b_shape=(1, self.out_features),
+        )
+        self.set_param_ranges(
+            {
+                "in_features": ("0<,+inf", int),
+                "out_features": ("0<,+inf", int),
+                "lambda_": ("0,+inf", None),
+            }
+        )
+        self.check_param_ranges()
+
+    def forward(self, X: TensorLike, is_train: bool = False) -> TensorLike:
+        _ = is_train
+        self.input_ = X
+        X_moved = np.moveaxis(X, self.axis, -1)
+
+        out = np.dot(X_moved, self.weights_) + self.biases_
+        return np.moveaxis(out, -1, self.axis)
+
+    def backward(self, d_out: TensorLike) -> TensorLike:
+        d_out_moved = np.moveaxis(d_out, self.axis, -1)
+        X_moved = np.moveaxis(self.input_, self.axis, -1)
+
+        X_reshape = X_moved.reshape(-1, self.in_features)
+        d_out_reshape = d_out_moved.reshape(-1, self.out_features)
+
+        self.dW = np.dot(X_reshape.T, d_out_reshape).reshape(self.weights_.shape)
+        self.dW += 2 * self.lambda_ * self.weights_
+
+        self.dB = np.sum(
+            d_out_moved, axis=tuple(range(d_out_moved.ndim - 1)), keepdims=True
+        ).reshape(self.biases_.shape)
+
+        self.dX = np.dot(d_out_reshape, self.weights_.T).reshape(X_moved.shape)
+        self.dX = np.moveaxis(self.dX, -1, self.axis)
+
+        return self.dX
+
+    def out_shape(self, in_shape: Tuple[int]) -> Tuple[int]:
+        out_shape = list(in_shape)
+        out_shape[self.axis] = self.out_features
+
+        return tuple(out_shape)

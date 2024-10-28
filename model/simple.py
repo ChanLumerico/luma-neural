@@ -1,6 +1,6 @@
 from typing import ClassVar, Literal, Self, override
 
-from luma.core.super import Estimator, Evaluator
+from luma.core.super import Evaluator
 from luma.interface.typing import Matrix, Tensor, Vector
 from luma.interface.util import InitUtil
 
@@ -12,7 +12,7 @@ from luma.neural import block as nb
 __all__ = ("SimpleMLP", "SimpleCNN", "SimpleTransformer")
 
 
-class SimpleMLP(Estimator, NeuralModel):
+class SimpleMLP(NeuralModel):
     """
     An MLP (Multilayer Perceptron) is a type of artificial neural network
     composed of at least three layers: an input layer, one or more hidden
@@ -124,19 +124,6 @@ class SimpleMLP(Estimator, NeuralModel):
         ]
         self.feature_shapes_ = self._get_feature_shapes(self.feature_sizes_)
 
-        self.set_param_ranges(
-            {
-                "in_features": ("0<,+inf", int),
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "dropout_rate": ("0,1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": (f"0<,+inf", int),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -155,21 +142,21 @@ class SimpleMLP(Estimator, NeuralModel):
                     random_state=self.random_state,
                 )
 
-    def fit(self, X: Matrix, y: Matrix) -> Self:
+    def fit_nn(self, X: Matrix, y: Matrix) -> Self:
         return super(SimpleMLP, self).fit_nn(X, y)
 
     @override
-    def predict(self, X: Matrix, argmax: bool = True) -> Matrix | Vector:
+    def predict_nn(self, X: Matrix, argmax: bool = True) -> Matrix | Vector:
         return super(SimpleMLP, self).predict_nn(X, argmax)
 
     @override
-    def score(
+    def score_nn(
         self, X: Matrix, y: Matrix, metric: Evaluator, argmax: bool = True
     ) -> float:
         return super(SimpleMLP, self).score_nn(X, y, metric, argmax)
 
 
-class SimpleCNN(Estimator, NeuralModel):
+class SimpleCNN(NeuralModel):
     """
     A Convolutional Neural Network (CNN) is a type of deep neural network
     primarily used in image recognition and processing that is particularly
@@ -327,25 +314,6 @@ class SimpleCNN(Estimator, NeuralModel):
             [*self._get_feature_shapes(self.feature_sizes_[1])],
         ]
 
-        self.set_param_ranges(
-            {
-                "out_channels": ("0<,+inf", int),
-                "out_features": ("0<,+inf", int),
-                "filter_size": ("0<,+inf", int),
-                "stride": ("0<,+inf", int),
-                "momentum": ("0,1", None),
-                "pool_filter_size": ("0<,+inf", int),
-                "pool_stride": ("0<,+inf", int),
-                "dropout_rate": ("0,1", None),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "dropout_rate": ("0,1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": (f"0<,+inf", int),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -389,23 +357,23 @@ class SimpleCNN(Estimator, NeuralModel):
                 )
 
     @Tensor.force_dim(4)
-    def fit(self, X: Tensor, y: Matrix) -> Self:
+    def fit_nn(self, X: Tensor, y: Matrix) -> Self:
         return super(SimpleCNN, self).fit_nn(X, y)
 
     @override
     @Tensor.force_dim(4)
-    def predict(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
+    def predict_nn(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
         return super(SimpleCNN, self).predict_nn(X, argmax)
 
     @override
     @Tensor.force_dim(4)
-    def score(
+    def score_nn(
         self, X: Tensor, y: Matrix, metric: Evaluator, argmax: bool = True
     ) -> float:
         return super(SimpleCNN, self).score_nn(X, y, metric, argmax)
 
 
-class SimpleTransformer(Estimator, NeuralModel):
+class SimpleTransformer(NeuralModel):
     def __init__(
         self,
         n_encoders: int,
@@ -467,23 +435,6 @@ class SimpleTransformer(Estimator, NeuralModel):
         super().init_model()
         self.model = nl.Sequential()
 
-        self.set_param_ranges(
-            {
-                "n_encoders": ("0<,+inf", int),
-                "n_decoders": ("0<,+inf", int),
-                "d_model": ("0<,+inf", int),
-                "d_ff": ("0<,+inf", int),
-                "n_heads": ("0<,+inf", int),
-                "out_features": ("0<,+inf", int),
-                "batch_size": ("0<,+inf", int),
-                "n_epochs": ("0<,+inf", int),
-                "valid_size": ("0<,<1", None),
-                "dropout_rate": ("0,1", None),
-                "lambda_": ("0,+inf", None),
-                "patience": (f"0<,+inf", int),
-            }
-        )
-        self.check_param_ranges()
         self.build_model()
 
     def build_model(self) -> None:
@@ -511,4 +462,31 @@ class SimpleTransformer(Estimator, NeuralModel):
             **base_args,
         )
 
-        # TODO: Further implementation begins from here
+        self.model.extend(
+            nl.DenseND(
+                self.d_model,
+                self.out_features,
+                -1,
+                self.initializer,
+                self.lambda_,
+                self.random_state,
+            ),
+            nl.Activation.Softmax(dim=-1),
+        )
+
+    # TODO: Make specialized train, eval methods
+    @Tensor.force_dim(3)
+    def fit_nn(self, X: Tensor, y: Matrix) -> Self:
+        return super(SimpleTransformer, self).fit_nn(X, y)
+
+    @override
+    @Tensor.force_dim(3)
+    def predict_nn(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
+        return super(SimpleTransformer, self).predict_nn(X, argmax)
+
+    # TODO: Modify scoring mechanism
+    @override
+    @Tensor.force_dim(3)
+    def score_nn(
+        self, X: Tensor, y: Matrix, metric: Evaluator, argmax: bool = True
+    ) -> float: ...
