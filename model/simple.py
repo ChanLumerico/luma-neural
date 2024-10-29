@@ -374,6 +374,10 @@ class SimpleCNN(NeuralModel):
 
 
 class SimpleTransformer(NeuralModel):
+
+    do_debug: ClassVar[bool] = False
+    do_register: ClassVar[bool] = False
+
     def __init__(
         self,
         n_encoders: int,
@@ -462,35 +466,30 @@ class SimpleTransformer(NeuralModel):
             mask_enc_dec=self.decoder_mask_cross,
             **base_args,
         )
-        
-        self.model += self.encoder
-        self.model += self.decoder
-
-        self.model.extend(
+        self.lin_softmax = nl.Sequential(
             nl.DenseND(
                 self.d_model,
                 self.out_features,
-                -1,
-                self.initializer,
-                self.lambda_,
-                self.random_state,
+                axis=-1,
+                initializer=self.initializer,
+                lambda_=self.lambda_,
+                random_state=self.random_state,
             ),
             nl.Activation.Softmax(dim=-1),
         )
 
-    # TODO: Make specialized train, eval methods
-    @Tensor.force_dim(3)
-    def fit_nn(self, X: Tensor, y: Matrix) -> Self:
-        return super(SimpleTransformer, self).fit_nn(X, y)
+        self.model.extend(self.encoder, self.decoder, self.lin_softmax)
 
     @override
-    @Tensor.force_dim(3)
-    def predict_nn(self, X: Tensor, argmax: bool = True) -> Matrix | Vector:
-        return super(SimpleTransformer, self).predict_nn(X, argmax)
+    def forward(self, X: Tensor, y: Tensor, is_train: bool = False) -> Tensor:
+        _ = self.encoder(X, is_train)
+        out = self.decoder(y, is_train)
+        out = self.lin_softmax(out, is_train)
+        return out
 
-    # TODO: Modify scoring mechanism
     @override
-    @Tensor.force_dim(3)
-    def score_nn(
-        self, X: Tensor, y: Matrix, metric: Evaluator, argmax: bool = True
-    ) -> float: ...
+    def backward(self, d_out: Tensor) -> Tensor:
+        d_out = self.lin_softmax.backward(d_out)
+        _ = self.decoder.backward(d_out)
+        d_out = self.encoder.backward(d_out)
+        return d_out

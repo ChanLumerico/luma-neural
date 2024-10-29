@@ -127,10 +127,10 @@ class _Buffer(Layer):
         self.f_buffer.append(tensor)
 
     def add_back_buffer(self, tensor: TensorLike) -> None:
-        self.b_buffer.remove(tensor)
+        self.b_buffer.append(tensor)
 
     def del_for_buffer(self, tensor: TensorLike) -> None:
-        self.f_buffer.append(tensor)
+        self.f_buffer.remove(tensor)
 
     def del_back_buffer(self, tensor: TensorLike) -> None:
         self.b_buffer.remove(tensor)

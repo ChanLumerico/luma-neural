@@ -32,9 +32,9 @@ class _PositionwiseFeedForward(nl.Sequential):
         self.check_param_ranges()
 
         super(_PositionwiseFeedForward, self).__init__(
-            nl.Conv1D(d_model, d_ff, filter_size=1, **basic_args),
+            nl.DenseND(d_model, d_ff, axis=-1, **basic_args),
             activation(),
-            nl.Conv1D(d_ff, d_model, filter_size=1, **basic_args),
+            nl.DenseND(d_ff, d_model, axis=-1, **basic_args),
         )
 
         if optimizer is not None:
@@ -90,6 +90,7 @@ class _Encoder(LayerGraph):
             term=self.tm_,
         )
 
+        self.build()
         if optimizer is not None:
             self.set_optimizer(optimizer)
 
@@ -179,6 +180,7 @@ class _Decoder(LayerGraph):
             term=self.tm_,
         )
 
+        self.build()
         if optimizer is not None:
             self.set_optimizer(optimizer)
 
@@ -283,9 +285,10 @@ class _EncoderStack(nl.Sequential):
             layers.append(nl.PositionalEncoding(d_model, pos_max_length))
 
         for i in range(n_encoders):
-            enc = base_encoder(d_model, d_ff, n_heads, mask, **basic_args)
-            if i == n_encoders - 1 and do_buffer:
-                enc.do_buffer = True
+            _do_buffer = i == n_encoders - 1 and do_buffer
+            enc = base_encoder(
+                d_model, d_ff, n_heads, mask, do_buffer=_do_buffer, **basic_args
+            )
             layers.append((f"Encoder_{i + 1}", enc))
 
         super(_EncoderStack, self).__init__(*layers)

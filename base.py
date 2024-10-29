@@ -331,7 +331,7 @@ class NeuralModel(ABC, NeuralBase):
     def _get_feature_shapes(self, sizes: list) -> list[tuple]:
         return [(i, j) for i, j in zip(sizes[:-1], sizes[1:])]
 
-    def check_necessaries_(self) -> None:
+    def check_necessaries(self) -> None:
         if self.model.optimizer is None:
             raise RuntimeError(
                 f"'{str(self)}' does not have an optimzier!"
@@ -347,11 +347,7 @@ class NeuralModel(ABC, NeuralBase):
     @Tensor.force_shape(input_shape)
     def fit_nn(self, X: TensorLike, y: TensorLike) -> Self:
         X_train, X_val, y_train, y_val = TrainTestSplit(
-            X,
-            y,
-            test_size=self.valid_size,
-            shuffle=self.shuffle,
-            random_state=self.random_state,
+            X, y, self.valid_size, self.shuffle, random_state=self.random_state
         ).get
 
         best_valid_loss = np.inf
@@ -411,19 +407,20 @@ class NeuralModel(ABC, NeuralBase):
         train_batch = BatchGenerator(
             X, y, batch_size=self.batch_size, shuffle=self.shuffle
         )
-        self.check_necessaries_()
+        self.check_necessaries()
 
         for i, (X_batch, y_batch) in enumerate(train_batch, start=1):
             t_start = time.time_ns()
-            out = self.model(X_batch, is_train=True)
+
+            out = self.forward(X_batch, is_train=True)
             loss = self.loss.loss(y_batch, out)
             d_out = self.loss.grad(y_batch, out)
 
             train_loss.append(loss)
             self.running_loss_.append(loss)
-            self.model.backward(d_out)
-            self.model.update()
 
+            self.backward(d_out)
+            self.update()
             self.update_lr("batch", i, loss, None)
 
             t_end = time.time_ns()
@@ -438,7 +435,7 @@ class NeuralModel(ABC, NeuralBase):
 
     def eval(self, X: TensorLike, y: TensorLike) -> list[float]:
         valid_loss = []
-        self.check_necessaries_()
+        self.check_necessaries()
 
         for X_batch, y_batch in BatchGenerator(
             X, y, batch_size=self.batch_size, shuffle=self.shuffle
@@ -448,6 +445,15 @@ class NeuralModel(ABC, NeuralBase):
             valid_loss.append(loss)
 
         return valid_loss
+
+    def forward(self, X: TensorLike, is_train: bool = False) -> TensorLike:
+        return self.model(X, is_train=is_train)
+
+    def backward(self, d_out: TensorLike) -> TensorLike:
+        return self.model.backward(d_out)
+
+    def update(self) -> None:
+        self.model.update()
 
     def set_optimizer(self, optimizer: Optimizer, **params: Any) -> None:
         self.model.set_optimizer(optimizer, **params)
