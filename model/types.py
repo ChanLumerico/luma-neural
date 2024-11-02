@@ -14,16 +14,16 @@ class ImageClassifier(metaclass=ABCMeta):
     """
 
 
-class ObjectDetector(metaclass=ABCMeta):
+class SequenceToSequence(metaclass=ABCMeta):
     """
-    Abstract base class for object detection models.
+    Abstract base class for sequence-to-sequence models.
 
     This class serves as an annotation for building custom
-    object detection models.
+    sequence-to-sequence models, typically used in tasks such as
+    machine translation, text summarization, and conversational
+    response generation.
 
-    The `ObjectDetector` class is intended to be inherited by
-    specific object detection models, which will implement
-    the necessary methods for object detection tasks such as
-    bounding box prediction, class identification, and confidence
-    scoring.
+    The `SequenceToSequence` class is intended to be inherited by
+    specific sequence-to-sequence models, which will implement
+    the necessary methods for training, evaluation, and inference.
     """

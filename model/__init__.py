@@ -15,9 +15,10 @@ from typing import Any, Never
 
 from .simple import *
 from .img_clf import *
+from .seq2seq import *
 
 
-SUB_MODULES: tuple[ModuleType] = (simple, img_clf)
+SUB_MODULES: tuple[ModuleType] = (simple, img_clf, seq2seq)
 MODELS: tuple[str] = ()
 
 for module in SUB_MODULES:

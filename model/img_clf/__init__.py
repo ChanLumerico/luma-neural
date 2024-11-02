@@ -124,7 +124,7 @@ class LeNet_1(lenet._LeNet_1):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 1, 28, 28] -> Matrix[-1, 10]
     ```
     Parameter Size:
@@ -172,7 +172,7 @@ class LeNet_4(lenet._LeNet_4):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 1, 32, 32] -> Matrix[-1, 10]
     ```
     Parameter Size:
@@ -219,7 +219,7 @@ class LeNet_5(lenet._LeNet_5):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 1, 32, 32] -> Matrix[-1, 10]
     ```
     Parameter Size:
@@ -268,7 +268,7 @@ class AlexNet(alex._AlexNet):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -278,7 +278,7 @@ class AlexNet(alex._AlexNet):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     ConvBlock2D(), DenseBlock()
     ```
     Arguments
@@ -325,7 +325,7 @@ class ZFNet(alex._ZFNet):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 227, 227] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -335,7 +335,7 @@ class ZFNet(alex._ZFNet):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     ConvBlock2D(), DenseBlock()
     ```
     Arguments
@@ -380,7 +380,7 @@ class VGGNet_11(vgg._VGGNet_11):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -390,7 +390,7 @@ class VGGNet_11(vgg._VGGNet_11):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     ConvBlock2D(), DenseBlock()
     ```
     Arguments
@@ -434,7 +434,7 @@ class VGGNet_13(vgg._VGGNet_13):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -444,7 +444,7 @@ class VGGNet_13(vgg._VGGNet_13):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     ConvBlock2D(), DenseBlock()
     ```
     Arguments
@@ -488,7 +488,7 @@ class VGGNet_16(vgg._VGGNet_16):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -498,7 +498,7 @@ class VGGNet_16(vgg._VGGNet_16):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     ConvBlock2D(), DenseBlock()
     ```
     Arguments
@@ -542,7 +542,7 @@ class VGGNet_19(vgg._VGGNet_19):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -552,7 +552,7 @@ class VGGNet_19(vgg._VGGNet_19):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     ConvBlock2D(), DenseBlock()
     ```
     Arguments
@@ -598,7 +598,7 @@ class Inception_V1(incep._Inception_V1):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -608,7 +608,7 @@ class Inception_V1(incep._Inception_V1):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     IncepBlock.V1()
     ```
     Arguments
@@ -654,7 +654,7 @@ class Inception_V2(incep._Inception_V2):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 299, 299] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -664,7 +664,7 @@ class Inception_V2(incep._Inception_V2):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     IncepBlock.V2_TypeA(),
     IncepBlock.V2_TypeB(),
     IncepBlock.V2_TypeC(),
@@ -714,7 +714,7 @@ class Inception_V3(incep._Inception_V3):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 299, 299] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -724,7 +724,7 @@ class Inception_V3(incep._Inception_V3):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     IncepBlock.V2_TypeA(),
     IncepBlock.V2_TypeB(),
     IncepBlock.V2_TypeC(),
@@ -774,7 +774,7 @@ class Inception_V4(incep._Inception_V4):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 299, 299] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -784,7 +784,7 @@ class Inception_V4(incep._Inception_V4):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     IncepBlock.V4_Stem(),
     IncepBlock.V4_TypeA(),
     IncepBlock.V4_TypeB(),
@@ -836,7 +836,7 @@ class Inception_ResNet_V1(incep._Inception_ResNet_V1):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 299, 299] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -846,7 +846,7 @@ class Inception_ResNet_V1(incep._Inception_ResNet_V1):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     IncepResBlock.V1_Stem(),
     IncepResBlock.V1_TypeA(),
     IncepResBlock.V1_TypeB(),
@@ -893,7 +893,7 @@ class Inception_ResNet_V2(incep._Inception_ResNet_V2):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 299, 299] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -903,7 +903,7 @@ class Inception_ResNet_V2(incep._Inception_ResNet_V2):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     IncepResBlock.V2_TypeA(),
     IncepResBlock.V2_TypeB(),
     IncepResBlock.V2_TypeC(),
@@ -949,7 +949,7 @@ class ResNet_18(resnet._ResNet_18):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -959,7 +959,7 @@ class ResNet_18(resnet._ResNet_18):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     ResNetBlock.Basic()
     ```
     Arguments
@@ -1003,7 +1003,7 @@ class ResNet_34(resnet._ResNet_34):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -1013,7 +1013,7 @@ class ResNet_34(resnet._ResNet_34):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     ResNetBlock.Basic()
     ```
     Arguments
@@ -1057,7 +1057,7 @@ class ResNet_50(resnet._ResNet_50):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -1067,7 +1067,7 @@ class ResNet_50(resnet._ResNet_50):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     ResNetBlock.Bottleneck()
     ```
     Arguments
@@ -1111,7 +1111,7 @@ class ResNet_101(resnet._ResNet_101):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -1121,7 +1121,7 @@ class ResNet_101(resnet._ResNet_101):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     ResNetBlock.Bottleneck()
     ```
     Arguments
@@ -1165,7 +1165,7 @@ class ResNet_152(resnet._ResNet_152):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -1175,7 +1175,7 @@ class ResNet_152(resnet._ResNet_152):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     ResNetBlock.Bottleneck()
     ```
     Arguments
@@ -1219,7 +1219,7 @@ class ResNet_200(resnet._ResNet_200):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -1229,7 +1229,7 @@ class ResNet_200(resnet._ResNet_200):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     ResNetBlock.PreActBottleneck()
     ```
     Arguments
@@ -1272,7 +1272,7 @@ class ResNet_269(resnet._ResNet_269):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -1282,7 +1282,7 @@ class ResNet_269(resnet._ResNet_269):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     ResNetBlock.PreActBottleneck()
     ```
     Arguments
@@ -1326,7 +1326,7 @@ class ResNet_1001(resnet._ResNet_1001):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -1336,7 +1336,7 @@ class ResNet_1001(resnet._ResNet_1001):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     ResNetBlock.PreActBottleneck()
     ```
     Arguments
@@ -1386,7 +1386,7 @@ class Xception(incep._Xception):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 299, 299] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -1396,7 +1396,7 @@ class Xception(incep._Xception):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     XceptionBlock.Entry(),
     XceptionBlock.Middle(),
     XceptionBlock.Exit(),
@@ -1447,7 +1447,7 @@ class MobileNet_V1(mobile._MobileNet_V1):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -1457,7 +1457,7 @@ class MobileNet_V1(mobile._MobileNet_V1):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     SeparableConv2D()
     ```
     Arguments
@@ -1505,7 +1505,7 @@ class MobileNet_V2(mobile._MobileNet_V2):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -1515,7 +1515,7 @@ class MobileNet_V2(mobile._MobileNet_V2):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     MobileNetBlock.InvRes()
     ```
     Arguments
@@ -1564,7 +1564,7 @@ class MobileNet_V3_S(mobile._MobileNet_V3_S):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -1574,7 +1574,7 @@ class MobileNet_V3_S(mobile._MobileNet_V3_S):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     MobileNetBlock.InvRes()
     MobileNetBlock.InvRes_SE()
     ```
@@ -1622,7 +1622,7 @@ class MobileNet_V3_L(mobile._MobileNet_V3_L):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -1632,7 +1632,7 @@ class MobileNet_V3_L(mobile._MobileNet_V3_L):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     MobileNetBlock.InvRes()
     MobileNetBlock.InvRes_SE()
     ```
@@ -1681,7 +1681,7 @@ class SE_ResNet_50(resnet._SE_ResNet_50):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -1691,7 +1691,7 @@ class SE_ResNet_50(resnet._SE_ResNet_50):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     ResNetBlock.Bottleneck_SE()
     ```
     Arguments
@@ -1739,7 +1739,7 @@ class SE_ResNet_152(resnet._SE_ResNet_152):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -1749,7 +1749,7 @@ class SE_ResNet_152(resnet._SE_ResNet_152):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     ResNetBlock.Bottleneck_SE()
     ```
     Arguments
@@ -1795,7 +1795,7 @@ class SE_Inception_ResNet_V2(incep._SE_Inception_ResNet_V2):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 299, 299] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -1805,7 +1805,7 @@ class SE_Inception_ResNet_V2(incep._SE_Inception_ResNet_V2):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     # These blocks are SE-augmented
     IncepResBlock.V2_TypeA(),
     IncepResBlock.V2_TypeB(),
@@ -1860,7 +1860,7 @@ class SE_DenseNet_121(dense._SE_DenseNet_121):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -1870,7 +1870,7 @@ class SE_DenseNet_121(dense._SE_DenseNet_121):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     # These blocks are SE-augmented
     DenseNetBlock.Composite(),
     DenseNetBlock.DenseUnit(),
@@ -1913,7 +1913,7 @@ class SE_DenseNet_169(dense._SE_DenseNet_169):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -1923,7 +1923,7 @@ class SE_DenseNet_169(dense._SE_DenseNet_169):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     # These blocks are SE-augmented
     DenseNetBlock.Composite(),
     DenseNetBlock.DenseUnit(),
@@ -1969,7 +1969,7 @@ class SE_ResNeXt_50(resnext._SE_ResNeXt_50):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -1979,7 +1979,7 @@ class SE_ResNeXt_50(resnext._SE_ResNeXt_50):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     ResNetBlock.Bottleneck_SE()  # Override `expansion` to 2
     ```
     Arguments
@@ -2025,7 +2025,7 @@ class SE_ResNeXt_101(resnext._SE_ResNeXt_101):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -2035,7 +2035,7 @@ class SE_ResNeXt_101(resnext._SE_ResNeXt_101):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     ResNetBlock.Bottleneck_SE()  # Override `expansion` to 2
     ```
     Arguments
@@ -2078,7 +2078,7 @@ class DenseNet_121(dense._DenseNet_121):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -2088,7 +2088,7 @@ class DenseNet_121(dense._DenseNet_121):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     DenseNetBlock.Composite(),
     DenseNetBlock.DenseUnit(),
     DenseNetBlock.Transition()
@@ -2136,7 +2136,7 @@ class DenseNet_169(dense._DenseNet_169):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -2146,7 +2146,7 @@ class DenseNet_169(dense._DenseNet_169):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     DenseNetBlock.Composite(),
     DenseNetBlock.DenseUnit(),
     DenseNetBlock.Transition()
@@ -2194,7 +2194,7 @@ class DenseNet_201(dense._DenseNet_201):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -2204,7 +2204,7 @@ class DenseNet_201(dense._DenseNet_201):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     DenseNetBlock.Composite(),
     DenseNetBlock.DenseUnit(),
     DenseNetBlock.Transition()
@@ -2252,7 +2252,7 @@ class DenseNet_264(dense._DenseNet_264):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -2262,7 +2262,7 @@ class DenseNet_264(dense._DenseNet_264):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     DenseNetBlock.Composite(),
     DenseNetBlock.DenseUnit(),
     DenseNetBlock.Transition()
@@ -2310,7 +2310,7 @@ class EfficientNet_B0(efficient._EfficientNet_B0):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -2320,7 +2320,7 @@ class EfficientNet_B0(efficient._EfficientNet_B0):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     EfficientBlock.MBConv()
     ```
     Arguments
@@ -2366,7 +2366,7 @@ class EfficientNet_B1(efficient._EfficientNet_B1):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 240, 240] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -2376,7 +2376,7 @@ class EfficientNet_B1(efficient._EfficientNet_B1):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     EfficientBlock.MBConv()
     ```
     Arguments
@@ -2422,7 +2422,7 @@ class EfficientNet_B2(efficient._EfficientNet_B2):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 260, 260] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -2432,7 +2432,7 @@ class EfficientNet_B2(efficient._EfficientNet_B2):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     EfficientBlock.MBConv()
     ```
     Arguments
@@ -2478,7 +2478,7 @@ class EfficientNet_B3(efficient._EfficientNet_B3):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 300, 300] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -2488,7 +2488,7 @@ class EfficientNet_B3(efficient._EfficientNet_B3):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     EfficientBlock.MBConv()
     ```
     Arguments
@@ -2534,7 +2534,7 @@ class EfficientNet_B4(efficient._EfficientNet_B4):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 380, 380] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -2544,7 +2544,7 @@ class EfficientNet_B4(efficient._EfficientNet_B4):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     EfficientBlock.MBConv()
     ```
     Arguments
@@ -2590,7 +2590,7 @@ class EfficientNet_B5(efficient._EfficientNet_B5):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 456, 456] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -2600,7 +2600,7 @@ class EfficientNet_B5(efficient._EfficientNet_B5):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     EfficientBlock.MBConv()
     ```
     Arguments
@@ -2646,7 +2646,7 @@ class EfficientNet_B6(efficient._EfficientNet_B6):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 528, 528] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -2656,7 +2656,7 @@ class EfficientNet_B6(efficient._EfficientNet_B6):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     EfficientBlock.MBConv()
     ```
     Arguments
@@ -2702,7 +2702,7 @@ class EfficientNet_B7(efficient._EfficientNet_B7):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 600, 600] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -2712,7 +2712,7 @@ class EfficientNet_B7(efficient._EfficientNet_B7):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     EfficientBlock.MBConv()
     ```
     Arguments
@@ -2759,7 +2759,7 @@ class EfficientNet_V2_S(efficient._EfficientNet_V2_S):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 384, 384] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -2769,7 +2769,7 @@ class EfficientNet_V2_S(efficient._EfficientNet_V2_S):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     EfficientBlock.MBConv(),
     EfficientBlock.FusedMBConv()
     ```
@@ -2821,7 +2821,7 @@ class EfficientNet_V2_M(efficient._EfficientNet_V2_M):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 480, 480] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -2831,7 +2831,7 @@ class EfficientNet_V2_M(efficient._EfficientNet_V2_M):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     EfficientBlock.MBConv(),
     EfficientBlock.FusedMBConv()
     ```
@@ -2883,7 +2883,7 @@ class EfficientNet_V2_L(efficient._EfficientNet_V2_L):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 480, 480] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -2893,7 +2893,7 @@ class EfficientNet_V2_L(efficient._EfficientNet_V2_L):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     EfficientBlock.MBConv(),
     EfficientBlock.FusedMBConv()
     ```
@@ -2945,7 +2945,7 @@ class EfficientNet_V2_XL(efficient._EfficientNet_V2_XL):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 480, 480] -> Matrix[-1, 21,843]
     ```
     Parameter Size:
@@ -2955,7 +2955,7 @@ class EfficientNet_V2_XL(efficient._EfficientNet_V2_XL):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     EfficientBlock.MBConv(),
     EfficientBlock.FusedMBConv()
     ```
@@ -3007,7 +3007,7 @@ class ResNeXt_50(resnext._ResNeXt_50):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -3017,7 +3017,7 @@ class ResNeXt_50(resnext._ResNeXt_50):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     ResNetBlock.Bottleneck()  # Override `expansion` to 2
     ```
     Arguments
@@ -3068,7 +3068,7 @@ class ResNeXt_101(resnext._ResNeXt_101):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -3078,7 +3078,7 @@ class ResNeXt_101(resnext._ResNeXt_101):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     ResNetBlock.Bottleneck()  # Override `expansion` to 2
     ```
     Arguments
@@ -3130,7 +3130,7 @@ class SK_ResNet_50(resnet._SK_ResNet_50):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -3140,7 +3140,7 @@ class SK_ResNet_50(resnet._SK_ResNet_50):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     ResNetBlock.Bottleneck_SK()
     ```
     Arguments
@@ -3188,7 +3188,7 @@ class SK_ResNet_101(resnet._SK_ResNet_101):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -3198,7 +3198,7 @@ class SK_ResNet_101(resnet._SK_ResNet_101):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     ResNetBlock.Bottleneck_SK()
     ```
     Arguments
@@ -3247,7 +3247,7 @@ class SK_ResNeXt_50(resnext._SK_ResNeXt_50):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -3257,7 +3257,7 @@ class SK_ResNeXt_50(resnext._SK_ResNeXt_50):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     ResNetBlock.Bottleneck_SK()  # Override `expantion` to 2
     ```
     Arguments
@@ -3308,7 +3308,7 @@ class SK_ResNeXt_101(resnext._SK_ResNeXt_101):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -3318,7 +3318,7 @@ class SK_ResNeXt_101(resnext._SK_ResNeXt_101):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     ResNetBlock.Bottleneck_SK()  # Override `expantion` to 2
     ```
     Arguments
@@ -3368,7 +3368,7 @@ class ResNeSt_50(resnest._ResNeSt_50):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -3378,7 +3378,7 @@ class ResNeSt_50(resnest._ResNeSt_50):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     ResNeStBlock()
     ```
     Arguments
@@ -3429,7 +3429,7 @@ class ResNeSt_101(resnest._ResNeSt_101):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -3439,7 +3439,7 @@ class ResNeSt_101(resnest._ResNeSt_101):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     ResNeStBlock()
     ```
     Arguments
@@ -3490,7 +3490,7 @@ class ResNeSt_200(resnest._ResNeSt_200):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -3500,7 +3500,7 @@ class ResNeSt_200(resnest._ResNeSt_200):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     ResNeStBlock()
     ```
     Arguments
@@ -3551,7 +3551,7 @@ class ResNeSt_269(resnest._ResNeSt_269):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -3561,7 +3561,7 @@ class ResNeSt_269(resnest._ResNeSt_269):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     ResNeStBlock()
     ```
     Arguments
@@ -3610,7 +3610,7 @@ class ConvNeXt_T(convnext._ConvNeXt_T):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -3620,7 +3620,7 @@ class ConvNeXt_T(convnext._ConvNeXt_T):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     ConvNeXtBlock.V1()
     ```
     Arguments
@@ -3666,7 +3666,7 @@ class ConvNeXt_S(convnext._ConvNeXt_S):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -3676,7 +3676,7 @@ class ConvNeXt_S(convnext._ConvNeXt_S):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     ConvNeXtBlock.V1()
     ```
     Arguments
@@ -3722,7 +3722,7 @@ class ConvNeXt_B(convnext._ConvNeXt_B):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -3732,7 +3732,7 @@ class ConvNeXt_B(convnext._ConvNeXt_B):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     ConvNeXtBlock.V1()
     ```
     Arguments
@@ -3777,7 +3777,7 @@ class ConvNeXt_L(convnext._ConvNeXt_L):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -3787,7 +3787,7 @@ class ConvNeXt_L(convnext._ConvNeXt_L):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     ConvNeXtBlock.V1()
     ```
     Arguments
@@ -3833,7 +3833,7 @@ class ConvNeXt_XL(convnext._ConvNeXt_XL):
     Specs
     -----
     Input/Output Shapes:
-    ```py
+    ```
     Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
     ```
     Parameter Size:
@@ -3843,7 +3843,7 @@ class ConvNeXt_XL(convnext._ConvNeXt_XL):
     Components
     ----------
     Blocks Used:
-    ```py
+    ```
     ConvNeXtBlock.V1()
     ```
     Arguments
@@ -3878,25 +3878,438 @@ class ConvNeXt_XL(convnext._ConvNeXt_XL):
     """
 
 
-class ConvNeXt_V2_A(convnext._ConvNeXt_V2_A): ...
+class ConvNeXt_V2_A(convnext._ConvNeXt_V2_A):
+    """
+    ConvNeXt-V2-A, also known as ConvNeXt-V2 Atto, is the smallest model in
+    the ConvNeXt-V2 family, optimized for lightweight applications and efficient
+    performance. Despite its compact size, it leverages a refined convolutional
+    design to effectively capture essential features, making it suitable for
+    resource-constrained environments and real-time image classification tasks.
+
+    Specs
+    -----
+    Input/Output Shapes:
+    ```
+    Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
+    ```
+    Parameter Size:
+    ```
+    3,690,800 weights, 12,640 biases -> 3,703,440 params
+    ```
+    Components
+    ----------
+    Blocks Used:
+    ```
+    ConvNeXtBlock.V2()
+    ```
+    Arguments
+    ---------
+    `activation` : callable, default=Activation.GELU
+        Type of activation function
+    `initializer` : InitStr, default=None
+        Type of weight initializer
+    `out_features` : int, default=1000
+        Number of output features
+    `batch_size` : int, default=100
+        Size of a single mini-batch
+    `n_epochs` : int, default=100
+        Number of epochs for training
+    `valid_size` : float, default=0.1
+        Fractional size of validation set
+    `lambda_` : float, default=0.0001
+        L2 regularization strength
+    `early_stopping` : bool, default=False
+        Whether to early-stop the training when the valid score stagnates
+    `patience` : int, default=10
+        Number of epochs to wait until early-stopping
+    `shuffle` : bool, default=True
+        Whethter to shuffle the data at the beginning of every epoch
+
+    References
+    ----------
+    [1] Liu, Zhuang, et al. ConvNeXt V2: Co-designing and Scaling ConvNets
+    with Masked Autoencoders. 2023. arXiv:2301.00808.
+
+    """
 
 
-class ConvNeXt_V2_F(convnext._ConvNeXt_V2_F): ...
+class ConvNeXt_V2_F(convnext._ConvNeXt_V2_F):
+    """
+    ConvNeXt-V2-F, also known as ConvNeXt-V2 Femto, is a step up in capacity
+    from the Atto model, balancing efficiency with increased depth for better
+    feature representation. It is designed for scenarios requiring a bit more
+    processing power while still prioritizing resource efficiency.
+
+    Specs
+    -----
+    Input/Output Shapes:
+    ```
+    Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
+    ```
+    Parameter Size:
+    ```
+    5,212,320 weights, 14,968 biases -> 5,227,288 params
+    ```
+    Components
+    ----------
+    Blocks Used:
+    ```
+    ConvNeXtBlock.V2()
+    ```
+    Arguments
+    ---------
+    `activation` : callable, default=Activation.GELU
+        Type of activation function
+    `initializer` : InitStr, default=None
+        Type of weight initializer
+    `out_features` : int, default=1000
+        Number of output features
+    `batch_size` : int, default=100
+        Size of a single mini-batch
+    `n_epochs` : int, default=100
+        Number of epochs for training
+    `valid_size` : float, default=0.1
+        Fractional size of validation set
+    `lambda_` : float, default=0.0001
+        L2 regularization strength
+    `early_stopping` : bool, default=False
+        Whether to early-stop the training when the valid score stagnates
+    `patience` : int, default=10
+        Number of epochs to wait until early-stopping
+    `shuffle` : bool, default=True
+        Whethter to shuffle the data at the beginning of every epoch
+
+    References
+    ----------
+    [1] Liu, Zhuang, et al. ConvNeXt V2: Co-designing and Scaling ConvNets
+    with Masked Autoencoders. 2023. arXiv:2301.00808.
+
+    """
 
 
-class ConvNeXt_V2_P(convnext._ConvNeXt_V2_P): ...
+class ConvNeXt_V2_P(convnext._ConvNeXt_V2_P):
+    """
+    ConvNeXt-V2-P, also known as ConvNeXt-V2 Pico, provides a good trade-off
+    between efficiency and performance. With additional layers and parameters,
+    it can handle more complex image tasks in real-time applications without
+    requiring substantial computational power.
+
+    Specs
+    -----
+    Input/Output Shapes:
+    ```
+    Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
+    ```
+    Parameter Size:
+    ```
+    9,038,720 weights, 19,624 biases -> 9,058,344 biases
+    ```
+    Components
+    ----------
+    Blocks Used:
+    ```
+    ConvNeXtBlock.V2()
+    ```
+    Arguments
+    ---------
+    `activation` : callable, default=Activation.GELU
+        Type of activation function
+    `initializer` : InitStr, default=None
+        Type of weight initializer
+    `out_features` : int, default=1000
+        Number of output features
+    `batch_size` : int, default=100
+        Size of a single mini-batch
+    `n_epochs` : int, default=100
+        Number of epochs for training
+    `valid_size` : float, default=0.1
+        Fractional size of validation set
+    `lambda_` : float, default=0.0001
+        L2 regularization strength
+    `early_stopping` : bool, default=False
+        Whether to early-stop the training when the valid score stagnates
+    `patience` : int, default=10
+        Number of epochs to wait until early-stopping
+    `shuffle` : bool, default=True
+        Whethter to shuffle the data at the beginning of every epoch
+
+    References
+    ----------
+    [1] Liu, Zhuang, et al. ConvNeXt V2: Co-designing and Scaling ConvNets
+    with Masked Autoencoders. 2023. arXiv:2301.00808.
+
+    """
 
 
-class ConvNeXt_V2_N(convnext._ConvNeXt_V2_N): ...
+class ConvNeXt_V2_N(convnext._ConvNeXt_V2_N):
+    """
+    ConvNeXt-V2-N, also known as ConvNeXt-V2 Nano, further increases the
+    model depth and parameter count, enabling enhanced feature learning.
+    This variant is suited for moderately complex image classification tasks,
+    offering better accuracy and detail while remaining computationally
+    manageable.
+
+    Specs
+    -----
+    Input/Output Shapes:
+    ```
+    Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
+    ```
+    Parameter Size:
+    ```
+    15,584,480 weights, 28,120 biases -> 15,612,600 params
+    ```
+    Components
+    ----------
+    Blocks Used:
+    ```
+    ConvNeXtBlock.V2()
+    ```
+    Arguments
+    ---------
+    `activation` : callable, default=Activation.GELU
+        Type of activation function
+    `initializer` : InitStr, default=None
+        Type of weight initializer
+    `out_features` : int, default=1000
+        Number of output features
+    `batch_size` : int, default=100
+        Size of a single mini-batch
+    `n_epochs` : int, default=100
+        Number of epochs for training
+    `valid_size` : float, default=0.1
+        Fractional size of validation set
+    `lambda_` : float, default=0.0001
+        L2 regularization strength
+    `early_stopping` : bool, default=False
+        Whether to early-stop the training when the valid score stagnates
+    `patience` : int, default=10
+        Number of epochs to wait until early-stopping
+    `shuffle` : bool, default=True
+        Whethter to shuffle the data at the beginning of every epoch
+
+    References
+    ----------
+    [1] Liu, Zhuang, et al. ConvNeXt V2: Co-designing and Scaling ConvNets
+    with Masked Autoencoders. 2023. arXiv:2301.00808.
+
+    """
 
 
-class ConvNeXt_V2_T(convnext._ConvNeXt_V2_T): ...
+class ConvNeXt_V2_T(convnext._ConvNeXt_V2_T):
+    """
+    ConvNeXt-V2-T, also known as ConvNeXt-V2 Tiny, provides a significant
+    capacity boost compared to its smaller counterparts, making it suitable
+    for a range of image classification tasks that require higher accuracy.
+    This model variant finds a strong balance between processing requirements
+    and feature capture.
+
+    Specs
+    -----
+    Input/Output Shapes:
+    ```
+    Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
+    ```
+    Parameter Size:
+    ```
+    28,576,992 weights, 42,184 biases -> 28,619,176 params
+    ```
+    Components
+    ----------
+    Blocks Used:
+    ```
+    ConvNeXtBlock.V2()
+    ```
+    Arguments
+    ---------
+    `activation` : callable, default=Activation.GELU
+        Type of activation function
+    `initializer` : InitStr, default=None
+        Type of weight initializer
+    `out_features` : int, default=1000
+        Number of output features
+    `batch_size` : int, default=100
+        Size of a single mini-batch
+    `n_epochs` : int, default=100
+        Number of epochs for training
+    `valid_size` : float, default=0.1
+        Fractional size of validation set
+    `lambda_` : float, default=0.0001
+        L2 regularization strength
+    `early_stopping` : bool, default=False
+        Whether to early-stop the training when the valid score stagnates
+    `patience` : int, default=10
+        Number of epochs to wait until early-stopping
+    `shuffle` : bool, default=True
+        Whethter to shuffle the data at the beginning of every epoch
+
+    References
+    ----------
+    [1] Liu, Zhuang, et al. ConvNeXt V2: Co-designing and Scaling ConvNets
+    with Masked Autoencoders. 2023. arXiv:2301.00808.
+
+    """
 
 
-class ConvNeXt_V2_B(convnext._ConvNeXt_V2_B): ...
+class ConvNeXt_V2_B(convnext._ConvNeXt_V2_B):
+    """
+    ConvNeXt-V2-B, also known as ConvNeXt-V2 Base, introduces a robust depth
+    for high-quality feature extraction. It is effective for complex tasks,
+    offering a balance of computational demand and strong accuracy suitable
+    for general image classification use cases.
+
+    Specs
+    -----
+    Input/Output Shapes:
+    ```
+    Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
+    ```
+    Parameter Size:
+    ```
+    88,566,400 weights, 111,208 biases -> 88,677,608 params
+    ```
+    Components
+    ----------
+    Blocks Used:
+    ```
+    ConvNeXtBlock.V2()
+    ```
+    Arguments
+    ---------
+    `activation` : callable, default=Activation.GELU
+        Type of activation function
+    `initializer` : InitStr, default=None
+        Type of weight initializer
+    `out_features` : int, default=1000
+        Number of output features
+    `batch_size` : int, default=100
+        Size of a single mini-batch
+    `n_epochs` : int, default=100
+        Number of epochs for training
+    `valid_size` : float, default=0.1
+        Fractional size of validation set
+    `lambda_` : float, default=0.0001
+        L2 regularization strength
+    `early_stopping` : bool, default=False
+        Whether to early-stop the training when the valid score stagnates
+    `patience` : int, default=10
+        Number of epochs to wait until early-stopping
+    `shuffle` : bool, default=True
+        Whethter to shuffle the data at the beginning of every epoch
+
+    References
+    ----------
+    [1] Liu, Zhuang, et al. ConvNeXt V2: Co-designing and Scaling ConvNets
+    with Masked Autoencoders. 2023. arXiv:2301.00808.
+
+    """
 
 
-class ConvNeXt_V2_L(convnext._ConvNeXt_V2_L): ...
+class ConvNeXt_V2_L(convnext._ConvNeXt_V2_L):
+    """
+    ConvNeXt-V2-L, also known as ConvNeXt-V2 Large, provides a considerable
+    leap in capacity, featuring an expanded number of layers and parameters.
+    It is tailored for high-performance image classification tasks requiring
+    detailed feature extraction and is suitable for applications where
+    accuracy is prioritized.
+
+    Specs
+    -----
+    Input/Output Shapes:
+    ```
+    Tensor[-1, 3, 224, 224] -> Matrix[-1, 1000]
+    ```
+    Parameter Size:
+    ```
+    197,730,240 weights, 166,312 biases -> 197,896,552 params
+    ```
+    Components
+    ----------
+    Blocks Used:
+    ```
+    ConvNeXtBlock.V2()
+    ```
+    Arguments
+    ---------
+    `activation` : callable, default=Activation.GELU
+        Type of activation function
+    `initializer` : InitStr, default=None
+        Type of weight initializer
+    `out_features` : int, default=1000
+        Number of output features
+    `batch_size` : int, default=100
+        Size of a single mini-batch
+    `n_epochs` : int, default=100
+        Number of epochs for training
+    `valid_size` : float, default=0.1
+        Fractional size of validation set
+    `lambda_` : float, default=0.0001
+        L2 regularization strength
+    `early_stopping` : bool, default=False
+        Whether to early-stop the training when the valid score stagnates
+    `patience` : int, default=10
+        Number of epochs to wait until early-stopping
+    `shuffle` : bool, default=True
+        Whethter to shuffle the data at the beginning of every epoch
+
+    References
+    ----------
+    [1] Liu, Zhuang, et al. ConvNeXt V2: Co-designing and Scaling ConvNets
+    with Masked Autoencoders. 2023. arXiv:2301.00808.
+
+    """
 
 
-class ConvNeXt_V2_H(convnext._ConvNeXt_V2_H): ...
+class ConvNeXt_V2_H(convnext._ConvNeXt_V2_H):
+    """
+    ConvNeXt-V2-H, also known as ConvNeXt-V2 Huge, is among the most
+    powerful in the family, equipped with a vast number of layers and
+    parameters. It is designed for highly sophisticated image tasks,
+    providing unparalleled accuracy and detail, suitable for state-of-the-art
+    image classification challenges.
+
+    Specs
+    -----
+    Input/Output Shapes:
+    ```
+    Tensor[-1, 3, 224, 224] -> Matrix[-1, 21,843]
+    ```
+    Parameter Size:
+    ```
+    659,875,040 weights, 304,072 biases -> 660,179,112 params
+    ```
+    Components
+    ----------
+    Blocks Used:
+    ```
+    ConvNeXtBlock.V2()
+    ```
+    Arguments
+    ---------
+    `activation` : callable, default=Activation.GELU
+        Type of activation function
+    `initializer` : InitStr, default=None
+        Type of weight initializer
+    `out_features` : int, default=21843
+        Number of output features
+    `batch_size` : int, default=100
+        Size of a single mini-batch
+    `n_epochs` : int, default=100
+        Number of epochs for training
+    `valid_size` : float, default=0.1
+        Fractional size of validation set
+    `lambda_` : float, default=0.0001
+        L2 regularization strength
+    `early_stopping` : bool, default=False
+        Whether to early-stop the training when the valid score stagnates
+    `patience` : int, default=10
+        Number of epochs to wait until early-stopping
+    `shuffle` : bool, default=True
+        Whethter to shuffle the data at the beginning of every epoch
+
+    References
+    ----------
+    [1] Liu, Zhuang, et al. ConvNeXt V2: Co-designing and Scaling ConvNets
+    with Masked Autoencoders. 2023. arXiv:2301.00808.
+
+    """
