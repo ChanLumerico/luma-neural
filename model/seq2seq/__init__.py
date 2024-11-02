@@ -17,3 +17,14 @@ The models included in this module cover diverse design paradigms,
 such as recurrent neural networks (RNNs), transformers, and attention 
 mechanisms, ensuring adaptability for various sequence-based tasks.
 """
+
+from . import transformer
+
+
+__all__ = ("Transformer_Base", "Transformer_Big")
+
+
+class Transformer_Base(transformer._Transformer_Base): ...
+
+
+class Transformer_Big(transformer._Transformer_Big): ...

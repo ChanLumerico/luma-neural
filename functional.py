@@ -1,4 +1,4 @@
-from typing import Any, Optional, Tuple, Type, override
+from typing import Optional, Tuple, Type, override
 
 from luma.interface.typing import LayerLike, Matrix
 from luma.neural.layer import *
@@ -98,3 +98,15 @@ def get_efficient_net_mbconv_config(
     new_config = new_config.round().astype(int)
 
     return new_config.tolist()
+
+
+def generate_enc_padding_mask(): ...
+
+
+def generate_dec_padding_mask(): ...
+
+
+def generate_look_ahead_mask(): ...
+
+
+def combine_dec_masks(): ...
