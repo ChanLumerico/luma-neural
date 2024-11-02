@@ -1,4 +1,4 @@
-from typing import Optional, Tuple
+from typing import Callable, Optional, Tuple
 import numpy as np
 
 from luma.interface.typing import Tensor
@@ -13,9 +13,9 @@ __all__ = (
 
 
 class _ScaledDotProductAttention(Layer):
-    def __init__(self, mask: Optional[Tensor] = None) -> None:
+    def __init__(self, mask_func: Callable[[Tensor], Tensor] | None = None) -> None:
         super().__init__()
-        self.mask = mask
+        self.mask_func = mask_func
         self.Q = None
         self.K = None
         self.V = None
@@ -33,7 +33,9 @@ class _ScaledDotProductAttention(Layer):
 
         d_k = Q.shape[-1]
         self.scores = np.matmul(Q, K.transpose(0, 1, 3, 2)) / np.sqrt(d_k)
-        if self.mask is not None:
+
+        if self.mask_func is not None:
+            self.mask = self.mask_func(self.scores)
             self.scores = np.where(self.mask == 0, -1e9, self.scores)
 
         scores_max = np.max(self.scores, axis=-1, keepdims=True)
@@ -58,7 +60,7 @@ class _ScaledDotProductAttention(Layer):
         )
         d_scores = self.attention_weights * (d_attention_weights - sum_d_attention)
 
-        if self.mask is not None:
+        if self.mask_func is not None:
             d_scores = np.where(self.mask == 0, 0, d_scores)
 
         d_k = self.Q.shape[-1]
@@ -78,7 +80,7 @@ class _MultiheadAttention(Layer):
         self,
         d_model: int,
         n_heads: int,
-        mask: Optional[Tensor] = None,
+        mask_func: Callable[[Tensor], Tensor] | None = None,
         random_state: Optional[int] = None,
     ) -> None:
         super().__init__()
@@ -105,7 +107,7 @@ class _MultiheadAttention(Layer):
         self.weights_ = [WQ, WK, WV, W_out]
         self.biases_ = [bQ, bK, bV, b_out]
 
-        self.attention = _ScaledDotProductAttention(mask=mask)
+        self.attention = _ScaledDotProductAttention(mask_func=mask_func)
 
     def forward(self, X: Tensor, is_train: bool = False) -> Tensor:
         return self.forward_qkv(X, X, X, is_train=is_train)
@@ -190,12 +192,12 @@ class _CrossMultiHeadAttention(Layer):
         self,
         d_model: int,
         n_heads: int,
-        mask: Optional[Tensor] = None,
+        mask_func: Callable[[Tensor], Tensor] | None = None,
         extern_key_val: Tensor | None = None,
         random_state: Optional[int] = None,
     ) -> None:
         super().__init__()
-        self.mha = _MultiheadAttention(d_model, n_heads, mask, random_state)
+        self.mha = _MultiheadAttention(d_model, n_heads, mask_func, random_state)
         self.extern_key_val = extern_key_val
 
         self.dX_K = None

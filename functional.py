@@ -1,6 +1,8 @@
 from typing import Optional, Tuple, Type, override
 
-from luma.interface.typing import LayerLike, Matrix
+import numpy as np
+
+from luma.interface.typing import LayerLike, Matrix, Tensor
 from luma.neural.layer import *
 from luma.neural.autoprop import LayerNode, LayerGraph, MergeMode
 
@@ -100,13 +102,16 @@ def get_efficient_net_mbconv_config(
     return new_config.tolist()
 
 
-def generate_enc_padding_mask(): ...
+@Tensor.force_shape(4)
+def generate_padding_mask(X: Tensor) -> Tensor:
+    mask = (np.sum(X, axis=2) == 0).astype(np.float64)
+    mask = np.any(mask, axis=1)
+    mask = mask[:, np.newaxis, np.newaxis, :]
+    return mask
 
-
-def generate_dec_padding_mask(): ...
-
-
-def generate_look_ahead_mask(): ...
-
-
-def combine_dec_masks(): ...
+@Tensor.force_shape(4)
+def generate_look_ahead_mask(X: Tensor) -> Tensor:
+    _, _, L, _ = X.shape
+    mask = np.triu(np.ones((L, L)), k=1)
+    mask = mask[np.newaxis, np.newaxis, :, :]
+    return mask + generate_padding_mask(X)

@@ -8,6 +8,8 @@ from luma.neural.base import NeuralModel
 from luma.neural import layer as nl
 from luma.neural import block as nb
 
+from luma.neural import functional as F
+
 
 __all__ = ("SimpleMLP", "SimpleCNN", "SimpleTransformer")
 
@@ -386,9 +388,9 @@ class SimpleTransformer(NeuralModel):
         d_ff: int,
         n_heads: int,
         out_features: int,
-        encoder_mask: Tensor | None = None,
-        decoder_mask_self: Tensor | None = None,
-        decoder_mask_cross: Tensor | None = None,
+        enc_mask_func: callable = F.generate_padding_mask,
+        dec_mask_self_func: callable = F.generate_look_ahead_mask,
+        dec_mask_cross_func: callable = F.generate_padding_mask,
         pos_max_length: int = 500,
         activation: callable = nl.Activation.ReLU,
         initializer: InitUtil.InitStr = None,
@@ -409,9 +411,9 @@ class SimpleTransformer(NeuralModel):
         self.d_ff = d_ff
         self.n_heads = n_heads
         self.out_features = out_features
-        self.encoder_mask = encoder_mask
-        self.decoder_mask_self = decoder_mask_self
-        self.decoder_mask_cross = decoder_mask_cross
+        self.enc_mask_func = enc_mask_func
+        self.dec_mask_self_func = dec_mask_self_func
+        self.dec_mask_cross_func = dec_mask_cross_func
         self.pos_max_length = pos_max_length
         self.activation = activation
         self.initializer = initializer
@@ -455,15 +457,15 @@ class SimpleTransformer(NeuralModel):
 
         self.encoder = nb.TransformerBlock.EncoderStack(
             n_encoders=self.n_encoders,
-            mask=self.encoder_mask,
+            mask_func=self.enc_mask_func,
             pos_max_length=self.pos_max_length,
             **base_args,
         )
         self.decoder = nb.TransformerBlock.DecoderStack(
             n_decoders=self.n_decoders,
             encoder=self.encoder.layers[-1][1],
-            mask_self=self.decoder_mask_self,
-            mask_enc_dec=self.decoder_mask_cross,
+            mask_self_func=self.dec_mask_self_func,
+            mask_cross_func=self.dec_mask_cross_func,
             **base_args,
         )
         self.lin_softmax = nl.Sequential(

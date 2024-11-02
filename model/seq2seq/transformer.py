@@ -14,7 +14,6 @@ from ..types import SequenceToSequence
 class _Transformer_Base(NeuralModel, SequenceToSequence, Supervised):
     def __init__(
         self,
-        seq_length_arr: list[int],  # [L_src, L_tgt]
         activation: callable = nl.Activation.ReLU,
         initializer: InitUtil.InitStr = None,
         out_features: int = 30000,
@@ -28,7 +27,6 @@ class _Transformer_Base(NeuralModel, SequenceToSequence, Supervised):
         random_state: int | None = None,
         deep_verbose: bool = False,
     ) -> None:
-        self.seq_length_arr = seq_length_arr
         self.activation = activation
         self.initializer = initializer
         self.out_features = out_features
@@ -61,8 +59,9 @@ class _Transformer_Base(NeuralModel, SequenceToSequence, Supervised):
             random_state=self.random_state,
         )
 
+        # TODO: Deal with the masks
         self.encoder = nb.TransformerBlock.EncoderStack(
-            6, 512, 2048, 8, self.enc_mask_, **base_args
+            6, 512, 2048, 8, self.enc_mask_func, **base_args
         )
         self.decoder = nb.TransformerBlock.DecoderStack(
             6,
@@ -70,8 +69,8 @@ class _Transformer_Base(NeuralModel, SequenceToSequence, Supervised):
             2048,
             8,
             self.encoder[-1][1],
-            self.dec_mask_self_,
-            self.dec_mask_cross_,
+            self.dec_mask_self_func,
+            self.dec_mask_cross_func,
             **base_args
         )
         self.lin_softmax = nl.Sequential(

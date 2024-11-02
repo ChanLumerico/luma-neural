@@ -1372,8 +1372,8 @@ class LayerNorm(norm._LayerNorm):
 
 
 class ScaledDotProductAttention(attend._ScaledDotProductAttention):
-    def __init__(self, mask: TensorLike | None = None) -> None:
-        super().__init__(mask)
+    def __init__(self, mask_func: Callable[[TensorLike], TensorLike] | None = None):
+        super().__init__(mask_func)
 
 
 class MultiHeadAttention(attend._MultiheadAttention):
@@ -1381,10 +1381,10 @@ class MultiHeadAttention(attend._MultiheadAttention):
         self,
         d_model: int,
         n_heads: int,
-        mask: TensorLike | None = None,
+        mask_func: Callable[[TensorLike], TensorLike] | None = None,
         random_state: int | None = None,
     ) -> None:
-        super().__init__(d_model, n_heads, mask, random_state)
+        super().__init__(d_model, n_heads, mask_func, random_state)
 
 
 class CrossMultiHeadAttention(attend._CrossMultiHeadAttention):
@@ -1392,11 +1392,11 @@ class CrossMultiHeadAttention(attend._CrossMultiHeadAttention):
         self,
         d_model: int,
         n_heads: int,
-        mask: TensorLike | None = None,
+        mask_func: Callable[[TensorLike], TensorLike] | None = None,
         extern_key_val: TensorLike | None = None,
         random_state: int | None = None,
     ) -> None:
-        super().__init__(d_model, n_heads, mask, extern_key_val, random_state)
+        super().__init__(d_model, n_heads, mask_func, extern_key_val, random_state)
 
 
 class PositionalEncoding(encode._PositionalEncoding):

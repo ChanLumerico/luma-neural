@@ -1,4 +1,4 @@
-from typing import Tuple, Type, override
+from typing import Callable, Tuple, Type, override
 
 from luma.core.super import Optimizer
 from luma.interface.typing import Tensor, TensorLike, LayerLike
@@ -47,7 +47,7 @@ class _Encoder(LayerGraph):
         d_model: int,
         d_ff: int,
         n_heads: int,
-        mask: Tensor | None = None,
+        mask_func: Callable[[Tensor], Tensor] | None = None,
         activation: callable = nl.Activation.ReLU,
         optimizer: Optimizer | None = None,
         initializer: InitUtil.InitStr = None,
@@ -59,7 +59,7 @@ class _Encoder(LayerGraph):
         self.d_model = d_model
         self.d_ff = d_ff
         self.n_heads = n_heads
-        self.mask = mask
+        self.mask_func = mask_func
         self.activation = activation
         self.optimizer = optimizer
         self.initializer = initializer
@@ -100,7 +100,7 @@ class _Encoder(LayerGraph):
 
         self.mha_ = SequentialNode(
             nl.MultiHeadAttention(
-                self.d_model, self.n_heads, self.mask, self.random_state
+                self.d_model, self.n_heads, self.mask_func, self.random_state
             ),
             nl.Dropout(self.dropout_rate, self.random_state),
             name="mha_",
@@ -128,8 +128,8 @@ class _Decoder(LayerGraph):
         d_ff: int,
         n_heads: int,
         encoder: _Encoder | None = None,
-        mask_self: Tensor | None = None,
-        mask_enc_dec: Tensor | None = None,
+        mask_self_func: Callable[[Tensor], Tensor] | None = None,
+        mask_cross_func: Callable[[Tensor], Tensor] | None = None,
         activation: callable = nl.Activation.ReLU,
         optimizer: Optimizer | None = None,
         initializer: InitUtil.InitStr = None,
@@ -140,8 +140,8 @@ class _Decoder(LayerGraph):
         self.d_model = d_model
         self.d_ff = d_ff
         self.n_heads = n_heads
-        self.mask_self = mask_self
-        self.mask_enc_dec = mask_enc_dec
+        self.mask_self_func = mask_self_func
+        self.mask_cross_func = mask_cross_func
         self.activation = activation
         self.optimizer = optimizer
         self.initializer = initializer
@@ -190,7 +190,7 @@ class _Decoder(LayerGraph):
 
         self.mha_self = SequentialNode(
             nl.MultiHeadAttention(
-                self.d_model, self.n_heads, self.mask_self, self.random_state
+                self.d_model, self.n_heads, self.mask_self_func, self.random_state
             ),
             nl.Dropout(self.dropout_rate, self.random_state),
             name="mha_self",
@@ -199,7 +199,10 @@ class _Decoder(LayerGraph):
 
         self.mha_enc_dec = LayerNode(
             nl.CrossMultiHeadAttention(
-                self.d_model, self.n_heads, self.mask_enc_dec, self.random_state
+                self.d_model,
+                self.n_heads,
+                self.mask_cross_func,
+                random_state=self.random_state,
             ),
             name="mha_enc_dec",
         )
@@ -246,7 +249,7 @@ class _EncoderStack(nl.Sequential):
         d_model: int,
         d_ff: int,
         n_heads: int,
-        mask: Tensor | None = None,
+        mask_func: Callable[[TensorLike], TensorLike] | None = None,
         base_encoder: Type[LayerLike | _Encoder] = _Encoder,
         activation: callable = nl.Activation.ReLU,
         optimizer: Optimizer | None = None,
@@ -287,7 +290,7 @@ class _EncoderStack(nl.Sequential):
         for i in range(n_encoders):
             _do_buffer = i == n_encoders - 1 and do_buffer
             enc = base_encoder(
-                d_model, d_ff, n_heads, mask, do_buffer=_do_buffer, **basic_args
+                d_model, d_ff, n_heads, mask_func, do_buffer=_do_buffer, **basic_args
             )
             layers.append((f"Encoder_{i + 1}", enc))
 
@@ -305,8 +308,8 @@ class _DecoderStack(nl.Sequential):
         d_ff: int,
         n_heads: int,
         encoder: _Encoder | None = None,
-        mask_self: Tensor | None = None,
-        mask_enc_dec: Tensor | None = None,
+        mask_self_func: Callable[[TensorLike], TensorLike] | None = None,
+        mask_cross_func: Callable[[TensorLike], TensorLike] | None = None,
         base_decoder: Type[LayerLike | _Decoder] = _Decoder,
         activation: callable = nl.Activation.ReLU,
         optimizer: Optimizer | None = None,
@@ -344,8 +347,8 @@ class _DecoderStack(nl.Sequential):
                 d_ff,
                 n_heads,
                 encoder,
-                mask_self,
-                mask_enc_dec,
+                mask_self_func,
+                mask_cross_func,
                 **basic_args,
             )
             layers.append((f"Decoder_{i + 1}", dec))
