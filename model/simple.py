@@ -381,7 +381,65 @@ _look_ahead_func = F.generate_look_ahead_mask
 
 class SimpleTransformer(NeuralModel):
     """
-    TODO: Docstring for `SimpleTransformer`
+    The Transformer is a neural network architecture that uses self-attention
+    to capture relationships across entire sequences simultaneously, making it
+    highly effective for tasks like NLP and vision. Its core components—multi-head
+    self-attention and positional encoding—allow it to model dependencies across
+    long sequences efficiently, enabling powerful models like BERT and GPT that
+    set benchmarks in numerous applications.
+
+    Parameters
+    ----------
+    `n_encoders` : int
+        Number of encoders
+    `n_decoders` : int
+        Number of decoders
+    `d_model` : int
+        Dimensionality of a model
+    `d_ff` : int
+        Hidden dimensionality of feed-forward layers;
+        Usually set to `4 * d_model`
+    `n_heads` : int
+        Number of attention heads
+    `out_features` : int
+        Number of output features of the final softmax layer
+        (i.e. vobaulary size)
+    `enc_mask_func` : ((Tensor) -> Tensor), optional, default=_padding_func
+        Maksing function for encoders
+    `dec_mask_self_func` : ((Tensor) -> Tensor), optional, default=_look_ahead_func
+        Masking function for self-attention in decoders
+    'dec_mask_cross_func` : ((Tensor) -> Tensor), optional, default=_padding_func
+        Maksing function for cross-attention in decoders
+    `pos_max_length` : int, default=5000
+        Maximum sequence length for positional encoding
+    `batch_size` : int, default=100
+        Size of a single mini-batch
+    `n_epochs` : int, default=10
+        Number of epochs for training
+    `valid_size` : float, default=0.1
+        Fractional size of validation set
+    `initializer` : InitStr, default=None
+        Type of weight initializer
+    `activation` : callable, default=nl.Activation.ReLU
+        Type of activation function
+    `dropout_rate` : float, default=0.1
+        Dropout rate
+    `lambda_` : float, default=0.0
+        L2 regularization strength
+    `early_stopping` : bool, default=False
+        Whether to early-stop the training when the valid score stagnates
+    `patience` : int, default=3
+        Number of epochs to wait until early-stopping
+    `shuffle` : bool, default=True
+        Whethter to shuffle the data at the beginning of every epoch
+
+    Notes
+    -----
+    * Masking functions receive a tensor of shape `(N, H, L, d_head)` and
+    must return the compatible shape of mask tensor.
+
+    * Preset mask generating functions are available at `neural.functional`.
+
     """
 
     do_debug: ClassVar[bool] = False
