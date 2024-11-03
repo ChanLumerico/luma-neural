@@ -1333,13 +1333,120 @@ class ConvNeXtBlock:
 
 @ClassType.non_instantiable()
 class TransformerBlock:
+    """
+    Container class for building components of original Transformers.
 
-    class PositionwiseFeedForward(transformer._PositionwiseFeedForward): ...
+    Reference
+    ---------
+    `Transformer-(Base, Big)` :
+        [1] Vaswani, Ashish, et al. "Attention Is All You Need." Advances in
+        Neural Information Processing Systems, vol. 30, 2017, pp. 5998-6008.
+    """
 
-    class Encoder(transformer._Encoder): ...
+    class PositionwiseFeedForward(transformer._PositionwiseFeedForward):
+        """
+        Position-wise feed-forwarding block used in Encoder and Decoder
+        of Transformer.
 
-    class Decoder(transformer._Decoder): ...
+        Parameters
+        ----------
+        `d_model` : int
+            Dimensionality of a model
+        `d_ff` : int
+            Hidden dimensionality of feed-forward layer.
+            Usually set to `4 * d_model`.
 
-    class EncoderStack(transformer._EncoderStack): ...
+        Refer to the figures shown in the original paper[1].
+        """
 
-    class DecoderStack(transformer._DecoderStack): ...
+    class Encoder(transformer._Encoder):
+        """
+        Encoder block used in original Transformer.
+
+        Parameters
+        ----------
+        `d_model` : int
+            Dimensionality of a model
+        `d_ff` : int
+            Hidden dimensionality of feed-forward layer.
+            Usually set to `4 * d_model`.
+        `n_heads` : int
+            Number of attention heads
+        `mask_func` : ((TensorLike) -> TensorLike), optional, default=None
+            Function that generates the mask tensor for attention scores.
+            It receives a tensor of shape `(N, H, L, d_head)` and must return the
+            compatible shape of mask tensor.
+
+            Preset mask generating functions are available at `neural.functional`.
+
+        Refer to the figures shown in the original paper[1].
+        """
+
+    class Decoder(transformer._Decoder):
+        """
+        Decoder block used in original Transformer.
+
+        Parameters
+        ----------
+        `d_model` : int
+            Dimensionality of a model
+        `d_ff` : int
+            Hidden dimensionality of feed-forward layer.
+            Usually set to `4 * d_model`
+        `n_heads` : int
+            Number of attention heads
+        `encoder` : TransformerBlock.Encoder, optional, default=None
+            An encoder instance to get the encoded output for cross-attention;
+            If set to None, it performs generic self-attention
+        `mask_self_func` : ((TensorLike) -> TensorLike), optional, default=None
+            Function that generates the mask tensor for self-attention
+        `mask_cross_func` : ((TensorLike) -> TensorLike), optional, default=None
+            Function that generates the mask tensor for cross-attention
+
+        Refer to the figures shown in the original paper[1].
+
+        Notes
+        -----
+        * Masking functions receive a tensor of shape `(N, H, L, d_head)` and
+        must return the compatible shape of mask tensor.
+
+        * Preset mask generating functions are available at `neural.functional`.
+
+        """
+
+    class EncoderStack(transformer._EncoderStack):
+        """
+        Stack of Encoder blocks used in original Transformer.
+
+        Parameters
+        ----------
+        `n_encoders` : int
+            Number of encoders
+        `base_encoder` : TransformerBlock.Encoder, LayerLike, default=_Encoder
+            Base encoder type
+        `do_buffer` : bool, default=True
+            Whether to add Buffer layer to the last encoder
+        `do_pos_encoding` : bool, default=True
+            Whether to perform positional encoding
+        `pos_max_length` : int, default=5000
+            Maximum sequence length for positional encoding
+
+        Refer to the figures shown in the original paper[1].
+        """
+
+    class DecoderStack(transformer._DecoderStack):
+        """
+        Stack of Decoder blocks used in original Transformer.
+
+        Parameters
+        ----------
+        `n_decoders` : int
+            Number of decoders
+        `encoder` : TransformerBlock.Encoder, optional, default=None
+            An encoder instance to get the encoded output for cross-attention;
+            If set to None, it performs generic self-attention
+        `base_decoder` : TransformerBlock.Decoder, LayerLike, default=_Decoder
+            Base decoder type
+
+        Refer to the figures shown in the original paper[1].
+        """

@@ -24,7 +24,13 @@ from . import transformer
 __all__ = ("Transformer_Base", "Transformer_Big")
 
 
-class Transformer_Base(transformer._Transformer_Base): ...
+class Transformer_Base(transformer._Transformer_Base):
+    """
+    TODO: Docstring for `Transformer-Base`
+    """
 
 
-class Transformer_Big(transformer._Transformer_Big): ...
+class Transformer_Big(transformer._Transformer_Big):
+    """
+    TODO: Docstring for `Transformer-Big`
+    """

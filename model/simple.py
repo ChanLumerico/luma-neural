@@ -380,6 +380,9 @@ _look_ahead_func = F.generate_look_ahead_mask
 
 
 class SimpleTransformer(NeuralModel):
+    """
+    TODO: Docstring for `SimpleTransformer`
+    """
 
     do_debug: ClassVar[bool] = False
     do_register: ClassVar[bool] = False
@@ -395,7 +398,6 @@ class SimpleTransformer(NeuralModel):
         enc_mask_func: Callable[[Tensor], Tensor] | None = _padding_func,
         dec_mask_self_func: Callable[[Tensor], Tensor] | None = _look_ahead_func,
         dec_mask_cross_func: Callable[[Tensor], Tensor] | None = _padding_func,
-        pos_max_length: int = 500,
         activation: callable = nl.Activation.ReLU,
         initializer: InitUtil.InitStr = None,
         batch_size: int = 100,
@@ -403,6 +405,7 @@ class SimpleTransformer(NeuralModel):
         valid_size: float = 0.1,
         lambda_: float = 0.0,
         dropout_rate: float = 0.1,
+        pos_max_length: int = 5000,
         early_stopping: bool = False,
         patience: int = 3,
         shuffle: bool = True,

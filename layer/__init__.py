@@ -1372,11 +1372,66 @@ class LayerNorm(norm._LayerNorm):
 
 
 class ScaledDotProductAttention(attend._ScaledDotProductAttention):
+    """
+    Scaled dot-product attention computes relevance by comparing each query to
+    all keys in the input. It takes the dot product of queries and keys, scales
+    by the square root of the key dimension to prevent large values, then applies
+    softmax to get attention weights. These weights are used to create a weighted
+    sum of values, letting the model focus on the most relevant parts of the
+    input for each query.
+
+    Parameters
+    ----------
+    `mask_func` : ((TensorLike) -> TensorLike), optional, default=None
+        Function that generates the mask tensor for attention scores.
+        It receives a tensor of shape `(N, H, L, d_head)` and must return the
+        compatible shape of mask tensor.
+
+        Preset masking functions are available at `neural.functional`.
+
+    Notes
+    -----
+    - The input `X` must have the form of 3D-array(`Tensor`).
+
+        ```py
+        X.shape = (batch_size, seq_length, d_model)
+        ```
+    """
+
     def __init__(self, mask_func: Callable[[TensorLike], TensorLike] | None = None):
         super().__init__(mask_func)
 
 
 class MultiHeadAttention(attend._MultiheadAttention):
+    """
+    Multi-head attention splits queries, keys, and values into multiple "heads,"
+    each focusing on different parts of the input. Each head computes attention
+    separately, capturing unique relationships, and the outputs are combined to
+    create a richer, multi-perspective representation. This allows the model to
+    capture complex dependencies more effectively.
+
+    Parameters
+    ----------
+    `d_model` : int,
+        Dimensionality of a model
+    `n_heads` : int,
+        Number of attention heads
+    `mask_func` : ((TensorLike) -> TensorLike), optional, default=None
+        Function that generates the mask tensor for attention scores.
+        It receives a tensor of shape `(N, H, L, d_head)` and must return the
+        compatible shape of mask tensor.
+
+        Preset masking functions are available at `neural.functional`.
+
+    Notes
+    -----
+    - The input `X` must have the form of 3D-array(`Tensor`).
+
+        ```py
+        X.shape = (batch_size, seq_length, d_model)
+        ```
+    """
+
     def __init__(
         self,
         d_model: int,
@@ -1388,6 +1443,39 @@ class MultiHeadAttention(attend._MultiheadAttention):
 
 
 class CrossMultiHeadAttention(attend._CrossMultiHeadAttention):
+    """
+    Cross multi-head attention allows one sequence (like a query) to attend
+    to a different sequence (like a context). Each attention head computes
+    scaled dot-product attention between the query sequence’s queries and the
+    context sequence’s keys and values. The heads are then combined, letting
+    the query sequence gather information from relevant parts of the context
+    sequence, enhancing understanding across sequences.
+
+    Parameters
+    ----------
+    `d_model` : int,
+        Dimensionality of a model
+    `n_heads` : int,
+        Number of attention heads
+    `mask_func` : ((TensorLike) -> TensorLike), optional, default=None
+        Function that generates the mask tensor for attention scores.
+        It receives a tensor of shape `(N, H, L, d_head)` and must return the
+        compatible shape of mask tensor.
+
+        Preset masking functions are available at `neural.functional`.
+    `extern_key_val` : TensorLike, optional, default=None
+        External key(K) and value(V) tensors for cross-attention.
+        If set to None, it performs generic self-attention.
+
+    Notes
+    -----
+    - The input `X` must have the form of 3D-array(`Tensor`).
+
+        ```py
+        X.shape = (batch_size, seq_length, d_model)
+        ```
+    """
+
     def __init__(
         self,
         d_model: int,
@@ -1400,6 +1488,21 @@ class CrossMultiHeadAttention(attend._CrossMultiHeadAttention):
 
 
 class PositionalEncoding(encode._PositionalEncoding):
+    """
+    Sinusoidal positional encoding adds a unique, continuous pattern to each
+    token's embedding based on its position in the sequence. Using sine and
+    cosine functions with varying frequencies, it assigns each position a
+    unique vector.
+
+    Parameters
+    ----------
+    `d_model` : int
+        Dimensionality of a model
+    `max_length` : int, default=5000
+        The maximum sequence length for which positions are encoded
+
+    """
+
     def __init__(self, d_model: int, max_length: int = 5000) -> None:
         super().__init__(d_model, max_length)
 

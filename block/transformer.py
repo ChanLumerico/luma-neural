@@ -258,7 +258,7 @@ class _EncoderStack(nl.Sequential):
         dropout_rate: float = 0.1,
         do_buffer: bool = True,
         do_pos_encoding: bool = True,
-        pos_max_length: int = 500,
+        pos_max_length: int = 5000,
         random_state: int | None = None,
     ) -> None:
         basic_args = dict(
