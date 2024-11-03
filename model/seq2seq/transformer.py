@@ -1,4 +1,4 @@
-from typing import override
+from typing import ClassVar, override
 
 from luma.core.super import Supervised
 from luma.interface.typing import Tensor
@@ -96,6 +96,8 @@ class _Transformer_Base(NeuralModel, SequenceToSequence, Supervised):
         )
 
         self.model.extend(self.encoder, self.decoder, self.lin_softmax)
+
+    input_shape: ClassVar[tuple] = (-1, -1, 512)
 
     @override
     def forward(self, X: Tensor, y: Tensor, is_train: bool = False) -> Tensor:
@@ -196,6 +198,8 @@ class _Transformer_Big(NeuralModel, SequenceToSequence, Supervised):
         )
 
         self.model.extend(self.encoder, self.decoder, self.lin_softmax)
+
+    input_shape: ClassVar[tuple] = (-1, -1, 1024)
 
     @override
     def forward(self, X: Tensor, y: Tensor, is_train: bool = False) -> Tensor:

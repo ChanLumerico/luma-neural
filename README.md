@@ -56,6 +56,7 @@ Deep learning models and neural network utilities of Luma
 | `Reshape` | $(*_{in})$ | $(*_{out})$ |
 | `Transpose` | $(*_{in})$ | $(*_{\mathcal{P}(in)})$ |
 | `Dense` | $(N,L_{in})$ | $(N,L_{out})$ |
+| `DenseND` | $(*,F_{in},*)$ | $(*,F_{out},*)$ |
 | `Identity` | $(*)$ | $(*)$ |
 
 ### Normalization
@@ -68,6 +69,14 @@ Deep learning models and neural network utilities of Luma
 | `LocalResponseNorm` | $(N,C,*)$ | $(N,C,*)$ |
 | `GlobalResponseNorm` | $(N,C,*)$ | $(N,C,*)$ |
 | `LayerNorm` | $(N,*)$ | $(N,*)$ |
+
+### Attention
+
+| Class | Input Shape | Output Shape |
+| --- | --- | --- |
+| `ScaledDotProductAttention` | $(N,H,L,d_{head})$ | $(N,H,L,d_{head})$ |
+| `MultiHeadAttention` | $(N,L,d_{model})$ | $(N,L,d_{model})$ |
+| `CrossMultiHeadAttention` | $(N,L,d_{model})$ | $(N,L,d_{model})$ |
 
 ### Utility
 
@@ -189,6 +198,16 @@ Deep learning models and neural network utilities of Luma
 | --- | --- | --- | --- |
 | `ConvNeXtBlock.V1` | 7 | $(N,C,H,W)$ | $(N,C,H,W)$ |
 | `ConvNeXtBlock.V2` | 8 | $(N,C,H,W)$ | $(N,C,H,W)$ |
+
+### Transformer Blocks
+
+| Class | # of Layers | Input Shape | Output Shape |
+| --- | --- | --- | --- |
+| `PositionwiseFeedForward` | 3 | $(N,L,d_{model})$ | $(N,L,d_{model})$ |
+| `Encoder` | 11 | $(N,L,d_{model})$ | $(N,L,d_{model})$ |
+| `Decoder` | 13 | $(N,L,d_{model})$ | $(N,L,d_{model})$ |
+| `EncoderStack` | $11n+0\sim2$ | $(N,L,d_{model})$ | $(N,L,d_{model})$ |
+| `DecoderStack` | $13n$ | $(N,L,d_{model})$ | $(N,L,d_{model})$ |
 
 *Waiting for future updates…🔮*
 
@@ -436,6 +455,22 @@ Information Processing Systems, 2012.
 | `ConvNeXt_V2_H` | 300 | $(N,3,224,224)$ | 659,875,040 | 304,072 | 660,179,112 | ✅ |
 
 #### CoAtNet Series
+
+*Waiting for future updates…🔮*
+
+### Sequence-to-Sequence Models
+
+#### Transformer Series
+
+*Transformer-(Base, Big)*
+
+>Vaswani, Ashish, et al. "Attention Is All You Need." Advances in Neural Information Processing Systems, vol. 30, 2017.
+>
+
+| Class | # of Layers | Input Shape | Weights | Biases | Total Param. | Implemented |
+| --- | --- | --- | --- | --- | --- | --- |
+| `Transformer_Base` | 147 | $(N,L,512)$ | 62,984,192 | 104,584 | 63,088,776 | ✅ |
+| `Transformer_Big` | 147 | $(N,L,1024)$ | 214,048,768 | 172,168 | 214,220,936 | ✅ |
 
 *Waiting for future updates…🔮*
 
