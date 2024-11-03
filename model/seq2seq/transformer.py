@@ -17,7 +17,7 @@ class _Transformer_Base(NeuralModel, SequenceToSequence, Supervised):
         self,
         activation: callable = nl.Activation.ReLU,
         initializer: InitUtil.InitStr = None,
-        out_features: int = 30000,
+        out_features: int = 37000,
         batch_size: int = 64,
         n_epochs: int = 10,
         valid_size: float = 0.1,

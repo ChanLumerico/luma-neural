@@ -1,4 +1,4 @@
-from typing import Callable, Optional, Tuple
+from typing import Callable, Optional, Tuple, override
 import numpy as np
 
 from luma.interface.typing import Tensor
@@ -228,3 +228,8 @@ class _CrossMultiHeadAttention(Layer):
 
     def out_shape(self, in_shape: Tuple[int]) -> Tuple[int]:
         return in_shape
+
+    @override
+    @property
+    def param_size(self) -> tuple[int, int]:
+        return self.mha.param_size

@@ -1,7 +1,7 @@
 from typing import Optional, Tuple, override
 import numpy as np
 
-from luma.interface.typing import Tensor, TensorLike
+from luma.interface.typing import Tensor
 from luma.neural.base import Layer
 
 
@@ -352,7 +352,7 @@ class _LayerNorm(Layer):
     @override
     @property
     def param_size(self) -> tuple[int, int]:
-        return super().param_size() if self.in_shape is not None else NotImplemented
+        return super().param_size if self.weights_ is not None else NotImplemented
 
     def out_shape(self, in_shape: Tuple[int]) -> Tuple[int]:
         return in_shape
