@@ -7,6 +7,7 @@ from luma.interface.util import InitUtil
 from luma.neural.base import NeuralModel
 from luma.neural import layer as nl
 from luma.neural import block as nb
+from luma.neural import functional as F
 
 from ..types import SequenceToSequence
 
@@ -21,6 +22,7 @@ class _Transformer_Base(NeuralModel, SequenceToSequence, Supervised):
         n_epochs: int = 10,
         valid_size: float = 0.1,
         lambda_: float = 0.0,
+        dropout_rate: float = 0.1,
         early_stopping: bool = False,
         patience: int = 3,
         shuffle: bool = True,
@@ -31,6 +33,7 @@ class _Transformer_Base(NeuralModel, SequenceToSequence, Supervised):
         self.initializer = initializer
         self.out_features = out_features
         self.lambda_ = lambda_
+        self.dropout_rate = dropout_rate
         self.shuffle = shuffle
         self.random_state = random_state
         self._fitted = False
@@ -48,6 +51,9 @@ class _Transformer_Base(NeuralModel, SequenceToSequence, Supervised):
         super(_Transformer_Base, self).init_model()
         self.model = nl.Sequential()
 
+        self.padding_mask_func = F.generate_padding_mask
+        self.look_ahead_mask_func = F.generate_look_ahead_mask
+
         self.build_model()
 
     def build_model(self) -> None:
@@ -59,29 +65,32 @@ class _Transformer_Base(NeuralModel, SequenceToSequence, Supervised):
             random_state=self.random_state,
         )
 
-        # TODO: Deal with the masks
         self.encoder = nb.TransformerBlock.EncoderStack(
-            6, 512, 2048, 8, self.enc_mask_func, **base_args
+            n_encoders=6,
+            d_model=512,
+            d_ff=2048,
+            n_heads=8,
+            mask_func=self.padding_mask_func,
+            **base_args
         )
         self.decoder = nb.TransformerBlock.DecoderStack(
-            6,
-            512,
-            2048,
-            8,
-            self.encoder[-1][1],
-            self.dec_mask_self_func,
-            self.dec_mask_cross_func,
+            n_decoders=6,
+            d_model=512,
+            d_ff=2048,
+            n_heads=8,
+            encoder=self.encoder[-1][1],
+            mask_self_func=self.look_ahead_mask_func,
+            mask_cross_func=self.padding_mask_func,
             **base_args
         )
         self.lin_softmax = nl.Sequential(
             nl.DenseND(
-                512,
-                self.out_features,
-                -1,
-                self.initializer,
-                None,
-                self.lambda_,
-                self.random_state,
+                in_features=512,
+                out_features=self.out_features,
+                axis=-1,
+                initializer=self.initializer,
+                lambda_=self.lambda_,
+                random_state=self.random_state,
             ),
             nl.Activation.Softmax(dim=-1),
         )

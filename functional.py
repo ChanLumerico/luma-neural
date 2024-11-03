@@ -109,6 +109,7 @@ def generate_padding_mask(X: Tensor) -> Tensor:
     mask = mask[:, np.newaxis, np.newaxis, :]
     return mask
 
+
 @Tensor.force_shape(4)
 def generate_look_ahead_mask(X: Tensor) -> Tensor:
     _, _, L, _ = X.shape

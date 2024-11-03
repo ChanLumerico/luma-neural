@@ -1,4 +1,4 @@
-from typing import ClassVar, Literal, Self, override
+from typing import Callable, ClassVar, Literal, Self, override
 
 from luma.core.super import Evaluator
 from luma.interface.typing import Matrix, Tensor, Vector
@@ -375,6 +375,10 @@ class SimpleCNN(NeuralModel):
         return super(SimpleCNN, self).score_nn(X, y, metric, argmax)
 
 
+_padding_func = F.generate_padding_mask
+_look_ahead_func = F.generate_look_ahead_mask
+
+
 class SimpleTransformer(NeuralModel):
 
     do_debug: ClassVar[bool] = False
@@ -388,9 +392,9 @@ class SimpleTransformer(NeuralModel):
         d_ff: int,
         n_heads: int,
         out_features: int,
-        enc_mask_func: callable = F.generate_padding_mask,
-        dec_mask_self_func: callable = F.generate_look_ahead_mask,
-        dec_mask_cross_func: callable = F.generate_padding_mask,
+        enc_mask_func: Callable[[Tensor], Tensor] | None = _padding_func,
+        dec_mask_self_func: Callable[[Tensor], Tensor] | None = _look_ahead_func,
+        dec_mask_cross_func: Callable[[Tensor], Tensor] | None = _padding_func,
         pos_max_length: int = 500,
         activation: callable = nl.Activation.ReLU,
         initializer: InitUtil.InitStr = None,
