@@ -412,7 +412,11 @@ class NeuralModel(ABC, NeuralBase):
         for i, (X_batch, y_batch) in enumerate(train_batch, start=1):
             t_start = time.time_ns()
 
-            out = self.forward(X_batch, is_train=True)
+            data_batch = [X_batch]
+            if type(self).require_target_on_forward:
+                data_batch.append(y_batch)
+
+            out = self.forward(*data_batch, is_train=True)
             loss = self.loss.loss(y_batch, out)
             d_out = self.loss.grad(y_batch, out)
 
@@ -445,6 +449,8 @@ class NeuralModel(ABC, NeuralBase):
             valid_loss.append(loss)
 
         return valid_loss
+
+    require_target_on_forward: ClassVar[bool] = False
 
     def forward(self, X: TensorLike, is_train: bool = False) -> TensorLike:
         return self.model(X, is_train=is_train)

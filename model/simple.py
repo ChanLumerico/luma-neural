@@ -547,6 +547,8 @@ class SimpleTransformer(NeuralModel):
 
         self.model.extend(self.encoder, self.decoder, self.lin_softmax)
 
+    require_target_on_forward: ClassVar[bool] = True
+
     @override
     def forward(self, X: Tensor, y: Tensor, is_train: bool = False) -> Tensor:
         _ = self.encoder(X, is_train)

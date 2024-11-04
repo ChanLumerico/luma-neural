@@ -99,6 +99,8 @@ class _Transformer_Base(NeuralModel, SequenceToSequence, Supervised):
 
     input_shape: ClassVar[tuple] = (-1, -1, 512)
 
+    require_target_on_forward: ClassVar[bool] = True
+
     @override
     def forward(self, X: Tensor, y: Tensor, is_train: bool = False) -> Tensor:
         _ = self.encoder(X, is_train)
@@ -200,6 +202,8 @@ class _Transformer_Big(NeuralModel, SequenceToSequence, Supervised):
         self.model.extend(self.encoder, self.decoder, self.lin_softmax)
 
     input_shape: ClassVar[tuple] = (-1, -1, 1024)
+
+    require_target_on_forward: ClassVar[bool] = True
 
     @override
     def forward(self, X: Tensor, y: Tensor, is_train: bool = False) -> Tensor:
